@@ -1,0 +1,1 @@
+This file makes git maintain this empty folder for logs.
