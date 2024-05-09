@@ -1,5 +1,6 @@
 *.env
 *.log
 *.wav
+*.mp3
 .idea/
 __pycache__/

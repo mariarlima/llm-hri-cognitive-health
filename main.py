@@ -19,7 +19,8 @@ if __name__ == '__main__':
     load_dotenv()
     stt = STT.STT()
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"))
-    tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"))
+    # tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"))
+    tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), api_provider="openai")
 
     # Since first response is pre-defined, play it through tts module.
     tts.play_text_audio(LLM.first_llm_response)

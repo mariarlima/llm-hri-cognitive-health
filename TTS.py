@@ -1,5 +1,6 @@
 from openai import OpenAI
 from unrealspeech import UnrealSpeechAPI, play, save
+from playsound import playsound
 
 import logging
 
@@ -16,8 +17,9 @@ class TTS:
             self.pitch = 1.1
             self.speech_api = UnrealSpeechAPI(api_key)
         elif api_provider == "openai":
-            # TODO: Implement openai TTS
-            raise NotImplementedError
+            self.model_id = "tts-1"
+            self.voice_id = "alloy"
+            self.openai_api = OpenAI(api_key=api_key)
         else:
             assert False, "Invalid TTS API Provider."
         logger.info("TTS module initialized.")
@@ -31,4 +33,9 @@ class TTS:
             logger.info("Playing TTS Audio...")
             play(tts_audio_data)
         elif self.api_provider == "openai":
-            raise NotImplementedError
+            tts_audio_data = self.openai_api.audio.speech.create(
+                model=self.model_id,
+                voice=self.voice_id,
+                input=text
+            )
+            play(tts_audio_data.content)
