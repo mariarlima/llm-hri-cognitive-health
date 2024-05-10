@@ -22,17 +22,24 @@ class STT:
         logger.info("Loading whisper model with ID: %s", config["whisper_model_id"])
         self.whisper_model = whisper.load_model(config["whisper_model_id"]).to(device)
         logger.info("Whisper model loaded.")
+
         # TODO: play with energy level.
         logger.info("Initializing Mic...")
         self.r = sr.Recognizer()
+
+        self.r.pause_threshold = config["STT"]["pause_threshold"]
         self.mic = sr.Microphone()
 
-    def get_voice_as_text(self):
+    def get_voice_as_text(self, pause_threshold=5, phrase_time_limit=0):
         with self.mic as source:
-            self.r.adjust_for_ambient_noise(source)
+            self.r.pause_threshold = pause_threshold
+            self.r.adjust_for_ambient_noise(source, 1)
             logger.info("listening...")
-            audio = self.r.listen(source) # TODO: timeout parameter is max timeout, find a way to set min timeout
+            # Timeout: max time r.listen will wait until a speech is picked up
+            # Phrase time limit: max duration of audio clip being recorded
+            audio = self.r.listen(source, timeout=10, phrase_time_limit=phrase_time_limit)
 
+        # TODO: handle r.listen exception here
         wav_path = 'playback.wav'
         with open(wav_path, "wb") as f:
             f.write(audio.get_wav_data())

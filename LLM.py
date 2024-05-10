@@ -1,4 +1,5 @@
 from openai import OpenAI
+from config import config
 import logging
 
 logger = logging.getLogger()
@@ -30,7 +31,7 @@ class LLM:
 
         logger.info("Calling LLM API")
         llm_response = self.openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=config["llm_model_id"],
             messages=self.conversation
         )
         logger.info("LLM response: %s", llm_response.choices[0].message.content)
