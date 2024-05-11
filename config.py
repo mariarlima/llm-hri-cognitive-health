@@ -14,7 +14,7 @@ config = {
     "llm_model_id": "gpt-3.5-turbo",
     "TTS":
         {
-            "api_provider": "unrealspeech",  # unrealspeech or openai
+            "api_provider": "openai",  # unrealspeech or openai
             "unrealspeech":
                 {
                     "voice_id": "Liv",
