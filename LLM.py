@@ -43,7 +43,7 @@ class LLM:
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
 
-    def request_response(self, text):
+    def request_response(self, text, isSystem=False):
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
 

@@ -31,15 +31,25 @@ class STT:
         self.mic = sr.Microphone()
 
     def get_voice_as_text(self, pause_threshold=5, phrase_time_limit=0):
+        response = {
+            "success": True,
+            "error": None,
+            "transcription": None
+        }
+
         with self.mic as source:
             self.r.pause_threshold = pause_threshold
             self.r.adjust_for_ambient_noise(source, 1)
             logger.info("listening...")
             # Timeout: max time r.listen will wait until a speech is picked up
             # Phrase time limit: max duration of audio clip being recorded
-            audio = self.r.listen(source, timeout=10, phrase_time_limit=phrase_time_limit)
+            try:
+                audio = self.r.listen(source, timeout=10, phrase_time_limit=phrase_time_limit)
+            except sr.WaitTimeoutError:
+                response["success"] = False
+                logger.warning("r.listen timeout.")
+                return response
 
-        # TODO: handle r.listen exception here
         wav_path = 'playback.wav'
         with open(wav_path, "wb") as f:
             f.write(audio.get_wav_data())
@@ -51,11 +61,6 @@ class STT:
             playsound(wav_path)
 
         # Transcribe
-        response = {
-            "success": True,
-            "error": None,
-            "transcription": None
-        }
 
         logger.info("Transcribing...")
         # try recognizing the speech in the recording
