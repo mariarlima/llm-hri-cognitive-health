@@ -5,8 +5,9 @@ from config import config
 import logging
 import logging_config
 
-logging_config.configure_logging()
-logger = logging.getLogger()
+# logging_config.configure_logging()
+logger = logging.getLogger("HRI")
+logging_config.configure_logger(logger)
 
 logger.info("Logger Initialized.")
 

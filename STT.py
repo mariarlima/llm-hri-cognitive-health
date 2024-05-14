@@ -7,7 +7,7 @@ import whisper
 import speech_recognition as sr
 from playsound import playsound
 
-logger = logging.getLogger()
+logger = logging.getLogger("HRI")
 
 
 class STT:

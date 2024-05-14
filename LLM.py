@@ -2,7 +2,7 @@ from openai import OpenAI
 from config import config
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("HRI")
 
 first_llm_response = "Hello, I am Blossom! I'm a robot will help you go through the cookie theft task."
 llm_prompt = [

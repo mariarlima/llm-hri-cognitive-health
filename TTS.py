@@ -4,7 +4,7 @@ from playsound import playsound
 from config import config
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("HRI")
 
 
 class TTS:
@@ -38,4 +38,5 @@ class TTS:
                 voice=self.voice_id,
                 input=text
             )
+            logger.info("Playing TTS Audio...")
             play(tts_audio_data.content)
