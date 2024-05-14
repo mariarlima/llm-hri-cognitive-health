@@ -1,8 +1,8 @@
 import json
 
-sequence_dir = "../blossom-public/blossompy/src/sequences/woody/"
+sequence_dir = "./blossom-public/blossompy/src/sequences/woody/"
 
-output_sequence_dir = "./"
+output_sequence_dir = "./blossom-public/blossompy/src/sequences/woody/cognitive/"
 
 
 def combine_sequences(sequences: list, sequence_name=None):
