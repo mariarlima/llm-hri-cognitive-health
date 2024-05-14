@@ -2,7 +2,7 @@ from openai import OpenAI
 from config import config
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("HRI")
 
 first_llm_response = "Hello, I am Blossom! I'm a robot will help you go through the cookie theft task."
 llm_prompt = [
@@ -43,7 +43,7 @@ class LLM:
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
 
-    def request_response(self, text):
+    def request_response(self, text, isSystem=False):
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
 

@@ -3,12 +3,25 @@ import logging
 import datetime
 
 
-def configure_logging():
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(levelname)8.8s] %(message)s",
-        handlers=[logging.StreamHandler(),
-                  logging.FileHandler(f'log/{datetime.datetime.now().isoformat().replace(":", "-")}.log',
-                                      encoding='utf-8')],
-    )
+# def configure_logging():
+#     logging.basicConfig(
+#         level=logging.DEBUG,
+#         format="%(asctime)s [%(levelname)8.8s] %(message)s",
+#         handlers=[logging.StreamHandler(),
+#                   logging.FileHandler(f'log/{datetime.datetime.now().isoformat().replace(":", "-")}.log',
+#                                       encoding='utf-8')],
+#     )
+
+def configure_logger(logger):
+    logger.setLevel(logging.INFO)
+    console_handler = logging.StreamHandler()
+    file_handler = logging.FileHandler(f'log/{datetime.datetime.now().isoformat().replace(":", "-")}.log',
+                                      encoding='utf-8')
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    console_handler.setFormatter(formatter)
+    file_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+
 # logger = logging.getLogger(__name__)

@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 sys.path.append("./blossom-public")
 from blossompy import Blossom
@@ -21,8 +22,12 @@ class BlossomInterface:
         random.shuffle(idle_sequences)
         self.bl.do_sequence(idle_sequences[0])
 
-    def do_sequence(self, seq="reset"):
+    def do_sequence(self, seq="reset", delay_time=0):
+        time.sleep(delay_time)
         self.bl.do_sequence(seq)
+
+    # def do_sequence(self, seq="reset"):
+    #     self.bl.do_sequence(seq)
 
 
 # bl = Blossom(sequence_dir='./blossom-public/blossompy/src/sequences')

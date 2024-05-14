@@ -28,4 +28,5 @@ config = {
                     "voice_id": "alloy"
                 }
         },
+    "Blossom": "Disabled"
 }
