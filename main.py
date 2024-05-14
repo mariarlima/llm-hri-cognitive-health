@@ -1,4 +1,6 @@
 import os
+import time
+import threading
 from dotenv import load_dotenv
 
 from config import config
@@ -51,8 +53,14 @@ if __name__ == '__main__':
         llm_response_text = llm.request_response(user_input_text)
         # llm_response_text = llm.request_response("What is a cookie theft task?")
         if config["Blossom"] == "Enabled":
-            bl.do_idle_sequence()
-            bl.do_sequence("grand/grand1")
+            bl_thread = threading.Thread(target=bl.do_sequence("grand/grand1", delay_time=2))
+            # bl.do_idle_sequence()
+            # bl.do_sequence("grand/grand1")
+            bl_thread.start()
+
         # llm_response_text = "A sonnet is a poetic form that originated in the poetry composed at the Court of the Holy Roman Emperor Frederick II in the Sicilian city of Palermo. The 13th-century poet and notary Giacomo da Lentini is credited with the sonnet's invention, and the Sicilian School of poets who surrounded him then spread the form to the mainland. The earliest sonnets, however, no longer survive in the original Sicilian language, but only after being translated into Tuscan dialect."
         tts.play_text_audio(llm_response_text)
+
+        if config["Blossom"] == "Enabled":
+            bl_thread.join()
 
