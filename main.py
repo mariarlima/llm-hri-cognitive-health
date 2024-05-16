@@ -22,7 +22,7 @@ from blossom_interaction import BlossomInterface
 if __name__ == '__main__':
     load_dotenv()
     stt = STT.STT()
-    llm = LLM.LLM(os.getenv("OPENAI_API_KEY"))
+    llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN)
     bl = None
     if config["Blossom"] == "Enabled":
         bl = BlossomInterface()

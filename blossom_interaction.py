@@ -19,10 +19,12 @@ class BlossomInterface:
     def reset(self):
         self.bl.do_sequence("reset")
 
-    def do_idle_sequence(self):
+    def do_idle_sequence(self, delay_time=0):
         idle_sequences = ["breathing/exhale", "breathing/inhale", "fear/fear_startled", "happy/happy_lookingup",
                           "sad/sad_downcast"]
         random.shuffle(idle_sequences)
+        time.sleep(delay_time)
+        logger.info(f"Blossom playing sequence {idle_sequences[0]}")
         self.bl.do_sequence(idle_sequences[0])
 
     def do_sequence(self, seq="reset", delay_time=0):
