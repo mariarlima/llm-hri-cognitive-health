@@ -1,4 +1,5 @@
 from openai import OpenAI
+from enum import Enum
 from config import config
 import logging
 
@@ -37,13 +38,38 @@ llm_prompt = [
     # }
 ]
 
+class LLM_Role(Enum):
+    MAIN = 1
+    SUMMARY = 2
+    MOD = 3
 
+
+# TODO: current arch is instantiate multiple LLM api, should it be singleton?
 class LLM:
-    def __init__(self, api_key):
+    def __init__(self, api_key, llm_role):
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
+        self.llm_role = llm_role
 
-    def request_response(self, text, isSystem=False):
+    def request_independent_response(self, text):
+        if self.llm_role == LLM_Role.MAIN:
+            logger.error("Call request_response for cognitive task.")
+        # TODO: what role should we assign in prompt?
+        prompt = {"role": "user", "content": text}
+
+        logger.info("Calling LLM API")
+        llm_response = self.openai.chat.completions.create(
+            model=config["llm_model_id"],
+            messages=self.conversation
+        )
+
+        logger.info("LLM response: %s", llm_response.choices[0].message.content)
+        return llm_response.choices[0].message.content
+
+    def request_response(self, text):
+        if self.llm_role != LLM_Role.MAIN:
+            logger.error("Call request_independent_response for Mod and Summary.")
+            return ""
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
 
