@@ -1,10 +1,12 @@
 import random
 import sys
 import time
+import logging
 
 sys.path.append("./blossom-public")
 from blossompy import Blossom
 
+logger = logging.getLogger("HRI")
 
 class BlossomInterface:
     def __init__(self):
@@ -12,6 +14,7 @@ class BlossomInterface:
         self.bl.connect()  # safe init and connects to blossom and puts blossom in reset position
         self.bl.load_sequences()
         self.bl.do_sequence("reset")
+        logger.info("Blossom Connected & Initialized.")
 
     def reset(self):
         self.bl.do_sequence("reset")
@@ -23,7 +26,9 @@ class BlossomInterface:
         self.bl.do_sequence(idle_sequences[0])
 
     def do_sequence(self, seq="reset", delay_time=0):
+        logger.info(f"Blossom start playing sequence {seq} with {delay_time} s of delay.")
         time.sleep(delay_time)
+        logger.info(f"Blossom playing sequence {seq}")
         self.bl.do_sequence(seq)
 
     # def do_sequence(self, seq="reset"):

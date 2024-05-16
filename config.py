@@ -11,7 +11,7 @@ config = {
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "phrase_time_limit": 20,  # Max duration of a recorded audio clip
         },
-    "llm_model_id": "gpt-3.5-turbo",
+    "llm_model_id": "gpt-4-turbo",
     "TTS":
         {
             "api_provider": "openai",  # unrealspeech or openai
@@ -28,5 +28,5 @@ config = {
                     "voice_id": "alloy"
                 }
         },
-    "Blossom": "Disabled"
+    "Blossom": "Enabled"
 }
