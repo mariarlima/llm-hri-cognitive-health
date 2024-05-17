@@ -33,14 +33,14 @@ if __name__ == '__main__':
 
     # Let LLM generates intro
     logger.info("Main interaction loop starts.")
-    isFIrstRound = True
+    free_speech = False
     llm_response_text = llm.request_response("Start")
     tts.play_text_audio(llm_response_text)
     while True:
         user_input_text = ""
         stt_response = None
-        if isFIrstRound:
-            isFIrstRound = False
+        if free_speech:
+            free_speech = False
             stt_response = stt.get_voice_as_text(phrase_time_limit=60, pause_threshold=10)
         else:
             stt_response = stt.get_voice_as_text(phrase_time_limit=0, pause_threshold=3)
@@ -49,6 +49,8 @@ if __name__ == '__main__':
         # TODO: no blossom exception handling
         # TODO: What should I put in prompt for no voice / stt error? - System message / user message with empty string
         llm_response_text = llm.request_response(user_input_text)
+        if "free" in llm_response_text:
+            free_speech = True
         if config["Blossom"] == "Enabled":
             bl_thread = threading.Thread(target=bl.do_sequence, args=("grand/grand1",), kwargs={"delay_time": 10})
             bl_thread.start()
