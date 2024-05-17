@@ -12,6 +12,7 @@ config = {
             "phrase_time_limit": 20,  # Max duration of a recorded audio clip
         },
     "llm_model_id": "gpt-4-turbo",
+    "free_speech_watermark": "qwer",
     "TTS":
         {
             "api_provider": "openai",  # unrealspeech or openai
