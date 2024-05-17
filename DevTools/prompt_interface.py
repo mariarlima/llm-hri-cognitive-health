@@ -3,8 +3,11 @@ import LLM
 
 import gradio as gr
 
+# TODO: history saving/loading, independent/session LLM calls,
 
 # TODO: Implement this using following example as references.
+
+
 def sentence_builder(quantity, animal, countries, place, activity_list, morning):
     return f"""The {quantity} {animal}s from {" and ".join(countries)} went to the {place} where they {" and ".join(activity_list)} until the {"morning" if morning else "night"}"""
 

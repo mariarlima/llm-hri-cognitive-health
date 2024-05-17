@@ -48,10 +48,12 @@ if __name__ == '__main__':
             user_input_text = stt_response["transcription"]["text"]
         # TODO: no blossom exception handling
         # TODO: What should I put in prompt for no voice / stt error? - System message / user message with empty string
+        # user_input_text = input("Enter prompt: ")
         llm_response_text = llm.request_response(user_input_text)
-        if config["free_speech_watermark"] in llm_response_text:
+        if config["Task"]["Picture"]["free_speech_watermark"] in llm_response_text:
             free_speech = True
-            llm_response_text.replace(config["free_speech_watermark"], "")
+            # llm_response_text.replace(config["free_speech_watermark"], "")
+            logger.info("Free speech watermark detected.")
         if config["Blossom"] == "Enabled":
             bl_thread = threading.Thread(target=bl.do_sequence, args=("grand/grand1",), kwargs={"delay_time": 10})
             bl_thread.start()
