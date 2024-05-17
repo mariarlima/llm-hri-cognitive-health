@@ -2,6 +2,7 @@ from openai import OpenAI
 from enum import Enum
 from config import config
 import logging
+import json
 
 logger = logging.getLogger("HRI")
 
@@ -49,7 +50,9 @@ class LLM:
     def __init__(self, api_key, llm_role):
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
+        self.full_conversation = llm_prompt
         self.llm_role = llm_role
+        self.additional_info = None
 
     def request_independent_response(self, text):
         if self.llm_role == LLM_Role.MAIN:
@@ -72,13 +75,18 @@ class LLM:
             return ""
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
+        self.full_conversation.append(user_response_to_prompt)
+        actual_prompt = self.conversation
+        if self.additional_info is not None:
+            actual_prompt.append({"role": "system", "content": "The previous conversation has been summarized into "
+                                                               "this json text: " + json.dumps(self.additional_info)})
 
-        logger.debug(self.conversation)
+        logger.debug(actual_prompt)
 
         logger.info("Calling LLM API")
         llm_response = self.openai.chat.completions.create(
             model=config["llm_model_id"],
-            messages=self.conversation
+            messages=actual_prompt
         )
         logger.info("LLM response: %s", llm_response.choices[0].message.content)
         llm_response_to_prompt = {
@@ -87,5 +95,33 @@ class LLM:
             "content": llm_response.choices[0].message.content
         }
         self.conversation.append(llm_response_to_prompt)
+        self.full_conversation.append(llm_response_to_prompt)
 
         return llm_response.choices[0].message.content
+
+    def save_history(self, filename="history.json"):
+        with open(filename) as history_file:
+            history_data = json.load(history_file)
+            self.conversation = history_data
+
+    def load_history(self, filename="history.json"):
+        with open(filename, "w") as history_file:
+            json.dump(self.conversation, history_file, indent=2)
+
+    def remove_last_n_rounds(self, n):
+        rounds_to_remove = n * 2  # TODO: this assume all conversation are two way interactions
+        if len(self.conversation) < rounds_to_remove:
+            logger.warning(f"Trying to remove {n} round(s) of interactions while there is only "
+                           f"{len(self.conversation)} rounds.")
+            rounds_to_remove = len(self.conversation)
+        self.conversation = self.conversation[:-rounds_to_remove]
+
+    def summarize_last_n_rounds(self, n, prompt=""):
+        rounds_to_sum = n * 2 # TODO: this assume all conversation are two way interactions
+        if len(self.conversation) < rounds_to_sum:
+            logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
+                           f"{len(self.conversation)} rounds.")
+            rounds_to_sum = len(self.conversation)
+        conversation_text = str(self.conversation[-rounds_to_sum:])
+        self.request_independent_response(prompt + conversation_text)
+

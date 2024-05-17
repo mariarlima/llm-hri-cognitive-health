@@ -12,10 +12,10 @@ def sentence_builder(quantity, animal, countries, place, activity_list, morning)
 demo = gr.Interface(
     sentence_builder,
     [
-        gr.Slider(2, 20, value=4, label="Count", info="Choose between 2 and 20"),
-        gr.Dropdown(
-            ["cat", "dog", "bird"], label="Animal", info="Will add more animals later!"
-        ),
+        gr.Slider(1, 20, value=4, label="How many rounds of interaction before summarization?", info="Choose between 1 and 10"),
+        # gr.Dropdown(
+        #     ["cat", "dog", "bird"], label="Animal", info="Will add more animals later!"
+        # ),
         gr.CheckboxGroup(["USA", "Japan", "Pakistan"], label="Countries", info="Where are they from?"),
         gr.Radio(["park", "zoo", "road"], label="Location", info="Where did they go?"),
         gr.Dropdown(
