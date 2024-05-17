@@ -39,6 +39,7 @@ llm_prompt = [
     # }
 ]
 
+
 class LLM_Role(Enum):
     MAIN = 1
     SUMMARY = 2
@@ -58,12 +59,12 @@ class LLM:
         if self.llm_role == LLM_Role.MAIN:
             logger.error("Call request_response for cognitive task.")
         # TODO: what role should we assign in prompt?
-        prompt = {"role": "user", "content": text}
+        prompt = [{"role": "user", "content": text}]
 
         logger.info("Calling LLM API")
         llm_response = self.openai.chat.completions.create(
             model=config["llm_model_id"],
-            messages=self.conversation
+            messages=prompt
         )
 
         logger.info("LLM response: %s", llm_response.choices[0].message.content)
@@ -117,11 +118,10 @@ class LLM:
         self.conversation = self.conversation[:-rounds_to_remove]
 
     def summarize_last_n_rounds(self, n, prompt=""):
-        rounds_to_sum = n * 2 # TODO: this assume all conversation are two way interactions
+        rounds_to_sum = n * 2  # TODO: this assume all conversation are two way interactions
         if len(self.conversation) < rounds_to_sum:
             logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
                            f"{len(self.conversation)} rounds.")
             rounds_to_sum = len(self.conversation)
         conversation_text = str(self.conversation[-rounds_to_sum:])
         self.request_independent_response(prompt + conversation_text)
-
