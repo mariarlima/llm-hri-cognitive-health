@@ -122,6 +122,6 @@ class LLM:
         if len(self.conversation) < rounds_to_sum:
             logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
                            f"{len(self.conversation)} rounds.")
-            rounds_to_sum = len(self.conversation)
+            rounds_to_sum = len(self.conversation) - 2  # Keep initial instruction.
         conversation_text = str(self.conversation[-rounds_to_sum:])
         self.request_independent_response(prompt + conversation_text)
