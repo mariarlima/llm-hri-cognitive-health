@@ -41,9 +41,9 @@ if __name__ == '__main__':
         stt_response = None
         if free_speech:
             free_speech = False
-            stt_response = stt.get_voice_as_text(phrase_time_limit=60, pause_threshold=10)
+            stt_response = stt.get_voice_as_text(phrase_time_limit=60, pause_threshold=7)
         else:
-            stt_response = stt.get_voice_as_text(phrase_time_limit=0, pause_threshold=3)
+            stt_response = stt.get_voice_as_text(phrase_time_limit=0, pause_threshold=4)
         if stt_response["success"]:
             user_input_text = stt_response["transcription"]["text"]
         # TODO: no blossom exception handling
