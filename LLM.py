@@ -136,4 +136,18 @@ class LLM:
 
     def summarize_message(self, original_text, prompt):
         llm_response = self.request_response(prompt + original_text)
-        
+
+    def summarize_last_n_user_response(self, prompt):
+        rounds_to_sum = n * 2  # TODO: this assume all conversation are two way interactions
+        if len(self.conversation) < rounds_to_sum:
+            logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
+                           f"{len(self.conversation)} rounds.")
+            rounds_to_sum = len(self.conversation) - 2  # Keep initial instruction.
+        last_n_convsersation = self.conversation[-rounds_to_sum:]
+        user_response = []
+        for msg in last_n_convsersation:
+            if msg["role"] == "user":
+                user_response.append(msg["content"])
+        llm_response = self.request_independent_response(prompt + str(user_response))
+        return llm_response
+    
