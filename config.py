@@ -1,26 +1,26 @@
 config = {
     "is_using_voice": True,
     "is_playback": False,
-    "whisper_model_id": "medium.en",
+    "whisper_model_id": "tiny.en", #"medium.en",
     "enable_LLM_module": True,
     "enable_TTS_module": True,
     # "wav_path": 'output.wav',
     "STT":
         {
-            "pause_threshold": 5,  # Only stop recording after 5 second of silence
+            "pause_threshold": 7,  # Only stop recording after 5 second of silence
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "phrase_time_limit": 20,  # Max duration of a recorded audio clip
         },
-    "llm_model_id": "gpt-4-turbo",
+    "llm_model_id": "gpt-4o", #"gpt-4-turbo",
     "TTS":
         {
             "api_provider": "openai",  # unrealspeech or openai
             "unrealspeech":
                 {
-                    "voice_id": "Liv",
+                    "voice_id": "Amy",
                     "bit_rate": "192k",
-                    "speed": 0,
-                    "pitch": 1.1
+                    "speed": -0.17,
+                    "pitch": 1.04,
                 },
             "openai":
                 {
@@ -28,18 +28,28 @@ config = {
                     "voice_id": "alloy"
                 }
         },
-    "Blossom": "Disabled",
+    "Blossom": "Disabled", # Enabled or Disabled
     "Task":
         {
-            "Picture":
+           "Picture_1":
                 {
                     "free_speech_watermark": "storytelling",
-                    "summary_prompt": ""
+                    "prompt": "llm_prompt_task1_1", 
+                }, 
+            "Picture_2":
+                {
+                    "free_speech_watermark": "storytelling",
+                    "prompt": "llm_prompt_task1_2", 
                 },
-            "Semantic":
+            "Semantic_1":
                 {
                     "free_speech_watermark": "different game",
-                    "summary_prompt": ""
+                    "prompt": "llm_prompt_task2_1", 
+                },
+            "Semantic_2":
+                {
+                    "free_speech_watermark": "different game",
+                    "prompt": "llm_prompt_task2_2", 
                 }
         },
 }

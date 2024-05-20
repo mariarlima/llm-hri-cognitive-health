@@ -1,8 +1,7 @@
 import logging
 from config import config
-
 import torch
-# import numpy as np
+import numpy as np
 import whisper
 import speech_recognition as sr
 from playsound import playsound
@@ -11,7 +10,7 @@ logger = logging.getLogger("HRI")
 
 
 class STT:
-    def __init__(self):
+    def __init__(self,mic_index=None):
         # Initialize whisper model
         if torch.cuda.is_available():
             device = torch.device("cuda")
@@ -28,37 +27,56 @@ class STT:
         self.r = sr.Recognizer()
 
         self.r.pause_threshold = config["STT"]["pause_threshold"]
-        self.mic = sr.Microphone()
+        l = sr.Microphone.list_microphone_names()
+        if 'USBAudio1.0' in l:
+            self.mic = sr.Microphone(device_index=l.index('USBAudio1.0'))
+            logger.info("Microphone found!")
+        else:
+            sr.Microphone(device_index=l.index('MacBook Pro Microphone'))
+            logger.warning(f"Microphone not found. Using default microphone.")
+    
+    # def list_microphones(self):
+    #     return sr.Microphone.list_microphone_names()
 
-    def get_voice_as_text(self, pause_threshold=5, phrase_time_limit=0):
+    def get_voice_as_text(self, pause_threshold=7, phrase_time_limit=0):
+        """
+        Listen to user speech and transcribe it to text using Whisper API.
+        """
         response = {
             "success": True,
             "error": None,
             "transcription": None
         }
+        try:
+            with self.mic as source:
+                self.r.pause_threshold = pause_threshold
+                self.r.adjust_for_ambient_noise(source, 1) # adjust if too noisy
+                logger.info("listening...")
+                # Timeout: max time r.listen will wait until a speech is picked up
+                # Phrase time limit: max duration of audio clip being recorded
+                try:
+                    audio = self.r.listen(source, timeout=10, phrase_time_limit=phrase_time_limit)
+                except sr.WaitTimeoutError:
+                    response["success"] = False
+                    response["error"] = "Listening timed out while waiting for phrase to start"
+                    logger.warning("r.listen timeout.")
+                    logger.warning(response["error"])
+                    return response
 
-        with self.mic as source:
-            self.r.pause_threshold = pause_threshold
-            self.r.adjust_for_ambient_noise(source, 1)
-            logger.info("listening...")
-            # Timeout: max time r.listen will wait until a speech is picked up
-            # Phrase time limit: max duration of audio clip being recorded
-            try:
-                audio = self.r.listen(source, timeout=10, phrase_time_limit=phrase_time_limit)
-            except sr.WaitTimeoutError:
-                response["success"] = False
-                logger.warning("r.listen timeout.")
-                return response
+            wav_path = 'playback.wav'
+            with open(wav_path, "wb") as f:
+                f.write(audio.get_wav_data())
 
-        wav_path = 'playback.wav'
-        with open(wav_path, "wb") as f:
-            f.write(audio.get_wav_data())
-
-        # print(audio_np_array)
-        if config["is_playback"]:
-            logger.info("Start playback.")
-            # Play the saved audio
-            playsound(wav_path)
+            # print(audio_np_array)
+            if config["is_playback"]:
+                logger.info("Start playback.")
+                # Play the saved audio
+                playsound(wav_path)
+        
+        except Exception as e:
+            response["success"] = False
+            response["error"] = str(e)
+            logger.error(f"An error occurred: {response['error']}")
 
         # Transcribe
 

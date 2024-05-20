@@ -3,11 +3,8 @@ import LLM
 
 import gradio as gr
 
-# TODO: history saving/loading, independent/session LLM calls,
 
 # TODO: Implement this using following example as references.
-
-
 def sentence_builder(quantity, animal, countries, place, activity_list, morning):
     return f"""The {quantity} {animal}s from {" and ".join(countries)} went to the {place} where they {" and ".join(activity_list)} until the {"morning" if morning else "night"}"""
 
@@ -15,10 +12,10 @@ def sentence_builder(quantity, animal, countries, place, activity_list, morning)
 demo = gr.Interface(
     sentence_builder,
     [
-        gr.Slider(1, 20, value=4, label="How many rounds of interaction before summarization?", info="Choose between 1 and 10"),
-        # gr.Dropdown(
-        #     ["cat", "dog", "bird"], label="Animal", info="Will add more animals later!"
-        # ),
+        gr.Slider(2, 20, value=4, label="Count", info="Choose between 2 and 20"),
+        gr.Dropdown(
+            ["cat", "dog", "bird"], label="Animal", info="Will add more animals later!"
+        ),
         gr.CheckboxGroup(["USA", "Japan", "Pakistan"], label="Countries", info="Where are they from?"),
         gr.Radio(["park", "zoo", "road"], label="Location", info="Where did they go?"),
         gr.Dropdown(
