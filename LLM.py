@@ -151,4 +151,3 @@ class LLM:
         llm_response = self.request_independent_response(prompt + str(user_response))
         return llm_response
 
-    def
