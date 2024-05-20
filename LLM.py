@@ -143,9 +143,9 @@ class LLM:
             logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
                            f"{len(self.conversation)} rounds.")
             rounds_to_sum = len(self.conversation) - 2  # Keep initial instruction.
-        last_n_convsersation = self.conversation[-rounds_to_sum:]
+        last_n_conversation = self.conversation[-rounds_to_sum:]
         user_response = []
-        for msg in last_n_convsersation:
+        for msg in last_n_conversation:
             if msg["role"] == "user":
                 user_response.append(msg["content"])
         llm_response = self.request_independent_response(prompt + str(user_response))
