@@ -33,11 +33,13 @@ config = {
         {
             "Picture":
                 {
-                    "free_speech_watermark": "storytelling"
+                    "free_speech_watermark": "storytelling",
+                    "summary_prompt": ""
                 },
             "Semantic":
                 {
-                    "free_speech_watermark": "different game"
+                    "free_speech_watermark": "different game",
+                    "summary_prompt": ""
                 }
         },
 }
