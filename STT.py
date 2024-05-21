@@ -5,6 +5,7 @@ import numpy as np
 import whisper
 import speech_recognition as sr
 from playsound import playsound
+import time
 
 logger = logging.getLogger("HRI")
 
@@ -38,7 +39,7 @@ class STT:
     # def list_microphones(self):
     #     return sr.Microphone.list_microphone_names()
 
-    def get_voice_as_text(self, pause_threshold=7, phrase_time_limit=0):
+    def get_voice_as_text(self, pause_threshold=7, phrase_time_limit=0, delay_time=0):
         """
         Listen to user speech and transcribe it to text using Whisper API.
         """
@@ -50,7 +51,8 @@ class STT:
         try:
             with self.mic as source:
                 self.r.pause_threshold = pause_threshold
-                self.r.adjust_for_ambient_noise(source, 1) # adjust if too noisy
+                time.sleep(delay_time)
+                self.r.adjust_for_ambient_noise(source, 1)  # adjust if too noisy
                 logger.info("listening...")
                 # Timeout: max time r.listen will wait until a speech is picked up
                 # Phrase time limit: max duration of audio clip being recorded
