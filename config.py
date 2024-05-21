@@ -1,7 +1,7 @@
 config = {
     "is_using_voice": True,
     "is_playback": False,
-    "whisper_model_id": "tiny.en", #"medium.en",
+    "whisper_model_id": "tiny.en",  #"medium.en",
     "enable_LLM_module": True,
     "enable_TTS_module": True,
     # "wav_path": 'output.wav',
@@ -11,7 +11,7 @@ config = {
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "phrase_time_limit": 20,  # Max duration of a recorded audio clip
         },
-    "llm_model_id": "gpt-4o", #"gpt-4-turbo",
+    "llm_model_id": "gpt-4o",  #"gpt-4-turbo",
     "TTS":
         {
             "api_provider": "openai",  # unrealspeech or openai
@@ -28,28 +28,36 @@ config = {
                     "voice_id": "alloy"
                 }
         },
-    "Blossom": "Disabled", # Enabled or Disabled
+    "Blossom": "Disabled",  # Enabled or Disabled
     "Task":
         {
-           "Picture_1":
+            "Picture_1":
                 {
                     "free_speech_watermark": "storytelling",
-                    "prompt": "llm_prompt_task1_1", 
-                }, 
+                    "prompt": "llm_prompt_task1_1",
+                    "start_watermark": "storytelling",
+                    "end_watermark": "bye",
+                },
             "Picture_2":
                 {
                     "free_speech_watermark": "storytelling",
-                    "prompt": "llm_prompt_task1_2", 
+                    "prompt": "llm_prompt_task1_2",
+                    "start_watermark": "storytelling",
+                    "end_watermark": "bye",
                 },
             "Semantic_1":
                 {
                     "free_speech_watermark": "different game",
-                    "prompt": "llm_prompt_task2_1", 
+                    "prompt": "llm_prompt_task2_1",
+                    "start_watermark": "different game",
+                    "end_watermark": "next challenge",
                 },
             "Semantic_2":
                 {
                     "free_speech_watermark": "different game",
-                    "prompt": "llm_prompt_task2_2", 
+                    "prompt": "llm_prompt_task2_2",
+                    "start_watermark": "different game",
+                    "end_watermark": "next challenge",
                 }
         },
 }
