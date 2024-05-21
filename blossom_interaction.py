@@ -42,8 +42,5 @@ class BlossomInterface:
 # bl.load_sequences()
 # while True:
 #     sequence_id = input("Input sequence: ")
-#     bl.do_sequence("grand/grand1")
-#     bl.do_sequence("yes")
-#     bl.do_sequence("grand/grand2")
 #     bl.do_sequence(sequence_id)
 # bl.do_sequence("reset")
