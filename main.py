@@ -33,7 +33,7 @@ if __name__ == '__main__':
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt)
     bl = None
-    if config["Blossom"] == "Enabled":
+    if config["Blossom"]["status"] == "Enabled":
         bl = BlossomInterface()
     if config["TTS"]["api_provider"] == "unrealspeech":
         tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"))
@@ -63,12 +63,12 @@ if __name__ == '__main__':
         if config["Task"][TASK]["free_speech_watermark"] in llm_response_text and len(llm_response_text) > 5: # does this handle the case where people ask for repetition or say something else?
             free_speech = True
             logger.info("Free speech watermark detected.")
-        if config["Blossom"] == "Enabled":
+        if config["Blossom"]["status"] == "Enabled":
             bl_thread = threading.Thread(target=bl.do_sequence, args=("grand/grand1",), kwargs={"delay_time": 10})
             bl_thread.start()
 
         tts.play_text_audio(llm_response_text)
 
-        if config["Blossom"] == "Enabled":
+        if config["Blossom"]["status"] == "Enabled":
             bl_thread.join()
 
