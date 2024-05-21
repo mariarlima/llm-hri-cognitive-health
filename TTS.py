@@ -3,8 +3,17 @@ from unrealspeech import UnrealSpeechAPI, play, save
 from playsound import playsound
 from config import config
 import logging
+from pydub import AudioSegment
+from io import BytesIO
 
 logger = logging.getLogger("HRI")
+
+
+def get_audio_length(audio_bytes):
+    audio = AudioSegment.from_file(BytesIO(audio_bytes), format="mp3")
+    duration_in_milliseconds = len(audio)
+    duration_in_seconds = duration_in_milliseconds / 1000
+    return duration_in_seconds
 
 
 class TTS:
@@ -26,11 +35,13 @@ class TTS:
 
     def play_text_audio(self, text):
         logger.info("Calling TTS API...")
+        audio_bytes = None
         if self.api_provider == "unrealspeech":
             tts_audio_data = self.speech_api.speech(text=text, voice_id=self.voice_id, bitrate=self.bit_rate,
                                                     speed=self.speed,
                                                     pitch=self.pitch)
             logger.info("Playing TTS Audio...")
+            audio_bytes = tts_audio_data
             play(tts_audio_data)
         elif self.api_provider == "openai":
             tts_audio_data = self.openai_api.audio.speech.create(
@@ -39,4 +50,6 @@ class TTS:
                 input=text
             )
             logger.info("Playing TTS Audio...")
+            audio_bytes = tts_audio_data.content
             play(tts_audio_data.content)
+        return get_audio_length(audio_bytes)

@@ -7,9 +7,17 @@ config = {
     # "wav_path": 'output.wav',
     "STT":
         {
-            "pause_threshold": 7,  # Only stop recording after 5 second of silence
+            "free_speech":
+                {
+                    "pause_threshold": 7,  # Only stop recording after 5 second of silence
+                    "phrase_time_limit": 60,  # Max duration of a recorded audio clip
+                },
+            "normal":
+                {
+                    "pause_threshold": 7,  # Only stop recording after 5 second of silence
+                    "phrase_time_limit": 0,  # Max duration of a recorded audio clip
+                },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
-            "phrase_time_limit": 20,  # Max duration of a recorded audio clip
         },
     "llm_model_id": "gpt-4o",  # "gpt-4-turbo",
     "TTS":
@@ -19,7 +27,7 @@ config = {
                 {
                     "voice_id": "Amy",
                     "bit_rate": "192k",
-                    "speed": -0.17,
+                    "speed": -0.2,
                     "pitch": 1.04,
                 },
             "openai":
@@ -30,7 +38,7 @@ config = {
         },
     "Blossom":
         {
-            "status": "Disabled",  # Enabled or Disabled
+            "status": "Enabled",  # Enabled or Disabled
             "sequence_list":
                 {
                     "start": ["cognitive/intro_01", "cognitive/intro_02", "cognitive/intro_03"],
@@ -39,6 +47,7 @@ config = {
                                "cognitive/encouragement_06"],
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"]
                 },
+            "delay": 15
         },
     "Task":
         {
