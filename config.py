@@ -1,7 +1,7 @@
 config = {
     "is_using_voice": True,
     "is_playback": False,
-    "whisper_model_id": "tiny.en",  #"medium.en",
+    "whisper_model_id": "tiny.en",  # "medium.en",
     "enable_LLM_module": True,
     "enable_TTS_module": True,
     # "wav_path": 'output.wav',
@@ -11,7 +11,7 @@ config = {
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "phrase_time_limit": 20,  # Max duration of a recorded audio clip
         },
-    "llm_model_id": "gpt-4o",  #"gpt-4-turbo",
+    "llm_model_id": "gpt-4o",  # "gpt-4-turbo",
     "TTS":
         {
             "api_provider": "openai",  # unrealspeech or openai
@@ -28,7 +28,18 @@ config = {
                     "voice_id": "alloy"
                 }
         },
-    "Blossom": "Disabled",  # Enabled or Disabled
+    "Blossom":
+        {
+            "status": "Disabled",  # Enabled or Disabled
+            "sequence_list":
+                {
+                    "start": ["cognitive/intro_01", "cognitive/intro_02", "cognitive/intro_03"],
+                    "prompt": ["cognitive/encouragement_01", "cognitive/encouragement_02", "cognitive/encouragement_03",
+                               "cognitive/encouragement_04", "cognitive/encouragement_05",
+                               "cognitive/encouragement_06"],
+                    "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"]
+                },
+        },
     "Task":
         {
             "Picture_1":
