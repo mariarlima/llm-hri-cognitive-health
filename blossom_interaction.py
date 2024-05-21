@@ -2,6 +2,7 @@ import random
 import sys
 import time
 import logging
+from config import config
 
 sys.path.append("./blossom-public")
 from blossompy import Blossom
@@ -19,13 +20,25 @@ class BlossomInterface:
     def reset(self):
         self.bl.do_sequence("reset")
 
+    def do_random_sequence_from_list(self, seq_list, delay_time=0):
+        random.shuffle(seq_list)
+        time.sleep(delay_time)
+        logger.info(f"Blossom playing sequence {seq_list[0]}")
+        self.bl.do_sequence(seq_list[0])
+
     def do_idle_sequence(self, delay_time=0):
         idle_sequences = ["breathing/exhale", "breathing/inhale", "fear/fear_startled", "happy/happy_lookingup",
                           "sad/sad_downcast"]
-        random.shuffle(idle_sequences)
-        time.sleep(delay_time)
-        logger.info(f"Blossom playing sequence {idle_sequences[0]}")
-        self.bl.do_sequence(idle_sequences[0])
+        self.do_random_sequence_from_list(idle_sequences, delay_time)
+
+    def do_start_sequence(self, delay_time=0):
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["Start"], delay_time)
+
+    def do_prompt_sequence(self, delay_time=0):
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["Prompt"], delay_time)
+
+    def do_end_sequence(self, delay_time=0):
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["end"], delay_time)
 
     def do_sequence(self, seq="reset", delay_time=0):
         logger.info(f"Blossom start playing sequence {seq} with {delay_time} s of delay.")
