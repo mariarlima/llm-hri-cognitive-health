@@ -6,24 +6,29 @@ from config import config
 import os
 import threading
 import time
+from pydub import AudioSegment
+from pydub.playback import play
 
 load_dotenv()
-
-if config["TTS"]["api_provider"] == "unrealspeech":
-    tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"))
 
 if config["Blossom"]["status"] == "Enabled":
     bl = BlossomInterface()
 
-speech = [
-    "Hello! I am Blossom, I am a robot from USC.",
-    "I can talk and move my body like this. Because I am a robot, you will hear these sounds that my body makes, I’m sorry!",
-    "Let me welcome you to our research study. It’s great to meet you!",
-    "Let me tell you what we’ll be doing today. We have two fun games lined up.",
-    "I’ll explain each game and give you time to answer. I’ll give you some hints along the way by asking you questions. One of the games will be to describe a picture that you will see on a screen next to me, and the other one to think of words."
-    "Just so you know, I can only focus on one thing at a time, so I won’t be able to answer other questions during the games. But if you don’t understand something or want me to repeat, please let me know!",
-    "Alright, before we begin, my friend Maria will check if you can hear me properly. Talk to you soon! "
-]
+audio_dir = "./blossom_intro_files_mp3/"
+
+def play_mp3(file_path):
+    audio = AudioSegment.from_mp3(file_path)
+    play(audio)
+
+# speech = [
+#     "Hello! I am Blossom, I am a robot from USC.",
+#     "I can talk and move my body like this. Because I am a robot, you will hear these sounds that my body makes, I’m sorry!",
+#     "Let me welcome you to our research study. It’s great to meet you!",
+#     "Let me tell you what we’ll be doing today. We have two fun games lined up.",
+#     "I’ll explain each game and give you time to answer. I’ll give you some hints along the way by asking you questions. One of the games will be to describe a picture that you will see on a screen next to me, and the other one to think of words."
+#     "Just so you know, I can only focus on one thing at a time, so I won’t be able to answer other questions during the games. But if you don’t understand something or want me to repeat, please let me know!",
+#     "Alright, before we begin, my friend Maria will check if you can hear me properly. Talk to you soon! "
+# ]
 
 blossom = [
     "happy/happy_nodding",
@@ -35,23 +40,25 @@ blossom = [
     "grand/grand4"
 ]
 
-def play_phrases_and_sequences(speech, blossom):
-    for ind, text in enumerate(speech):
+def play_phrases_and_sequences(blossom, audio_dir):
+    audio_files = os.listdir(audio_dir)
+    for ind, seq in enumerate(blossom):
         if config["Blossom"]["status"] == "Enabled":
             bl_thread = threading.Thread(
                 target=bl.do_sequence, 
                 kwargs={
-                    "seq": blossom[ind], 
+                    "seq": seq, 
                     "delay_time": config["Blossom"]["delay_intro"]
                     }
                 )
             bl_thread.start()
         
-        tts.play_text_audio(text)
+        audio_file_path = os.path.join(audio_dir, audio_files[ind])
+        play_mp3(audio_file_path)
 
         if config["Blossom"]["status"] == "Enabled":
             bl_thread.join()
         
         time.sleep(1)
 
-play_phrases_and_sequences(speech, blossom)
+play_phrases_and_sequences(blossom, audio_dir)
