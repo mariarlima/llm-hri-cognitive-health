@@ -52,10 +52,10 @@ class BlossomInterface:
     #     self.bl.do_sequence(seq)
 
 
-# bl = Blossom(sequence_dir='./blossom-public/blossompy/src/sequences')
-# bl.connect()  # safe init and connects to blossom and puts blossom in reset position
-# bl.load_sequences()
-# while True:
-#     sequence_id = input("Input sequence: ")
-#     bl.do_sequence(sequence_id)
-# bl.do_sequence("reset")
+bl = Blossom(sequence_dir='./blossom-public/blossompy/src/sequences')
+bl.connect()  # safe init and connects to blossom and puts blossom in reset position
+bl.load_sequences()
+while True:
+    sequence_id = input("Input sequence: ")
+    bl.do_sequence(sequence_id)
+bl.do_sequence("reset")

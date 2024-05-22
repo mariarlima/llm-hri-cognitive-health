@@ -4,7 +4,6 @@ config = {
     "whisper_model_id": "tiny.en",  # "medium.en",
     "enable_LLM_module": True,
     "enable_TTS_module": True,
-    # "wav_path": 'output.wav',
     "STT":
         {
             "free_speech":
@@ -27,7 +26,7 @@ config = {
                 {
                     "voice_id": "Amy",
                     "bit_rate": "192k",
-                    "speed": -0.2,
+                    "speed": -0.25,
                     "pitch": 1.04,
                 },
             "openai":
@@ -45,9 +44,10 @@ config = {
                     "prompt": ["cognitive/encouragement_01", "cognitive/encouragement_02", "cognitive/encouragement_03",
                                "cognitive/encouragement_04", "cognitive/encouragement_05",
                                "cognitive/encouragement_06"],
-                    "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"]
+                    "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
-            "delay": 15
+            "delay": 15,
+            "delay_intro":10,
         },
     "Task":
         {
@@ -57,6 +57,7 @@ config = {
                     "prompt": "llm_prompt_task1_1",
                     "start_watermark": "storytelling",
                     "end_watermark": "bye",
+                    "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
                 },
             "Picture_2":
                 {
@@ -64,6 +65,7 @@ config = {
                     "prompt": "llm_prompt_task1_2",
                     "start_watermark": "storytelling",
                     "end_watermark": "bye",
+                    "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
                 },
             "Semantic_1":
                 {
@@ -71,6 +73,7 @@ config = {
                     "prompt": "llm_prompt_task2_1",
                     "start_watermark": "different game",
                     "end_watermark": "next challenge",
+                    "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Bye"
                 },
             "Semantic_2":
                 {
@@ -78,6 +81,7 @@ config = {
                     "prompt": "llm_prompt_task2_2",
                     "start_watermark": "different game",
                     "end_watermark": "next challenge",
+                    "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
                 }
         },
 }
