@@ -47,8 +47,8 @@ config = {
                                "cognitive/encouragement_06"],
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
-            "delay": 15,
-            "delay_intro":0.8,
+            "delay": 0.8,
+            "delay_intro": 0.8,
         },
     "Task":
         {
