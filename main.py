@@ -1,4 +1,5 @@
 import os
+import queue
 import threading
 from dotenv import load_dotenv
 
@@ -27,6 +28,7 @@ max_duration = 4 * 60  # 4 minutes in seconds
 # TODO: implement async audio and https request to achieve a better latency for interaction
 if __name__ == '__main__':
     load_dotenv()
+    signal_queue = queue.Queue()
     stt = STT.STT()
     # choose appropriate prompt based on task and version/session
     prompt_name = config["Task"][TASK]["prompt"]
@@ -37,9 +39,10 @@ if __name__ == '__main__':
     if config["Blossom"]["status"] == "Enabled":
         bl = BlossomInterface()
     if config["TTS"]["api_provider"] == "unrealspeech":
-        tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"))
+        tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"), signal_queue)
     else:  # fallback to openai tts
-        tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), api_provider="openai")
+        tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), signal_queue, api_provider="openai")
+    bl_thread = None
 
     # Let LLM generate intro
     logger.info("Main interaction loop starts.")
@@ -64,32 +67,39 @@ if __name__ == '__main__':
             if config["Blossom"]["status"] == "Enabled":
                 bl_thread = threading.Thread(target=bl.do_start_sequence(), args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
-                bl_thread.start()
-            # listen to user 
-            stt_response = stt.get_voice_as_text(phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
-                                                 pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+                # bl_thread.start()
+            # listen to user
+            if config["is_using_voice"]:
+                stt_response = stt.get_voice_as_text(phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
+                                                    pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+            else:
+                user_input_text = input("Enter Prompts: ")
         # Case 2: end of interaction (from LLM)
         elif end_task:
             if config["Blossom"]["status"] == "Enabled":
                 bl_thread = threading.Thread(target=bl.do_end_sequence(), args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
-                bl_thread.start()
+                # bl_thread.start()
             # end here, will not listen to user
             break
         
         # Case 3: ongoing interaction/prompting
         else:
-            # listen to user 
-            stt_response = stt.get_voice_as_text(phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
+            # listen to user
+            if config["is_using_voice"]:
+                stt_response = stt.get_voice_as_text(phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
                                                  pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
             # trigger random behaviour Blossom (prompt)
             if config["Blossom"]["status"] == "Enabled":
                 bl_thread = threading.Thread(target=bl.do_prompt_sequence(), args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
-                bl_thread.start()
-        
-        if stt_response["success"]:
-            user_input_text = stt_response["transcription"]["text"]
+            else:
+                user_input_text = input("Enter Prompts: ")
+                # bl_thread.start()
+
+        if config["is_using_voice"]:
+            if stt_response["success"]:
+                user_input_text = stt_response["transcription"]["text"]
         # TODO: no blossom exception handling
         # TODO: What should I put in prompt for no voice / stt error? - System message / user message with empty string
 
@@ -114,16 +124,22 @@ if __name__ == '__main__':
             logger.info("End of task detected.")
 
         # TTS audio response
-        tts.play_text_audio(llm_response_text)
-
+        tts_thread = threading.Thread(target=tts.play_text_audio, args=(llm_response_text,))
+        tts_thread.start()
+        audio_length = signal_queue.get()  # wait for TTS audio to load
         if config["Blossom"]["status"] == "Enabled":
-            bl_thread.join()
+            bl_thread.start()
+            # bl_thread.join()
+        logger.info(f"Audio length: {audio_length} s, put main thread to sleep {audio_length + 0.5}s.")
+        time.sleep(audio_length + 0.5)
+        logger.info("Main thread wakes up.")
 
     # play audio for end of task out of main loop
     if end_task:
         end_text = config["Task"][TASK]["end_blossom"]
+        bl_thread.start()
         tts.play_text_audio(end_text)
 
     # Close Blossom thread out of main loop
-    if config["Blossom"]["status"] == "Enabled":
-        bl_thread.join()
+    # if config["Blossom"]["status"] == "Enabled":
+    #     bl_thread.join()
