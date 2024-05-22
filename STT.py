@@ -27,14 +27,17 @@ class STT:
         logger.info("Initializing Mic...")
         self.r = sr.Recognizer()
 
-        self.r.pause_threshold = config["STT"]["pause_threshold"]
-        l = sr.Microphone.list_microphone_names()
-        if 'USBAudio1.0' in l:
-            self.mic = sr.Microphone(device_index=l.index('USBAudio1.0'))
+        self.r.pause_threshold = config["STT"]["normal"]["pause_threshold"]
+        mic_list = sr.Microphone.list_microphone_names()
+        
+        if 'USBAudio1.0' in mic_list:
+            self.mic = sr.Microphone(device_index=mic_list.index('USBAudio1.0'))
             logger.info("Microphone found!")
-        else:
-            sr.Microphone(device_index=l.index('MacBook Pro Microphone'))
+        elif 'MacBook Pro Microphone' in mic_list:
+            self.mic = sr.Microphone(device_index=mic_list.index('MacBook Pro Microphone'))
             logger.warning(f"Microphone not found. Using default microphone.")
+        else:
+            self.mic = sr.Microphone()
     
     # def list_microphones(self):
     #     return sr.Microphone.list_microphone_names()
@@ -57,7 +60,7 @@ class STT:
                 # Timeout: max time r.listen will wait until a speech is picked up
                 # Phrase time limit: max duration of audio clip being recorded
                 try:
-                    audio = self.r.listen(source, timeout=10, phrase_time_limit=phrase_time_limit)
+                    audio = self.r.listen(source, timeout=config["STT"]["timeout"], phrase_time_limit=phrase_time_limit)
                 except sr.WaitTimeoutError:
                     response["success"] = False
                     response["error"] = "Listening timed out while waiting for phrase to start"

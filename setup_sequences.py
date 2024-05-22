@@ -17,3 +17,5 @@ combine_sequences(["sesame/sesame10", "happy/happy_nodding"], "encouragement_06"
 combine_sequences(["grand/grand12", "happy/happy_20181204_120338"], "end_01")
 combine_sequences(["happy/happy_daydream", "grand/grand8"], "end_02")
 combine_sequences(["grand/grand4", "happy/happy", "grand/grand10", "happy/happy"], "end_03")
+combine_sequences(["grand/grand4", "cognitive/encouragement_04"], "extra_01")
+combine_sequences(["sesame/sesame10", "grand/grand12"], "extra_02")

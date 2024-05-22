@@ -32,6 +32,7 @@ class TTS:
                                                     pitch=self.pitch)
             logger.info("Playing TTS Audio...")
             play(tts_audio_data)
+        
         elif self.api_provider == "openai":
             tts_audio_data = self.openai_api.audio.speech.create(
                 model=self.model_id,
