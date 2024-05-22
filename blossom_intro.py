@@ -33,10 +33,10 @@ def play_mp3(file_path):
 blossom = [
     "happy/happy_nodding",
     "happy/happy_20181204_130211",
-    "happy/happy_8_109",
+    "cognitive/extra_03",
     "happy/happy_nodding",
-    "cognitive/extra_01",
-    "cognitive/extra_02",
+    "cognitive/extra_04",
+    "cognitive/extra_05",
     "grand/grand4"
 ]
 
