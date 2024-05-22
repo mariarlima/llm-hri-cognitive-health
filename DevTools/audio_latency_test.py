@@ -3,6 +3,8 @@ from io import BytesIO
 import sounddevice as sd
 import soundfile as sf
 from unrealspeech import UnrealSpeechAPI, play, save
+from blossom_interaction import BlossomInterface
+import os
 
 def read_mp3_as_bytes(file_path):
     with open(file_path, 'rb') as file:
@@ -17,11 +19,3 @@ def get_audio_length(audio_bytes):
     return duration_in_seconds
 
 
-# Example usage
-file_path_ = '../voiceover1.mp3'
-audio_bytes_ = read_mp3_as_bytes(file_path_)
-duration = get_audio_length(audio_bytes_)
-print(f"Audio length: {duration} seconds")
-# sd.play(*sf.read(BytesIO(audio_bytes_)))
-play(audio_bytes_)
-sd.wait()
