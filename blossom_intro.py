@@ -33,15 +33,16 @@ def play_mp3(file_path):
 blossom = [
     "happy/happy_nodding",
     "happy/happy_20181204_130211",
-    "happy/happy_8_10",
+    "happy/happy_8_109",
     "happy/happy_nodding",
     "cognitive/extra_01",
     "cognitive/extra_02",
     "grand/grand4"
 ]
 
-def play_phrases_and_sequences(blossom, audio_dir):
-    audio_files = os.listdir(audio_dir)
+audio_files = ['voice_1.mp3', 'voice_2.mp3', 'voice_3.mp3', 'voice_4.mp3', 'voice_5.mp3', 'voice_6.mp3', 'voice_7.mp3']
+
+def play_phrases_and_sequences(blossom, audio_files):
     for ind, seq in enumerate(blossom):
         if config["Blossom"]["status"] == "Enabled":
             bl_thread = threading.Thread(
@@ -55,10 +56,7 @@ def play_phrases_and_sequences(blossom, audio_dir):
         
         audio_file_path = os.path.join(audio_dir, audio_files[ind])
         play_mp3(audio_file_path)
-
-        if config["Blossom"]["status"] == "Enabled":
-            bl_thread.join()
         
         time.sleep(1)
 
-play_phrases_and_sequences(blossom, audio_dir)
+play_phrases_and_sequences(blossom, audio_files)
