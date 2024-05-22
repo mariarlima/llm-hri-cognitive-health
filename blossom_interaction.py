@@ -9,6 +9,7 @@ from blossompy import Blossom
 
 logger = logging.getLogger("HRI")
 
+
 class BlossomInterface:
     def __init__(self):
         self.bl = Blossom(sequence_dir='./blossom-public/blossompy/src/sequences')
@@ -22,7 +23,7 @@ class BlossomInterface:
 
     def do_random_sequence_from_list(self, seq_list, delay_time=0):
         random.shuffle(seq_list)
-        time.sleep(10)
+        time.sleep(delay_time)
         logger.info(f"Blossom playing sequence {seq_list[0]}")
         self.bl.do_sequence(seq_list[0])
 
@@ -42,9 +43,9 @@ class BlossomInterface:
 
     def do_sequence(self, seq="reset", delay_time=0):
         logger.info(f"Blossom start playing sequence {seq} with {delay_time} s of delay.")
-        print(f"Signal Received, delay: {delay_time}")
+        # print(f"Signal Received, delay: {delay_time}")
         time.sleep(delay_time)
-        print("Exit Sleep")
+        # print("Exit Sleep")
         logger.info(f"Blossom playing sequence {seq}")
         self.bl.do_sequence(seq)
 
@@ -52,10 +53,10 @@ class BlossomInterface:
     #     self.bl.do_sequence(seq)
 
 
-bl = Blossom(sequence_dir='./blossom-public/blossompy/src/sequences')
-bl.connect()  # safe init and connects to blossom and puts blossom in reset position
-bl.load_sequences()
-while True:
-    sequence_id = input("Input sequence: ")
-    bl.do_sequence(sequence_id)
-bl.do_sequence("reset")
+# bl = Blossom(sequence_dir='./blossom-public/blossompy/src/sequences')
+# bl.connect()  # safe init and connects to blossom and puts blossom in reset position
+# bl.load_sequences()
+# while True:
+#     sequence_id = input("Input sequence: ")
+#     bl.do_sequence(sequence_id)
+# bl.do_sequence("reset")

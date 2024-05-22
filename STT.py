@@ -11,7 +11,7 @@ logger = logging.getLogger("HRI")
 
 
 class STT:
-    def __init__(self,mic_index=None):
+    def __init__(self, mic_index=None):
         # Initialize whisper model
         if torch.cuda.is_available():
             device = torch.device("cuda")
@@ -29,7 +29,7 @@ class STT:
 
         self.r.pause_threshold = config["STT"]["normal"]["pause_threshold"]
         mic_list = sr.Microphone.list_microphone_names()
-        
+
         if 'USBAudio1.0' in mic_list:
             self.mic = sr.Microphone(device_index=mic_list.index('USBAudio1.0'))
             logger.info("Microphone found!")
@@ -38,7 +38,7 @@ class STT:
             logger.warning(f"Microphone not found. Using default microphone.")
         else:
             self.mic = sr.Microphone()
-    
+
     # def list_microphones(self):
     #     return sr.Microphone.list_microphone_names()
 
@@ -77,7 +77,7 @@ class STT:
                 logger.info("Start playback.")
                 # Play the saved audio
                 playsound(wav_path)
-        
+
         except Exception as e:
             response["success"] = False
             response["error"] = str(e)

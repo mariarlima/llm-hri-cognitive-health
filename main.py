@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from config import config
 import logging
 import logging_config
-import time 
+import time
 
 # logging_config.configure_logging()
 logger = logging.getLogger("HRI")
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     while True:
         user_input_text = ""
         stt_response = None
-        
+
         # Case 1: free description
         if free_task:
             free_task = False
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                 bl_thread.start()
             # end here, not using microphone anymore
             break
-        
+
         # Case 2: ongoing interaction/prompting
         else:
             # listen to user 
@@ -93,12 +93,12 @@ if __name__ == '__main__':
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
                 bl_thread.start()
             # print(stt_response)
-        
+
         if stt_response["success"]:
             user_input_text = stt_response["transcription"]["text"]
         # TODO: no blossom exception handling
         # TODO: What should I put in prompt for no voice / stt error? - System message / user message with empty string
-        
+
         # Check the total interaction time
         elapsed_time = time.time() - start_time
         logger.info(f"Time of HRI: {elapsed_time} s")
@@ -111,7 +111,7 @@ if __name__ == '__main__':
         # LLM process the user input for next interaction turn
         llm_response_text = llm.request_response(user_input_text)
 
-        if config["Task"][TASK]["free_speech_watermark"] in llm_response_text and len(llm_response_text) > 5:  
+        if config["Task"][TASK]["free_speech_watermark"] in llm_response_text and len(llm_response_text) > 5:
             # TODO: check does this handle the case where people ask for repetition or say something else?
             free_task = True
             logger.info("Free speech watermark detected.")
@@ -125,12 +125,9 @@ if __name__ == '__main__':
 
         # TTS audio response
         tts.play_text_audio(llm_response_text)
-        
 
         if config["Blossom"]["status"] == "Enabled":
             bl_thread.join()
-
-        
 
     # play audio for end of task out of main loop
     if end_task:

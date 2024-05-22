@@ -111,7 +111,6 @@ llm_prompt_task2_2 = [
 ]
 
 
-
 class LLM_Role(Enum):
     MAIN = 1
     SUMMARY = 2

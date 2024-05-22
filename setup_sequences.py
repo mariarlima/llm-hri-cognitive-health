@@ -5,7 +5,8 @@ combine_sequences(["grand/grand1", "anger/anger_0_109", "yes", "anger/anger_scre
 
 combine_sequences(["amazon_demo/Introduction_NameAsking", "amazon_demo/Introduction_MakeFriends_Yes"], "intro_01")
 combine_sequences(["amazon_demo/Introduction_MakeFriends", "amazon_demo/Personalization_BecomingFriends"], "intro_02")
-combine_sequences(["amazon_demo/Introduction_MakeFriends_Yes", "amazon_demo/Personalization_BecomingFriends"], "intro_03")
+combine_sequences(["amazon_demo/Introduction_MakeFriends_Yes", "amazon_demo/Personalization_BecomingFriends"],
+                  "intro_03")
 
 combine_sequences(["happy/happy_nodding", "happy/happy_8_109"], "encouragement_01")
 combine_sequences(["happy/happy_20181204_130211"], "encouragement_02")

@@ -6,6 +6,7 @@ from unrealspeech import UnrealSpeechAPI, play, save
 from blossom_interaction import BlossomInterface
 import os
 
+
 def read_mp3_as_bytes(file_path):
     with open(file_path, 'rb') as file:
         audio_bytes = file.read()
@@ -17,5 +18,3 @@ def get_audio_length(audio_bytes):
     duration_in_milliseconds = len(audio)
     duration_in_seconds = duration_in_milliseconds / 1000
     return duration_in_seconds
-
-
