@@ -47,7 +47,7 @@ config = {
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
             "delay": 15,
-            "delay_intro":10,
+            "delay_intro":0.8,
         },
     "Task":
         {

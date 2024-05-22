@@ -35,16 +35,23 @@ blossom = [
     "grand/grand4"
 ]
 
-for text in speech:
-    ind = text.index()
-    if config["Blossom"]["status"] == "Enabled":
-        bl_thread = threading.Thread(target=bl.do_sequence(seq = blossom[ind]), args=(),
-                                             kwargs={"delay_time": config["Blossom"]["delay"]})
-        bl_thread.start()
+def play_phrases_and_sequences(speech, blossom):
+    for ind, text in enumerate(speech):
+        if config["Blossom"]["status"] == "Enabled":
+            bl_thread = threading.Thread(
+                target=bl.do_sequence, 
+                kwargs={
+                    "seq": blossom[ind], 
+                    "delay_time": config["Blossom"]["delay_intro"]
+                    }
+                )
+            bl_thread.start()
+        
+        tts.play_text_audio(text)
 
-    tts.play_text_audio(text)
+        if config["Blossom"]["status"] == "Enabled":
+            bl_thread.join()
+        
+        time.sleep(1)
 
-    if config["Blossom"]["status"] == "Enabled":
-        bl_thread.join()
-    
-    time.sleep(1)
+play_phrases_and_sequences(speech, blossom)
