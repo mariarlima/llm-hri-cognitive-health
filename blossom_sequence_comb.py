@@ -28,5 +28,4 @@ def combine_sequences(sequences: list, sequence_name=None):
             output_sequence["animation"] = sequence_name
             json.dump(output_sequence, outfile, indent=2)
 
-
 # combine_sequences(["yes", "no"], "yes_no")

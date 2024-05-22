@@ -19,7 +19,8 @@ demo = gr.Interface(
         gr.CheckboxGroup(["USA", "Japan", "Pakistan"], label="Countries", info="Where are they from?"),
         gr.Radio(["park", "zoo", "road"], label="Location", info="Where did they go?"),
         gr.Dropdown(
-            ["ran", "swam", "ate", "slept"], value=["swam", "slept"], multiselect=True, label="Activity", info="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nisl eget ultricies aliquam, nunc nisl aliquet nunc, eget aliquam nisl nunc vel nisl."
+            ["ran", "swam", "ate", "slept"], value=["swam", "slept"], multiselect=True, label="Activity",
+            info="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nisl eget ultricies aliquam, nunc nisl aliquet nunc, eget aliquam nisl nunc vel nisl."
         ),
         gr.Checkbox(label="Morning", info="Did they do it in the morning?"),
     ],

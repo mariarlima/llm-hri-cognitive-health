@@ -43,7 +43,7 @@ class TTS:
             logger.info("Playing TTS Audio...")
             audio_bytes = tts_audio_data
             play(tts_audio_data)
-        
+
         elif self.api_provider == "openai":
             tts_audio_data = self.openai_api.audio.speech.create(
                 model=self.model_id,
