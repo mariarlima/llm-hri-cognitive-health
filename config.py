@@ -37,7 +37,7 @@ config = {
         },
     "Blossom":
         {
-            "status": "Disabled",  # Enabled or Disabled
+            "status": "Enabled",  # Enabled or Disabled
             "sequence_list":
                 {
                     "start": ["cognitive/intro_01", "cognitive/intro_02", "cognitive/intro_03"],

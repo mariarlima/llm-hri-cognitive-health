@@ -41,12 +41,15 @@ if __name__ == '__main__':
     else:  # fallback to openai tts
         tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), api_provider="openai")
 
+    # bl_thread = threading.Thread(target=bl.do_start_sequence(), args=(), kwargs={"delay_time": 5})
+    # bl_thread.start()
+    # bl_thread.join()
+    # input()
+
     # Let LLM generate intro
     logger.info("Main interaction loop starts.")
     free_task = False
     end_task = False
-
-    # trigger LLM with audio prompt
     llm_response_text = llm.request_response("Start")
     start_time = time.time()  # Track start time
     tts.play_text_audio(llm_response_text)
@@ -60,6 +63,8 @@ if __name__ == '__main__':
         if free_task:
             free_task = False
             # trigger random behaviour Blossom (start)
+        if free_task:
+            free_task = False
             if config["Blossom"]["status"] == "Enabled":
                 bl_thread = threading.Thread(target=bl.do_start_sequence(), args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})

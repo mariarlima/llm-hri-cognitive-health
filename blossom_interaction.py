@@ -32,10 +32,10 @@ class BlossomInterface:
         self.do_random_sequence_from_list(idle_sequences, delay_time)
 
     def do_start_sequence(self, delay_time=0):
-        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["Start"], delay_time)
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["start"], delay_time)
 
     def do_prompt_sequence(self, delay_time=0):
-        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["Prompt"], delay_time)
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["prompt"], delay_time)
 
     def do_end_sequence(self, delay_time=0):
         self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["end"], delay_time)
