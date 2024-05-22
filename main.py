@@ -31,6 +31,7 @@ if __name__ == '__main__':
     signal_queue = queue.Queue()
     stt = STT.STT()
     # choose appropriate prompt based on task and version/session
+    # print(config["STT"]["mic_time_offset"])
     prompt_name = config["Task"][TASK]["prompt"]
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
@@ -70,8 +71,9 @@ if __name__ == '__main__':
                 # bl_thread.start()
             # listen to user
             if config["is_using_voice"]:
-                stt_response = stt.get_voice_as_text(phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
-                                                    pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+                stt_response = stt.get_voice_as_text(
+                    phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
+                    pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
             else:
                 user_input_text = input("Enter Prompts: ")
         # Case 2: end of interaction (from LLM)
@@ -82,13 +84,14 @@ if __name__ == '__main__':
                 # bl_thread.start()
             # end here, will not listen to user
             break
-        
+
         # Case 3: ongoing interaction/prompting
         else:
             # listen to user
             if config["is_using_voice"]:
-                stt_response = stt.get_voice_as_text(phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
-                                                 pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+                stt_response = stt.get_voice_as_text(
+                    phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
+                    pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
             # trigger random behaviour Blossom (prompt)
             if config["Blossom"]["status"] == "Enabled":
                 bl_thread = threading.Thread(target=bl.do_prompt_sequence(), args=(),
@@ -130,8 +133,9 @@ if __name__ == '__main__':
         if config["Blossom"]["status"] == "Enabled":
             bl_thread.start()
             # bl_thread.join()
-        logger.info(f"Audio length: {audio_length} s, put main thread to sleep {audio_length + 0.5}s.")
-        time.sleep(audio_length + 0.5)
+        logger.info(
+            f"Audio length: {audio_length} s, put main thread to sleep {audio_length + config["STT"]["mic_time_offset"]}s.")
+        time.sleep(audio_length + config["STT"]["mic_time_offset"])
         logger.info("Main thread wakes up.")
 
     # play audio for end of task out of main loop

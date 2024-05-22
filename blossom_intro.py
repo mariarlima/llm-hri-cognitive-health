@@ -16,9 +16,11 @@ if config["Blossom"]["status"] == "Enabled":
 
 audio_dir = "./blossom_intro_files_mp3/"
 
+
 def play_mp3(file_path):
     audio = AudioSegment.from_mp3(file_path)
     play(audio)
+
 
 # speech = [
 #     "Hello! I am Blossom, I am a robot from USC.",
@@ -40,43 +42,25 @@ blossom = [
     "grand/grand4"
 ]
 
-<<<<<<< HEAD
-
-def play_phrases_and_sequences(speech, blossom):
-    for ind, text in enumerate(speech):
-=======
 audio_files = ['voice_1.mp3', 'voice_2.mp3', 'voice_3.mp3', 'voice_4.mp3', 'voice_5.mp3', 'voice_6.mp3', 'voice_7.mp3']
+
 
 def play_phrases_and_sequences(blossom, audio_files):
     for ind, seq in enumerate(blossom):
->>>>>>> 7ea10185605591b7c7838183bc1883d89a673af8
         if config["Blossom"]["status"] == "Enabled":
             bl_thread = threading.Thread(
                 target=bl.do_sequence,
                 kwargs={
-<<<<<<< HEAD
-                    "seq": blossom[ind],
-=======
-                    "seq": seq, 
->>>>>>> 7ea10185605591b7c7838183bc1883d89a673af8
+                    "seq": seq,
                     "delay_time": config["Blossom"]["delay_intro"]
                 }
             )
             bl_thread.start()
-<<<<<<< HEAD
 
-        tts.play_text_audio(text)
-
-        time.sleep(1)
-
-
-play_phrases_and_sequences(speech, blossom)
-=======
-        
         audio_file_path = os.path.join(audio_dir, audio_files[ind])
         play_mp3(audio_file_path)
-        
+
         time.sleep(1)
 
+
 play_phrases_and_sequences(blossom, audio_files)
->>>>>>> 7ea10185605591b7c7838183bc1883d89a673af8

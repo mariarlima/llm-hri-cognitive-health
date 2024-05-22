@@ -17,6 +17,7 @@ config = {
                     "phrase_time_limit": 0,  # Max duration of a recorded audio clip
                 },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
+            "mic_time_offset": 0.0,  # Time offset for mic to start recording
         },
     "llm_model_id": "gpt-4o",  # "gpt-4-turbo",
     "TTS":
