@@ -1,6 +1,7 @@
 from openai import OpenAI
 from unrealspeech import UnrealSpeechAPI, play, save
 from playsound import playsound
+import platform
 from config import config
 from utilities import get_audio_length
 import logging
@@ -43,8 +44,11 @@ class TTS:
                                                     speed=self.speed,
                                                     pitch=self.pitch)
             logger.info("Playing TTS Audio...")
-            audio_bytes = tts_audio_data
-            self.signal_queue.put(get_audio_length(audio_bytes))
+            if platform.system() == "Darwin":
+                print("Darwin")
+            elif platform.system() == "Windows":
+                audio_bytes = tts_audio_data
+                self.signal_queue.put(get_audio_length(audio_bytes))
             play(tts_audio_data)
 
         elif self.api_provider == "openai":
