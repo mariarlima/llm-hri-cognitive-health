@@ -3,19 +3,12 @@ from unrealspeech import UnrealSpeechAPI, play, save
 from playsound import playsound
 import platform
 from config import config
-from utilities import get_audio_length
+from utilities import get_audio_length, read_mp3_as_bytes, read_mp3_as_bytes_url
 import logging
 from pydub import AudioSegment
 from io import BytesIO
 
 logger = logging.getLogger("HRI")
-
-
-def get_audio_length(audio_bytes):
-    audio = AudioSegment.from_file(BytesIO(audio_bytes), format="mp3")
-    duration_in_milliseconds = len(audio)
-    duration_in_seconds = duration_in_milliseconds / 1000
-    return duration_in_seconds
 
 
 class TTS:
@@ -45,7 +38,8 @@ class TTS:
                                                     pitch=self.pitch)
             logger.info("Playing TTS Audio...")
             if platform.system() == "Darwin":
-                print("Darwin")
+                audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
+                self.signal_queue.put(get_audio_length(audio_bytes))
             elif platform.system() == "Windows":
                 audio_bytes = tts_audio_data
                 self.signal_queue.put(get_audio_length(audio_bytes))
@@ -61,4 +55,5 @@ class TTS:
             audio_bytes = tts_audio_data.content
             self.signal_queue.put(get_audio_length(audio_bytes))
             play(tts_audio_data.content)
+            # TODO: handle platform wise audio length calculation
         return get_audio_length(audio_bytes)
