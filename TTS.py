@@ -37,12 +37,14 @@ class TTS:
                                                     speed=self.speed,
                                                     pitch=self.pitch)
             logger.info("Playing TTS Audio...")
-            if platform.system() == "Darwin":
-                audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
-                self.signal_queue.put(get_audio_length(audio_bytes))
-            elif platform.system() == "Windows":
-                audio_bytes = tts_audio_data
-                self.signal_queue.put(get_audio_length(audio_bytes))
+            # if platform.system() == "Darwin":
+            #     audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
+            #     self.signal_queue.put(get_audio_length(audio_bytes))
+            # elif platform.system() == "Windows":
+            #     audio_bytes = tts_audio_data
+            #     self.signal_queue.put(get_audio_length(audio_bytes))
+            audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
+            self.signal_queue.put(get_audio_length(audio_bytes))
             play(tts_audio_data)
 
         elif self.api_provider == "openai":
@@ -55,5 +57,4 @@ class TTS:
             audio_bytes = tts_audio_data.content
             self.signal_queue.put(get_audio_length(audio_bytes))
             play(tts_audio_data.content)
-            # TODO: handle platform wise audio length calculation
         return get_audio_length(audio_bytes)

@@ -52,8 +52,14 @@ if __name__ == '__main__':
 
     llm_response_text = llm.request_response("Start")
     start_time = time.time()  # Track start time
-    tts.play_text_audio(llm_response_text)
-    signal_queue.get()  # Consume signal here, keep queue empty.
+    bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
+                                 kwargs={"delay_time": config["Blossom"]["delay_intro"]})
+    tts_thread = threading.Thread(target=tts.play_text_audio, args=(llm_response_text,))
+    tts_thread.start()
+    intro_audio_length = signal_queue.get()  # Consume signal here, keep queue empty.
+    bl_thread.start()
+    time.sleep(intro_audio_length)
+    bl.reset()  # Cutoff Blossom's movement after audio ends
     # Main interaction loop
     while True:
         user_input_text = ""
