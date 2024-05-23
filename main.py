@@ -53,7 +53,7 @@ if __name__ == '__main__':
     llm_response_text = llm.request_response("Start")
     start_time = time.time()  # Track start time
     tts.play_text_audio(llm_response_text)
-
+    signal_queue.get()  # Consume signal here, keep queue empty.
     # Main interaction loop
     while True:
         user_input_text = ""
@@ -66,7 +66,7 @@ if __name__ == '__main__':
         if free_task:
             free_task = False
             if config["Blossom"]["status"] == "Enabled":
-                bl_thread = threading.Thread(target=bl.do_start_sequence(), args=(),
+                bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
                 # bl_thread.start()
             # listen to user
@@ -79,7 +79,7 @@ if __name__ == '__main__':
         # Case 2: end of interaction (from LLM)
         elif end_task:
             if config["Blossom"]["status"] == "Enabled":
-                bl_thread = threading.Thread(target=bl.do_end_sequence(), args=(),
+                bl_thread = threading.Thread(target=bl.do_end_sequence, args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
                 # bl_thread.start()
             # end here, will not listen to user
@@ -92,9 +92,12 @@ if __name__ == '__main__':
                 stt_response = stt.get_voice_as_text(
                     phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
                     pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+            else:
+                user_input_text = input("Enter Prompts: ")
+
             # trigger random behaviour Blossom (prompt)
             if config["Blossom"]["status"] == "Enabled":
-                bl_thread = threading.Thread(target=bl.do_prompt_sequence(), args=(),
+                bl_thread = threading.Thread(target=bl.do_prompt_sequence, args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
             else:
                 user_input_text = input("Enter Prompts: ")
