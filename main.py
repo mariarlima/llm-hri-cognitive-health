@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
         # Check the total interaction time
         elapsed_time = time.time() - start_time
-        logger.info(f"Time of HRI: {elapsed_time} s")
+        logger.info(f"Time of HRI: {round(elapsed_time, 2)} s")
         if elapsed_time >= max_duration:
             logger.info("! Max duration reached. Ending interaction now")
             end_task = True

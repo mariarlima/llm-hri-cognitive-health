@@ -1,11 +1,9 @@
 import logging
 from config import config
 import torch
-import numpy as np
 import whisper
 import speech_recognition as sr
 from playsound import playsound
-import time
 
 logger = logging.getLogger("HRI")
 
@@ -35,14 +33,14 @@ class STT:
             logger.info("Microphone found!")
         elif 'MacBook Pro Microphone' in mic_list:
             self.mic = sr.Microphone(device_index=mic_list.index('MacBook Pro Microphone'))
-            logger.warning(f"Microphone not found. Using default microphone.")
+            logger.warning(f"Extra microphone not found. Using default microphone.")
         else:
             self.mic = sr.Microphone()
 
     # def list_microphones(self):
     #     return sr.Microphone.list_microphone_names()
 
-    def get_voice_as_text(self, pause_threshold=7, phrase_time_limit=0, delay_time=0):
+    def get_voice_as_text(self, pause_threshold, phrase_time_limit):
         """
         Listen to user speech and transcribe it to text using Whisper API.
         """
@@ -54,7 +52,6 @@ class STT:
         try:
             with self.mic as source:
                 self.r.pause_threshold = pause_threshold
-                time.sleep(delay_time)
                 self.r.adjust_for_ambient_noise(source, 1)  # adjust if too noisy
                 logger.info("listening...")
                 # Timeout: max time r.listen will wait until a speech is picked up

@@ -28,7 +28,7 @@ config = {
                     "voice_id": "Amy",
                     "bit_rate": "192k",
                     "speed": -0.25,
-                    "pitch": 1.04,
+                    "pitch": 1.09,
                 },
             "openai":
                 {
