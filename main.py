@@ -135,6 +135,7 @@ if __name__ == '__main__':
         if config["Blossom"]["status"] == "Enabled":
             bl_thread.start()
         time.sleep(audio_length + config["STT"]["mic_time_offset"])
+        bl.reset()  # Cutoff Blossom's movement after audio ends
         logger.info("Main thread wakes up.")
 
     # play audio for end of task out of main loop
