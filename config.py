@@ -8,21 +8,21 @@ config = {
         {
             "free_speech":
                 {
-                    "pause_threshold": 7,  # Only stop recording after 5 second of silence
+                    "pause_threshold": 4,  # Only stop recording after 5 second of silence
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
             "normal":
                 {
-                    "pause_threshold": 7,  # Only stop recording after 5 second of silence
+                    "pause_threshold": 3,  # Only stop recording after 5 second of silence
                     "phrase_time_limit": 0,  # Max duration of a recorded audio clip
                 },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
-            "mic_time_offset": 0.0,  # Time offset for mic to start recording
+            "mic_time_offset": -0.05,  # Time offset for mic to start recording, seconds
         },
     "llm_model_id": "gpt-4o",  # "gpt-4-turbo",
     "TTS":
         {
-            "api_provider": "openai",  # unrealspeech or openai
+            "api_provider": "unrealspeech",  # unrealspeech or openai
             "unrealspeech":
                 {
                     "voice_id": "Amy",

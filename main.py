@@ -90,8 +90,8 @@ if __name__ == '__main__':
             # listen to user
             if config["is_using_voice"]:
                 stt_response = stt.get_voice_as_text(
-                    phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
-                    pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+                    phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
+                    pause_threshold=config["STT"]["normal"]["pause_threshold"])
             else:
                 user_input_text = input("Enter Prompts: ")
 
@@ -101,7 +101,6 @@ if __name__ == '__main__':
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
             else:
                 user_input_text = input("Enter Prompts: ")
-                # bl_thread.start()
 
         if config["is_using_voice"]:
             if stt_response["success"]:
@@ -135,9 +134,6 @@ if __name__ == '__main__':
         audio_length = signal_queue.get()  # wait for TTS audio to load
         if config["Blossom"]["status"] == "Enabled":
             bl_thread.start()
-            # bl_thread.join()
-        logger.info(
-            f"Audio length: {audio_length} s, put main thread to sleep {audio_length + config["STT"]["mic_time_offset"]}s.")
         time.sleep(audio_length + config["STT"]["mic_time_offset"])
         logger.info("Main thread wakes up.")
 
@@ -146,7 +142,3 @@ if __name__ == '__main__':
         end_text = config["Task"][TASK]["end_blossom"]
         bl_thread.start()
         tts.play_text_audio(end_text)
-
-    # Close Blossom thread out of main loop
-    # if config["Blossom"]["status"] == "Enabled":
-    #     bl_thread.join()
