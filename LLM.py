@@ -2,6 +2,7 @@ from openai import OpenAI
 from enum import Enum
 from config import config
 import logging
+import json
 
 logger = logging.getLogger("HRI")
 
@@ -122,18 +123,21 @@ class LLM:
     def __init__(self, api_key, llm_role, llm_prompt):
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
+        self.full_conversation = llm_prompt
+        self.additional_info = None
         self.llm_role = llm_role
+        self.mod_instruction = None
 
     def request_independent_response(self, text):
         if self.llm_role == LLM_Role.MAIN:
             logger.error("Call request_response for cognitive task.")
         # TODO: what role should we assign in prompt?
-        # prompt = {"role": "user", "content": text}
+        prompt = [{"role": "user", "content": text}]
 
         logger.info("Calling LLM API")
         llm_response = self.openai.chat.completions.create(
             model=config["llm_model_id"],
-            messages=self.conversation
+            messages=prompt
         )
 
         logger.info("LLM response: %s", llm_response.choices[0].message.content)
@@ -146,12 +150,20 @@ class LLM:
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
 
-        logger.debug(self.conversation)
+        self.full_conversation.append(user_response_to_prompt)
+        actual_prompt = self.conversation
+        if self.additional_info is not None:
+            actual_prompt.append({"role": "system", "content": "The previous conversation has been summarized into "
+                                                               "this json text: " + json.dumps(self.additional_info)})
+        if self.mod_instruction is not None:
+            actual_prompt.append({"role": "system", "content": self.mod_instruction})
+
+        logger.debug(actual_prompt)
 
         logger.info("Calling LLM API")
         llm_response = self.openai.chat.completions.create(
             model=config["llm_model_id"],
-            messages=self.conversation
+            messages=actual_prompt
         )
         logger.info("LLM response: %s", llm_response.choices[0].message.content)
         llm_response_to_prompt = {
@@ -160,5 +172,50 @@ class LLM:
             "content": llm_response.choices[0].message.content
         }
         self.conversation.append(llm_response_to_prompt)
+        self.full_conversation.append(llm_response_to_prompt)
 
         return llm_response.choices[0].message.content
+
+    def save_history(self, filename="history.json"):
+        with open(filename) as history_file:
+            history_data = json.load(history_file)
+            self.conversation = history_data
+
+    def load_history(self, filename="history.json"):
+        with open(filename, "w") as history_file:
+            json.dump(self.conversation, history_file, indent=2)
+
+    def remove_last_n_rounds(self, n):
+        rounds_to_remove = n * 2  # TODO: this assume all conversation are two way interactions
+        if len(self.conversation) < rounds_to_remove:
+            logger.warning(f"Trying to remove {n} round(s) of interactions while there is only "
+                           f"{len(self.conversation)} rounds.")
+            rounds_to_remove = len(self.conversation)
+        self.conversation = self.conversation[:-rounds_to_remove]
+
+    def summarize_last_n_rounds(self, n, prompt=""):
+        rounds_to_sum = n * 2  # TODO: this assume all conversation are two way interactions
+        if len(self.conversation) < rounds_to_sum:
+            logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
+                           f"{len(self.conversation)} rounds.")
+            rounds_to_sum = len(self.conversation) - 2  # Keep initial instruction.
+        conversation_text = str(self.conversation[-rounds_to_sum:])
+        llm_response = self.request_independent_response(prompt + conversation_text)
+        return llm_response
+
+    def summarize_message(self, original_text, prompt):
+        llm_response = self.request_response(prompt + original_text)
+
+    def summarize_last_n_user_response(self, n, prompt):
+        rounds_to_sum = n * 2  # TODO: this assume all conversation are two way interactions
+        if len(self.conversation) < rounds_to_sum:
+            logger.warning(f"Trying to summarize {n} round(s) of interactions while there is only "
+                           f"{len(self.conversation)} rounds.")
+            rounds_to_sum = len(self.conversation) - 2  # Keep initial instruction.
+        last_n_conversation = self.conversation[-rounds_to_sum:]
+        user_response = []
+        for msg in last_n_conversation:
+            if msg["role"] == "user":
+                user_response.append(msg["content"])
+        llm_response = self.request_independent_response(prompt + str(user_response))
+        return llm_response
