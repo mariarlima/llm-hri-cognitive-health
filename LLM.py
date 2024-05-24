@@ -190,7 +190,7 @@ class LLM:
         return self.conversation
 
     def load_history(self, history):
-        logger.info(f"Loading history: {history}")
+        logger.info(f"Loading history: {json.dumps(history, indent=2)}")
         self.conversation = history
         self.full_conversation = history
 
