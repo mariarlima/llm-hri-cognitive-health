@@ -123,6 +123,7 @@ class LLM:
     def __init__(self, api_key, llm_role, llm_prompt):
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
+        # TODO: Do we need full_conversation?
         self.full_conversation = llm_prompt
         self.additional_info = None
         self.llm_role = llm_role
@@ -176,14 +177,22 @@ class LLM:
 
         return llm_response.choices[0].message.content
 
-    def save_history(self, filename="history.json"):
+    def load_history_from_file(self, filename="history.json"):
+        with open(filename, "w") as history_file:
+            json.dump(self.conversation, history_file, indent=2)
+
+    def save_history_to_file(self, filename="history.json"):
         with open(filename) as history_file:
             history_data = json.load(history_file)
             self.conversation = history_data
 
-    def load_history(self, filename="history.json"):
-        with open(filename, "w") as history_file:
-            json.dump(self.conversation, history_file, indent=2)
+    def save_history(self):
+        return self.conversation
+
+    def load_history(self, history):
+        logger.info(f"Loading history: {history}")
+        self.conversation = history
+        self.full_conversation = history
 
     def remove_last_n_rounds(self, n):
         rounds_to_remove = n * 2  # TODO: this assume all conversation are two way interactions
