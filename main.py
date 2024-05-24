@@ -55,8 +55,10 @@ if __name__ == '__main__':
 
     # TODO: Add save/load function here to resume from last interaction.
     # TODO: What should be saved? - elapsed time, conversation history, additional_info
-    # TODO: following variable is for testing
     load_save = False
+    load_save_command = input("Enter 'y' to load last save, anything else to start new interaction: ")
+    if load_save_command == "y":
+        load_save = True
     if (load_save):
         save_data = load_latest_save()
         start_time = time.time() - save_data["elapsed_time"]
