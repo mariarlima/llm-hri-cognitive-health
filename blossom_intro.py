@@ -33,16 +33,17 @@ def play_mp3(file_path):
 # ]
 
 blossom = [
+    "cognitive/extra_07",
+    "cognitive/extra_08",
     "happy/happy_nodding",
-    "happy/happy_20181204_130211",
-    "cognitive/extra_03",
-    "happy/happy_nodding",
-    "cognitive/extra_04",
-    "cognitive/extra_05",
-    "grand/grand4"
+    "cognitive/extra_09",
+    "grand/grand4",
+    "cognitive/extra_07",
+    "cognitive/extra_06",
+    "cognitive/extra_08"
 ]
 
-audio_files = ['voice_1.mp3', 'voice_2.mp3', 'voice_3.mp3', 'voice_4.mp3', 'voice_5.mp3', 'voice_6.mp3', 'voice_7.mp3']
+audio_files = ['new_voice_1.mp3', 'new_voice_2.mp3', 'new_voice_3.mp3', 'new_voice_4.mp3', 'new_voice_5.mp3', 'new_voice_6.mp3', 'new_voice_7.mp3', 'new_voice_8.mp3']
 
 
 def play_phrases_and_sequences(blossom, audio_files):
@@ -60,7 +61,7 @@ def play_phrases_and_sequences(blossom, audio_files):
         audio_file_path = os.path.join(audio_dir, audio_files[ind])
         play_mp3(audio_file_path)
 
-        time.sleep(1)
+        time.sleep(1.5)
 
 
 play_phrases_and_sequences(blossom, audio_files)
