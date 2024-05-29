@@ -8,7 +8,7 @@ import logging
 import logging_config
 import time
 
-from utilities import create_save, load_latest_save
+from utilities import create_save, load_latest_save, create_final_save
 
 # logging_config.configure_logging()
 logger = logging.getLogger("HRI")
@@ -179,9 +179,6 @@ if __name__ == '__main__':
         bl_thread.start()
         tts.play_text_audio(end_text)
 
-    # save_data = {
-    #     "full_conversation_history": llm.full_conversation,
-    #     "additional_info": llm.additional_info
-    # }
-    # save_filename = create_final_save(save_data)
-    # logger.info(f"Full interaction data saved at {save_filename}")
+    save_data = llm.save_final_history()
+    save_filename = create_final_save(save_data)
+    logger.info(f"Full interaction data saved at {save_filename}")

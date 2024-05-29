@@ -53,6 +53,13 @@ def create_save(save_data):
     return save_filename
 
 
+def create_final_save(save_data):
+    save_filename = f'FinalSaves/{datetime.datetime.now().isoformat().replace(":", "-")}.json'
+    with open(save_filename, 'w') as save_file:
+        json.dump(save_data, save_file)
+    return save_filename
+
+
 def load_save(save_filename):
     with open(save_filename, 'r') as save_file:
         save_data = json.load(save_file)
