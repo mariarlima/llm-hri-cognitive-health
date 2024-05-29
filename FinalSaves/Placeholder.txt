@@ -1,0 +1,1 @@
+Final saves will be placed here. This file also keep git tracking this empty folder.

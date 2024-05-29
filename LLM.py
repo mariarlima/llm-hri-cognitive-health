@@ -3,6 +3,7 @@ from enum import Enum
 from config import config
 import logging
 import json
+import copy
 
 logger = logging.getLogger("HRI")
 
@@ -124,7 +125,7 @@ class LLM:
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
         # TODO: Do we need full_conversation?
-        self.full_conversation = llm_prompt
+        self.full_conversation = copy.deepcopy(llm_prompt)
         self.additional_info = None
         self.llm_role = llm_role
         self.mod_instruction = None
@@ -151,6 +152,8 @@ class LLM:
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
 
+        logger.info(json.dumps(self.conversation, indent=4))
+
         self.full_conversation.append(user_response_to_prompt)
         actual_prompt = self.conversation
         if self.additional_info is not None:
@@ -160,6 +163,8 @@ class LLM:
             actual_prompt.append({"role": "system", "content": self.mod_instruction})
 
         logger.debug(actual_prompt)
+        # Add mod instruction and addition information to prompt
+        # self.full_conversation.append(actual_prompt)
 
         logger.info("Calling LLM API")
         llm_response = self.openai.chat.completions.create(
@@ -173,6 +178,7 @@ class LLM:
             "content": llm_response.choices[0].message.content
         }
         self.conversation.append(llm_response_to_prompt)
+        logger.info(json.dumps(self.conversation, indent=4))
         self.full_conversation.append(llm_response_to_prompt)
 
         return llm_response.choices[0].message.content
@@ -193,6 +199,9 @@ class LLM:
         logger.info(f"Loading history: {json.dumps(history, indent=2)}")
         self.conversation = history
         self.full_conversation = history
+
+    def save_final_history(self):
+        return self.full_conversation
 
     def remove_last_n_rounds(self, n):
         rounds_to_remove = n * 2  # TODO: this assume all conversation are two way interactions
