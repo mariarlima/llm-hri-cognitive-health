@@ -152,7 +152,7 @@ class LLM:
         user_response_to_prompt = {"role": "user", "content": text}
         self.conversation.append(user_response_to_prompt)
 
-        logger.info(json.dumps(self.conversation, indent=4))
+        # logger.info(json.dumps(self.conversation, indent=4))
 
         self.full_conversation.append(user_response_to_prompt)
         actual_prompt = self.conversation
@@ -178,7 +178,7 @@ class LLM:
             "content": llm_response.choices[0].message.content
         }
         self.conversation.append(llm_response_to_prompt)
-        logger.info(json.dumps(self.conversation, indent=4))
+        # logger.info(json.dumps(self.conversation, indent=4))
         self.full_conversation.append(llm_response_to_prompt)
 
         return llm_response.choices[0].message.content
