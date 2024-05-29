@@ -42,6 +42,28 @@ class BlossomInterface:
     def do_end_sequence(self, delay_time=0):
         self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["end"], delay_time)
 
+    def do_start_sequence_matching(self, delay_time=0, audio_length=0):
+        # if audio_length == 0:
+        #     self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["start"], delay_time)
+        # elif audio_length < config["Blossom"]["sequence_length_boundary_list"][0]:
+        #     self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["start"][0], delay_time)
+        # elif audio_length < config["Blossom"]["sequence_length_boundary_list"][1]:
+        #     self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["start"][1], delay_time)
+        # else:
+        #     self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["start"][2], delay_time)
+        #
+        for i in range(0, len(config["Blossom"]["sequence_length_boundary_list"]["start"])):
+            if audio_length < config["Blossom"]["sequence_length_boundary_list"]["start"][i]:
+                self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["start"][i], delay_time)
+                break
+
+    def do_prompt_sequence_matching(self, delay_time=0, audio_length=0):
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["prompt"], delay_time)
+
+    def do_end_sequence_matching(self, delay_time=0, audio_length=0):
+        self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["end"], delay_time)
+
+
     def do_sequence(self, seq="reset", delay_time=0):
         logger.info(f"Blossom start playing sequence {seq} with {delay_time}s of delay.")
         # print(f"Signal Received, delay: {delay_time}")
