@@ -136,6 +136,7 @@ class LLM:
         prompt = [{"role": "user", "content": text}]
 
         logger.info("Calling LLM API")
+        # TODO: Add hyperparameter for LLM API
         llm_response = self.openai.chat.completions.create(
             model=config["llm_model_id"],
             messages=prompt
@@ -166,6 +167,7 @@ class LLM:
         # self.full_conversation.append(actual_prompt)
 
         logger.info("Calling LLM API")
+        # TODO: Add hyperparameter for LLM API
         llm_response = self.openai.chat.completions.create(
             model=config["llm_model_id"],
             messages=actual_prompt
