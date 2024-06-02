@@ -38,7 +38,7 @@ config = {
         },
     "Blossom":
         {
-            "status": "Enabled",  # Enabled or Disabled
+            "status": "Disabled",  # Enabled or Disabled
             "sequence_length_boundary_list": {"start": [5, 10, 15], "prompt": [5, 10, 15], "end": [5, 10, 15]},
             "sequence_list":
                 {
