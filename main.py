@@ -179,6 +179,6 @@ if __name__ == '__main__':
         bl_thread.start()
         tts.play_text_audio(end_text)
 
-    save_data = llm.save_final_history()
-    save_filename = create_final_save(save_data)
-    logger.info(f"Full interaction data saved at {save_filename}")
+        save_data = llm.save_final_history()
+        save_filename = create_final_save(save_data)
+        logger.info(f"Full interaction data saved at {save_filename}")
