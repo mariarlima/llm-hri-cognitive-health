@@ -27,8 +27,12 @@ class STT:
 
         self.r.pause_threshold = config["STT"]["normal"]["pause_threshold"]
         mic_list = sr.Microphone.list_microphone_names()
+        # print(mic_list)
 
-        if 'USBAudio1.0' in mic_list:
+        if 'External Headphones' in mic_list:
+            self.mic = sr.Microphone(device_index=mic_list.index('External Headphones'))
+            logger.info("Microphone new found!")
+        elif 'USBAudio1.0' in mic_list:
             self.mic = sr.Microphone(device_index=mic_list.index('USBAudio1.0'))
             logger.info("Microphone found!")
         elif 'MacBook Pro Microphone' in mic_list:
@@ -36,9 +40,6 @@ class STT:
             logger.warning(f"Extra microphone not found. Using default microphone.")
         else:
             self.mic = sr.Microphone()
-
-    # def list_microphones(self):
-    #     return sr.Microphone.list_microphone_names()
 
     def get_voice_as_text(self, pause_threshold, phrase_time_limit):
         """
