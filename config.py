@@ -1,5 +1,5 @@
 config = {
-    "is_using_voice": False,
+    "is_using_voice": True,
     "is_playback": False,
     "whisper_model_id": "tiny.en",  # "medium.en",
     "enable_LLM_module": True,
@@ -39,13 +39,27 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
-            "sequence_length_boundary_list": {"start": [5, 10, 15], "prompt": [5, 10, 15], "end": [5, 10, 15]},
+            "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {
                     "start": ["cognitive/intro_01", "cognitive/intro_02", "cognitive/intro_03"],
                     "prompt": ["cognitive/encouragement_01", "cognitive/encouragement_02", "cognitive/encouragement_03",
                                "cognitive/encouragement_04", "cognitive/encouragement_05",
                                "cognitive/encouragement_06"],
+                    "prompt_timed":
+                        [
+                            ["happy/happy_1_109", "happy/happy_2_109", "happy/happy_5_109", "happy/happy_8_109", "happy/happy_9_109" ],
+                            ["yes", "fear/fear_startled"],
+                            ["happy/happy_nodding", "happy/happy", "anger/anger_dissapoint"],
+                            ["grand/grand4", "sesame/sesame12", "fear/fear"],
+                            ["cognitive/encouragement_04", "happy/happy_head_bobbing", "fear/fear_looking_around_1"],
+                            ["cognitive/encouragement_01", "happy/happy_daydream"],
+                            ["cognitive/encouragement_03", "cognitive/encouragement_05"],
+                            ["cognitive/encouragement_06", "cognitive/encouragement_02", "happy/happy_20181204_122044", "happy/happy_20181204_120338"],
+                            ["cognitive/end_01", "cognitive/end_02"],
+                            ["cognitive/end_03", "cognitive/intro_03"],
+                            ["cognitive/intro_01", "cognitive/intro_02"]
+                        ],
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
             "delay": 0.8,

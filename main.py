@@ -47,6 +47,8 @@ if __name__ == '__main__':
     else:  # fallback to openai tts
         tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), signal_queue, api_provider="openai")
     bl_thread = None
+    bl_thread_target = None
+    bl_thread_kwargs = None
     tts_thread = None
     start_time = time.time()
     free_task = False
@@ -72,8 +74,8 @@ if __name__ == '__main__':
 
         llm_response_text = llm.request_response("Start")
         start_time = time.time()  # Track start time
-        bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
-                                     kwargs={"delay_time": config["Blossom"]["delay_intro"]})
+        bl_thread = threading.Thread(target=bl.do_prompt_sequence, args=(),
+                                     kwargs={"delay_time": config["Blossom"]["delay"]})
         tts_thread = threading.Thread(target=tts.play_text_audio, args=(llm_response_text,))
         tts_thread.start()
         intro_audio_length = signal_queue.get()  # Consume signal here, keep queue empty.
@@ -93,8 +95,10 @@ if __name__ == '__main__':
             if free_task:
                 free_task = False
                 if config["Blossom"]["status"] == "Enabled":
-                    bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
-                                                 kwargs={"delay_time": config["Blossom"]["delay"]})
+                    # bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
+                    #                              kwargs={"delay_time": config["Blossom"]["delay"]})
+                    bl_thread_target = bl.do_start_sequence
+                    bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
                 # listen to user
                 if config["is_using_voice"]:
                     stt_response = stt.get_voice_as_text(
@@ -105,8 +109,12 @@ if __name__ == '__main__':
             # Case 2: end of interaction (from LLM)
             elif end_task:
                 if config["Blossom"]["status"] == "Enabled":
-                    bl_thread = threading.Thread(target=bl.do_end_sequence, args=(),
-                                                 kwargs={"delay_time": config["Blossom"]["delay"]})
+                    # bl_thread = threading.Thread(target=bl.do_end_sequence, args=(),
+                    #                              kwargs={"delay_time": config["Blossom"]["delay"]})
+                    bl_thread_target = bl.do_end_sequence()
+                    bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
+                    bl_thread = threading.Thread(target=bl_thread_target, args=(), kwargs=bl_thread_kwargs)
+                    bl_thread.start()
                 # end here, will not listen to user
                 break
 
@@ -122,8 +130,12 @@ if __name__ == '__main__':
 
                 # trigger random behaviour Blossom (prompt)
                 if config["Blossom"]["status"] == "Enabled":
-                    bl_thread = threading.Thread(target=bl.do_prompt_sequence, args=(),
-                                                 kwargs={"delay_time": config["Blossom"]["delay"]})
+                    # bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
+                    #                              kwargs={"delay_time": config["Blossom"]["delay"],
+                    #                                      "audio_length": stt_response["transcription"]["duration"]})
+                    bl_thread_target = bl.do_prompt_sequence_matching
+                    bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"],
+                                        "audio_length": 0}
                 else:
                     user_input_text = input("Enter Prompts: ")
 
@@ -140,7 +152,7 @@ if __name__ == '__main__':
                 logger.info("! Max duration reached. Ending interaction now")
                 end_task = True
                 # break before LLM processes if > max duration
-                break
+                continue
 
             # LLM process the user input for next interaction turn
             llm_response_text = llm.request_response(user_input_text)
@@ -149,6 +161,8 @@ if __name__ == '__main__':
                 # TODO: check does this handle the case where people ask for repetition or say something else?
                 free_task = True
                 logger.info("Free speech watermark detected.")
+                bl_thread_target = bl.do_start_sequence
+                bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
             if config["Task"][TASK]["end_watermark"] in llm_response_text:
                 end_task = True
                 logger.info("End of task detected.")
@@ -158,6 +172,9 @@ if __name__ == '__main__':
             tts_thread.start()
             audio_length = signal_queue.get()  # wait for TTS audio to load
             if config["Blossom"]["status"] == "Enabled":
+                if "audio_length" in bl_thread_kwargs:
+                    bl_thread_kwargs["audio_length"] = audio_length
+                bl_thread = threading.Thread(target=bl_thread_target, args=(), kwargs=bl_thread_kwargs)
                 bl_thread.start()
             time.sleep(audio_length + config["STT"]["mic_time_offset"])
             bl.reset()  # Cutoff Blossom's movement after audio ends
@@ -176,7 +193,7 @@ if __name__ == '__main__':
     # play audio for end of task out of main loop
     if end_task:
         end_text = config["Task"][TASK]["end_blossom"]
-        bl_thread.start()
+        # bl_thread.start()
         tts.play_text_audio(end_text)
 
         save_data = llm.save_final_history()
