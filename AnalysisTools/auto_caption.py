@@ -49,9 +49,9 @@ audio_file = "../Experiments.mp3"
 parser = argparse.ArgumentParser(description="Auto Captioning Tool CLI")
 
 # Add the arguments
-parser.add_argument('-f', '--file', type=str, required=True, help="The input file")
+parser.add_argument('-f', '--file', type=str, required=True, help="Input file to transcribe.")
 # parser.add_argument('-o', '--output', type=str, required=True, help="The output file")
-parser.add_argument('-m', '--model', type=str, required=False, help="The model to use", default="base.en")
+parser.add_argument('-m', '--model', type=str, required=False, help="Whisper model ID", default="base.en")
 
 # Parse the arguments
 args = parser.parse_args()
