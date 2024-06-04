@@ -39,6 +39,7 @@ if __name__ == '__main__':
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt)
+    llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
     bl = None
     if config["Blossom"]["status"] == "Enabled":
         bl = BlossomInterface()
@@ -74,13 +75,21 @@ if __name__ == '__main__':
 
         llm_response_text = llm.request_response("Start")
         start_time = time.time()  # Track start time
-        bl_thread = threading.Thread(target=bl.do_prompt_sequence, args=(),
-                                     kwargs={"delay_time": config["Blossom"]["delay"]})
+
         tts_thread = threading.Thread(target=tts.play_text_audio, args=(llm_response_text,))
         tts_thread.start()
         intro_audio_length = signal_queue.get()  # Consume signal here, keep queue empty.
-        bl_thread.start()
-        time.sleep(intro_audio_length)
+        
+        if TASK == "Picture_1" or TASK == "Picture_2":
+            bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
+                                         kwargs={"delay_time": config["Blossom"]["delay"],
+                                                 "audio_length": intro_audio_length})
+            bl_thread.start()
+        elif TASK == "Semantic_1" or TASK == "Semantic_2":
+            bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
+                                         kwargs={"delay_time": config["Blossom"]["delay"]})
+            bl_thread.start()
+        time.sleep(intro_audio_length + config["STT"]["mic_time_offset"])
         bl.reset()  # Cutoff Blossom's movement after audio ends
 
     # Main interaction loop
@@ -156,6 +165,9 @@ if __name__ == '__main__':
 
             # LLM process the user input for next interaction turn
             llm_response_text = llm.request_response(user_input_text)
+
+            # TODO: Moderation here.
+            # mod_result = llm_moderator.request_independent_response()
 
             if config["Task"][TASK]["free_speech_watermark"] in llm_response_text and len(llm_response_text) > 5:
                 # TODO: check does this handle the case where people ask for repetition or say something else?

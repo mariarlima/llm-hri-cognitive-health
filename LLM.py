@@ -7,6 +7,8 @@ import copy
 
 logger = logging.getLogger("HRI")
 
+llm_mod_prompt = ""
+
 llm_prompt_task1_1 = [
     {
         "role": "system",
@@ -126,7 +128,7 @@ class LLM_Role(Enum):
 
 # TODO: current arch is instantiate multiple LLM api, should it be singleton?
 class LLM:
-    def __init__(self, api_key, llm_role, llm_prompt):
+    def __init__(self, api_key, llm_role, llm_prompt=""):
         self.openai = OpenAI(api_key=api_key)
         self.conversation = llm_prompt
         # TODO: Do we need full_conversation?
@@ -150,6 +152,23 @@ class LLM:
         )
 
         logger.info("LLM response: %s", llm_response.choices[0].message.content)
+        return llm_response.choices[0].message.content
+
+    def request_mod_response(self, generated_content):
+        if self.llm_role != LLM_Role.MOD:
+            logger.error("Call request_mod_response from MOD LLM only.")
+        # TODO: what role should we assign in prompt?
+        prompt = [{"role": "system", "content": llm_mod_prompt}, {"role": "user", "content": generated_content}]
+
+        logger.info("Calling LLM API")
+        # TODO: Add hyperparameter for LLM API
+        # checkpoint: Add hyperparams
+        llm_response = self.openai.chat.completions.create(
+            model=config["llm_model_id"],
+            messages=prompt
+        )
+
+        logger.info("MOD LLM response: %s", llm_response.choices[0].message.content)
         return llm_response.choices[0].message.content
 
     def request_response(self, text):
