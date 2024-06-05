@@ -24,7 +24,7 @@ from blossom_interaction import BlossomInterface
 from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_prompt_task2_2
 
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
-TASK = "Picture_1"
+TASK = "Picture_2"
 max_duration = 4 * 60  # 4 minutes in seconds
 
 # TODO: How should load be triggered? - command line argument or config file?
@@ -80,18 +80,21 @@ if __name__ == '__main__':
         tts_thread = threading.Thread(target=tts.play_text_audio, args=(llm_response_text,))
         tts_thread.start()
         intro_audio_length = signal_queue.get()  # Consume signal here, keep queue empty.
-
-        if TASK == "Picture_1" or TASK == "Picture_2":
-            bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
-                                         kwargs={"delay_time": config["Blossom"]["delay"],
-                                                 "audio_length": intro_audio_length})
-            bl_thread.start()
-        elif TASK == "Semantic_1" or TASK == "Semantic_2":
-            bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
-                                         kwargs={"delay_time": config["Blossom"]["delay"]})
-            bl_thread.start()
-        time.sleep(intro_audio_length + config["STT"]["mic_time_offset"])
-        bl.reset()  # Cutoff Blossom's movement after audio ends
+        
+        # handle Blossom activation
+        if config["Blossom"]["status"] == "Enabled":
+            if TASK == "Picture_1" or TASK == "Picture_2":
+            
+                bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
+                                            kwargs={"delay_time": config["Blossom"]["delay"],
+                                                    "audio_length": intro_audio_length})
+                bl_thread.start()
+            elif TASK == "Semantic_1" or TASK == "Semantic_2":
+                bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
+                                            kwargs={"delay_time": config["Blossom"]["delay"]})
+                bl_thread.start()
+            time.sleep(intro_audio_length + config["STT"]["mic_time_offset"])
+            bl.reset()  # Cutoff Blossom's movement after audio ends
 
     # Main interaction loop
     try:
@@ -116,6 +119,7 @@ if __name__ == '__main__':
                         pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
                 else:
                     user_input_text = input("Enter Prompts: ")
+                    
             # Case 2: end of interaction (from LLM)
             elif end_task:
                 if config["Blossom"]["status"] == "Enabled":
