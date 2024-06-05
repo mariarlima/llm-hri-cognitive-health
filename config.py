@@ -1,5 +1,5 @@
 config = {
-    "is_using_voice": False,
+    "is_using_voice": True,
     "is_playback": False,
     "whisper_model_id": "tiny.en",  # "medium.en",
     "enable_LLM_module": True,
@@ -62,7 +62,7 @@ config = {
                         ],
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
-            "delay": 0.75,
+            "delay": 0.6,
             "delay_intro": 0.75,
         },
     "Task":
