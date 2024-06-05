@@ -7,7 +7,11 @@ import copy
 
 logger = logging.getLogger("HRI")
 
+# TODO: Add moderation prompt here.
 llm_mod_prompt = ""
+
+# TODO: Add predefined response for regenerating response here.
+regeneration_predefined_response = ""
 
 llm_prompt_task1_1 = [
     {
