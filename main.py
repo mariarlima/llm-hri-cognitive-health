@@ -32,13 +32,13 @@ max_duration = 4 * 60  # 4 minutes in seconds
 if __name__ == '__main__':
     load_dotenv()
     signal_queue = queue.Queue()
-    stt = STT.STT()
     # choose appropriate prompt based on task and version/session
     # print(config["STT"]["mic_time_offset"])
     prompt_name = config["Task"][TASK]["prompt"]
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt)
+    stt = STT.STT(os.getenv("OPENAI_API_KEY"))
     llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
     bl = None
     if config["Blossom"]["status"] == "Enabled":
