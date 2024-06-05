@@ -1,4 +1,7 @@
 import logging
+
+from openai import OpenAI
+
 from config import config
 import torch
 import whisper
@@ -9,7 +12,9 @@ logger = logging.getLogger("HRI")
 
 
 class STT:
-    def __init__(self, mic_index=None):
+    def __init__(self, api_key):
+        # Initialize whisper API
+        self.openai_api = OpenAI(api_key=api_key)
         # Initialize whisper model
         if torch.cuda.is_available():
             device = torch.device("cuda")
@@ -41,7 +46,7 @@ class STT:
         else:
             self.mic = sr.Microphone()
 
-    def get_voice_as_text(self, pause_threshold, phrase_time_limit):
+    def get_voice_as_text(self, pause_threshold, phrase_time_limit, use_api=False):
         """
         Listen to user speech and transcribe it to text using Whisper API.
         """
@@ -82,25 +87,33 @@ class STT:
             logger.error(f"An error occurred: {response['error']}")
 
         # Transcribe
-
-        logger.info("Transcribing...")
-        # try recognizing the speech in the recording
-        # if a RequestError or UnknownValueError exception is caught,
-        #     update the response object accordingly
-        try:
-            response["transcription"] = self.whisper_model.transcribe('playback.wav')
-        except sr.RequestError:
-            # API was unreachable or unresponsive
-            response["success"] = False
-            response["error"] = "API unavailable"
-        except sr.UnknownValueError:
-            # speech was unintelligible
-            response["error"] = "Unable to recognize speech"
-
-        if response["success"]:
-            logger.info("You said: %s", response["transcription"]["text"])
+        if use_api:
+            logger.info("Calling OpenAI Transcription API...")
+            audio_file = open("playback.wav", "rb")
+            transcript = self.openai_api.audio.transcriptions.create(
+                file=audio_file,
+                model="whisper-1",
+                response_format="text"
+            )
         else:
-            logger.warning("Transcribe failed.")
-            logger.warning("%s", response["error"])
+            logger.info("Transcribing...")
+            # try recognizing the speech in the recording
+            # if a RequestError or UnknownValueError exception is caught,
+            #     update the response object accordingly
+            try:
+                response["transcription"] = self.whisper_model.transcribe('playback.wav')
+            except sr.RequestError:
+                # API was unreachable or unresponsive
+                response["success"] = False
+                response["error"] = "API unavailable"
+            except sr.UnknownValueError:
+                # speech was unintelligible
+                response["error"] = "Unable to recognize speech"
+
+            if response["success"]:
+                logger.info("You said: %s", response["transcription"]["text"])
+            else:
+                logger.warning("Transcribe failed.")
+                logger.warning("%s", response["error"])
 
         return response
