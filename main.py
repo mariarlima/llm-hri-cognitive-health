@@ -118,8 +118,8 @@ if __name__ == '__main__':
                     stt_response = stt.get_voice_as_text(
                         phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
                         pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
-                else:
-                    user_input_text = input("Enter Prompts: ")
+                # else:
+                #     user_input_text = input("Enter Prompts: ")
                     
             # Case 2: end of interaction (from LLM)
             elif end_task:
@@ -140,8 +140,8 @@ if __name__ == '__main__':
                     stt_response = stt.get_voice_as_text(
                         phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
                         pause_threshold=config["STT"]["normal"]["pause_threshold"])
-                else:
-                    user_input_text = input("Enter Prompts: ")
+                # else:
+                #     user_input_text = input("Enter Prompts: ")
 
                 # trigger random behaviour Blossom (prompt)
                 if config["Blossom"]["status"] == "Enabled":
@@ -151,8 +151,8 @@ if __name__ == '__main__':
                     bl_thread_target = bl.do_prompt_sequence_matching
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"],
                                         "audio_length": 0}
-                else:
-                    user_input_text = input("Enter Prompts: ")
+                # else:
+                #     user_input_text = input("Enter Prompts: ")
 
             if config["is_using_voice"]:
                 if stt_response["success"]:
@@ -206,8 +206,9 @@ if __name__ == '__main__':
                 # TODO: check does this handle the case where people ask for repetition or say something else?
                 free_task = True
                 logger.info("Free speech watermark detected.")
-                bl_thread_target = bl.do_start_sequence
-                bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
+                if config["Blossom"]["status"] == "Enabled":
+                    bl_thread_target = bl.do_start_sequence
+                    bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
             if config["Task"][TASK]["end_watermark"] in llm_response_text:
                 end_task = True
                 logger.info("End of task detected.")
