@@ -93,7 +93,8 @@ if __name__ == '__main__':
                 bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
                                             kwargs={"delay_time": config["Blossom"]["delay"]})
                 bl_thread.start()
-            time.sleep(intro_audio_length + config["STT"]["mic_time_offset"])
+        time.sleep(intro_audio_length + config["STT"]["mic_time_offset"])
+        if config["Blossom"]["status"] == "Enabled":
             bl.reset()  # Cutoff Blossom's movement after audio ends
 
     # Main interaction loop
@@ -221,7 +222,8 @@ if __name__ == '__main__':
                 bl_thread = threading.Thread(target=bl_thread_target, args=(), kwargs=bl_thread_kwargs)
                 bl_thread.start()
             time.sleep(audio_length + config["STT"]["mic_time_offset"])
-            bl.reset()  # Cutoff Blossom's movement after audio ends
+            if config["Blossom"]["status"] == "Enabled":
+                bl.reset()  # Cutoff Blossom's movement after audio ends
             logger.info("Main thread wakes up.")
     except KeyboardInterrupt:
         logger.info("KeyboardInterrupt: Backing up...")
