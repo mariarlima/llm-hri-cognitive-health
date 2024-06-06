@@ -21,6 +21,7 @@ import STT
 import LLM
 import TTS
 from blossom_interaction import BlossomInterface
+from blossom_local_sender import BlossomLocalSender
 from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_prompt_task2_2
 
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
@@ -42,7 +43,10 @@ if __name__ == '__main__':
     llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
     bl = None
     if config["Blossom"]["status"] == "Enabled":
-        bl = BlossomInterface()
+        if config["Blossom"]["use_network_controller"]:
+            bl = BlossomLocalSender()
+        else:
+            bl = BlossomInterface()
     if config["TTS"]["api_provider"] == "unrealspeech":
         tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"), signal_queue)
     else:  # fallback to openai tts
