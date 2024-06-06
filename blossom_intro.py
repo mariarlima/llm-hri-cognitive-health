@@ -27,7 +27,7 @@ blossom = [
     "cognitive/extra_08",
     "happy/happy_nodding",
     "cognitive/extra_09",
-    "grand/grand4",
+    "cognitive/extra_11",
     "cognitive/extra_07",
     "cognitive/extra_06",
     "cognitive/extra_10",

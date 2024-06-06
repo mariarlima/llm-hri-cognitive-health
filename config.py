@@ -39,7 +39,10 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
+<<<<<<< HEAD
+=======
             "use_network_controller": True,
+>>>>>>> bbb4c7a39ae46287b04d8deb69254f8f9d9b6314
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {
