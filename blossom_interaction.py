@@ -63,7 +63,7 @@ class BlossomInterface:
     def do_prompt_sequence_matching(self, delay_time=0, audio_length=0):
         logger.info(
             f"Tread Target: do_prompt_sequence_matching, delay_time: {delay_time}, audio_length: {audio_length}")
-        if audio_length > config["Blossom"]["sequence_length_boundary_list"]["prompt"][-1]:
+        if audio_length >= config["Blossom"]["sequence_length_boundary_list"]["prompt"][-1]:
             self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["prompt"], delay_time)
         else:
             for i in range(0, len(config["Blossom"]["sequence_length_boundary_list"]["prompt"])):
