@@ -24,10 +24,10 @@ combine_sequences(["happy/happy_8_109", "happy/happy_nodding"], "extra_03")
 combine_sequences(["cognitive/extra_01", "happy/happy_nodding"], "extra_04")
 combine_sequences(["cognitive/extra_02", "happy/happy_8_109"], "extra_05")
 # new updated priming/intro sequence
-combine_sequences(["cognitive/extra_01", "fear/fear", "sesame/sesame10", "yes"], "extra_06")
+combine_sequences(["cognitive/extra_01", "anger/anger_dissapoint", "sesame/sesame10", "yes"], "extra_06")
 combine_sequences(["happy/happy_nodding", "happy/happy_8_109"], "extra_07")
 combine_sequences(["grand/grand4", "yes"], "extra_08")
 combine_sequences(["happy/happy", "happy/happy_9_109", "sad/sad_head_down"], "extra_09")
-combine_sequences(["sesame/sesame12", "fear/fear", "happy/happy_1_109", "fear/fear_startled"], "extra_10")
+combine_sequences(["sesame/sesame12", "fear/fear", "happy/happy_1_109", "fear/fear"], "extra_10")
 combine_sequences(["grand/grand4", "happy/happy_2_109"], "extra_11")
 

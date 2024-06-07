@@ -14,7 +14,7 @@ config = {
             "normal":
                 {
                     "pause_threshold": 3,  # Only stop recording after 5 second of silence
-                    "phrase_time_limit": 0,  # Max duration of a recorded audio clip
+                    "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "mic_time_offset": -0.05,  # Time offset for mic to start recording, seconds
@@ -39,7 +39,7 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
-            "use_network_controller": True,
+            "use_network_controller": True, 
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {
@@ -63,7 +63,7 @@ config = {
                         ],
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
-            "delay": 0.6,
+            "delay": 0.9,
             "delay_intro": 0.75,
         },
     "Task":
