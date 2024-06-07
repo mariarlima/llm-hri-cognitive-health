@@ -18,7 +18,7 @@ if config["Blossom"]["status"] == "Enabled":
     else:
          bl = BlossomInterface()
 
-audio_dir = "./blossom_intro_files_mp3/upd/" # changed folder with updated files 
+audio_dir = "./blossom_intro_files_mp3/" # changed folder with updated files 
 
 
 def play_mp3(file_path):
