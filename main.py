@@ -27,7 +27,7 @@ from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
 # TASK = "Picture_2"
 TASK = "Semantic_2"
-max_duration = 4 * 60  # 4 minutes in seconds
+max_duration = 5 * 60  # 5 minutes in seconds
 
 # TODO: How should load be triggered? - command line argument or config file?
 
@@ -108,14 +108,12 @@ if __name__ == '__main__':
             stt_response = None
 
             # Case 1: free description
-            if free_task:
-                free_task = False
-                # trigger random behaviour Blossom (start)
+            # if free_task:
+            #     free_task = False
+            #     # trigger random behaviour Blossom (start)
             if free_task:
                 free_task = False
                 if config["Blossom"]["status"] == "Enabled":
-                    # bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
-                    #                              kwargs={"delay_time": config["Blossom"]["delay"]})
                     bl_thread_target = bl.do_start_sequence
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
                 # listen to user

@@ -1,15 +1,15 @@
 config = {
     "is_using_voice": True,
     "is_playback": False,
-    "whisper_model_id": "tiny.en",  # "medium.en",
+    "whisper_model_id": "tiny.en",  # first try: "base.en", then: "small.en", 
     "enable_LLM_module": True,
     "enable_TTS_module": True,
     "STT":
         {
             "free_speech":
                 {
-                    "pause_threshold": 4,  # Only stop recording after 5 second of silence
-                    "phrase_time_limit": 60,  # Max duration of a recorded audio clip
+                    "pause_threshold": 6,  # Only stop recording after 5 second of silence
+                    "phrase_time_limit": 70,  # Max duration of a recorded audio clip
                 },
             "normal":
                 {
@@ -39,7 +39,7 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
-            "use_network_controller": True, 
+            "use_network_controller": True, # to use AWS instance server and Raspberry Pi 
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {
