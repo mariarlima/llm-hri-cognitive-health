@@ -90,12 +90,12 @@ if __name__ == '__main__':
         # handle Blossom activation
         if config["Blossom"]["status"] == "Enabled":
             if TASK == "Picture_1" or TASK == "Picture_2":
-            
                 bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
                                             kwargs={"delay_time": config["Blossom"]["delay"],
                                                     "audio_length": intro_audio_length})
                 bl_thread.start()
             elif TASK == "Semantic_1" or TASK == "Semantic_2":
+                free_task = True
                 bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
                                             kwargs={"delay_time": config["Blossom"]["delay"]})
                 bl_thread.start()
