@@ -20,6 +20,7 @@ def format_timestamp(seconds):
 
     return f"{main_time},{milliseconds}"
 
+
 # def format_timestamp(seconds):
 #     return str(datetime.timedelta(seconds=seconds)).replace(".", ",")
 
@@ -40,6 +41,26 @@ def transcribe_and_generate_srt(model, audio_file):
     srt_content = "\n".join(srt)
     return srt_content
 
+
+def transcribe_and_generate_srt_and_text(model, audio_file):
+    result = model.transcribe(audio_file)
+
+    segments = result["segments"]
+
+    plain_text = []
+    srt = []
+    for i, segment in enumerate(segments):
+        text = segment["text"]
+
+        start = format_timestamp(segment["start"])
+        end = format_timestamp(segment["end"])
+
+        srt.append(f"{i + 1}\n{start} --> {end}\n{text}\n")
+        plain_text.append(f"{text}")
+
+    plain_text_content = "\n".join(plain_text)
+    srt_content = "\n".join(srt)
+    return plain_text_content, srt_content
 
 
 whisper_model_id = "base.en"
@@ -70,7 +91,6 @@ if torch.cuda.is_available():
 else:
     device = "cpu"
 whisper_model = whisper.load_model(args.model).to(device)
-
 
 srt_content = transcribe_and_generate_srt(whisper_model, args.file)
 
