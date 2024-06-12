@@ -8,7 +8,7 @@ import logging
 import logging_config
 import time
 
-from utilities import create_save, load_latest_save, create_final_save
+from utilities import create_save, load_latest_save, create_final_save, get_integer_input
 
 # logging_config.configure_logging()
 logger = logging.getLogger("HRI")
@@ -66,11 +66,12 @@ if __name__ == '__main__':
     # TODO: What should be saved? - elapsed time, conversation history, additional_info
     load_save = False
     load_save_command = input("Enter 'y' to load last save, anything else to start new interaction: ")
+    extra_time = get_integer_input("Enter time in second to add more interaction time: ")
     if load_save_command == "y":
         load_save = True
     if (load_save):
         save_data = load_latest_save()
-        start_time = time.time() - save_data["elapsed_time"]
+        start_time = time.time() - (save_data["elapsed_time"] - extra_time)
         llm.load_history(save_data["conversation_history"])
         llm.additional_info = save_data["additional_info"]
         free_task = save_data["free_task"]

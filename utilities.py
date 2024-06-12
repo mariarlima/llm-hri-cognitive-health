@@ -69,3 +69,11 @@ def load_save(save_filename):
 def load_latest_save():
     latest_save_filename = get_latest_save_filename()
     return load_save(latest_save_filename)
+
+
+def get_integer_input(prompt):
+    try:
+        return int(input(prompt))
+    except ValueError:
+        print("NAN input detected. Return input as 0.")
+        return 0
