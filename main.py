@@ -108,11 +108,10 @@ if __name__ == '__main__':
             stt_response = None
 
             # Case 1: free description
-            # if free_task:
-            #     free_task = False
-            #     # trigger random behaviour Blossom (start)
             if free_task:
+                logger.info(f"Free task ON")
                 free_task = False
+                # trigger random behaviour Blossom (start)
                 if config["Blossom"]["status"] == "Enabled":
                     bl_thread_target = bl.do_start_sequence
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
@@ -140,9 +139,14 @@ if __name__ == '__main__':
             else:
                 # listen to user
                 if config["is_using_voice"]:
-                    stt_response = stt.get_voice_as_text(
-                        phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
-                        pause_threshold=config["STT"]["normal"]["pause_threshold"])
+                    if TASK == "Picture_1" or TASK == "Picture_2":
+                        stt_response = stt.get_voice_as_text(
+                            phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
+                            pause_threshold=config["STT"]["normal"]["pause_threshold_task_1"])
+                    else:
+                        stt_response = stt.get_voice_as_text(
+                            phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
+                            pause_threshold=config["STT"]["normal"]["pause_threshold"])
                 # else:
                 #     user_input_text = input("Enter Prompts: ")
 
@@ -186,10 +190,13 @@ if __name__ == '__main__':
                 audio_length = signal_queue.get()  # wait for TTS audio to load
 
                 # Start Blossom
-                bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
-                                             kwargs={"delay_time": config["Blossom"]["delay"],
-                                                     "audio_length": stt_response["transcription"]["duration"]})
-
+                bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, 
+                                             args=(),
+                                             kwargs={
+                                                 "delay_time": config["Blossom"]["delay"],
+                                                 "audio_length": stt_response["transcription"]["duration"]
+                                                 }
+                                            )
                 bl_thread.start()
 
                 # Remove last round of conversation history, and regenerate response
@@ -205,13 +212,17 @@ if __name__ == '__main__':
                     # TODO: Should I keep the last round of conversation history?
                     end_task = True
                     continue
-            if config["Task"][TASK]["free_speech_watermark"] in llm_response_text and len(llm_response_text) > 5:
+            
+            # Free speech watermark detection for both tasks
+            if config["Task"][TASK]["free_speech_watermark"] in llm_response_text and len(user_input_text) > 5:
                 # TODO: check does this handle the case where people ask for repetition or say something else?
                 free_task = True
                 logger.info("Free speech watermark detected.")
                 if config["Blossom"]["status"] == "Enabled":
                     bl_thread_target = bl.do_start_sequence
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
+            
+            # End of task detection from LLM response
             if config["Task"][TASK]["end_watermark"] in llm_response_text:
                 end_task = True
                 logger.info("End of task detected.")
@@ -229,6 +240,7 @@ if __name__ == '__main__':
             if config["Blossom"]["status"] == "Enabled":
                 bl.reset()  # Cutoff Blossom's movement after audio ends
             logger.info("Main thread wakes up.")
+    
     except KeyboardInterrupt:
         logger.info("KeyboardInterrupt: Backing up...")
         save_data = {

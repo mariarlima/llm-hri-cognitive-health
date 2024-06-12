@@ -1,7 +1,7 @@
 config = {
     "is_using_voice": True,
     "is_playback": False,
-    "whisper_model_id": "tiny.en",  # first try: "base.en", then: "small.en", 
+    "whisper_model_id": "tiny.en",  # "tiny.en", first try: "base.en", then: "small.en", 
     "enable_LLM_module": True,
     "enable_TTS_module": True,
     "STT":
@@ -9,11 +9,12 @@ config = {
             "free_speech":
                 {
                     "pause_threshold": 6,  # Only stop recording after 5 second of silence
-                    "phrase_time_limit": 70,  # Max duration of a recorded audio clip
+                    "phrase_time_limit": 80,  # Max duration of a recorded audio clip
                 },
             "normal":
                 {
                     "pause_threshold": 3,  # Only stop recording after 5 second of silence
+                    "pause_threshold_task_1": 3,
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
@@ -63,7 +64,7 @@ config = {
                         ],
                     "end": ["cognitive/end_01", "cognitive/end_02", "cognitive/end_03"],
                 },
-            "delay": 0.9,
+            "delay": 0.8,
             "delay_intro": 0.75,
         },
     "Task":
