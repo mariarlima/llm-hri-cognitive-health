@@ -76,12 +76,14 @@ for start, end in subclip_tuple:
     print(f"Convert to seconds: {start_second} - {end_second}")
     clips.append(video.subclip(start_second, end_second))
 
-clips_subfix = ["picture", "semantic", "interview"]
+clips_subfix = ["T1", "T2", "interview"]
 
 original_codec = get_video_info(args.file)
 
 index = 0
 for clip in clips:
+    if index >= len(clips_subfix) - 1:
+        clips_subfix.append(f"unmarked_clip_{index}")
     output_filename = os.path.join(dir_name, f"{name}_{clips_subfix[index]}{ext}")
     print(f"Saving sliced video {output_filename} duration: {clip.duration}")
     clip.write_videofile(output_filename, codec=original_codec["video_codec"],
