@@ -35,7 +35,7 @@ def transcribe_and_save_results(whisper_model_id, whisper_model, video_filename,
     return plain_text_content, srt_content
 
 
-whisper_model_ids = ["tiny.en", "base.en"]
+whisper_model_ids = ["tiny.en", "base.en", "small.en", "medium.en"]
 
 # Create the parser
 parser = argparse.ArgumentParser(description="Auto Whisper Model Evaluation Tool CLI")
