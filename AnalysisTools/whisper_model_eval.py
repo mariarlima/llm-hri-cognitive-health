@@ -26,7 +26,7 @@ def transcribe_and_save_results(whisper_model_id, whisper_model, video_filename,
     plain_text_content, srt_content = transcribe_and_generate_srt_and_text(whisper_model, video_filename)
     current_results[whisper_model_id] = plain_text_content
 
-    output_plain_text_file = os.path.join(directory, f"{filename}_plain_text.txt")
+    output_plain_text_file = os.path.join(directory, f"{filename}_{whisper_model_id.replace('.', '_')}_plain_text.txt")
     output_srt_file = os.path.join(directory, f"{filename}_{whisper_model_id.replace('.', '_')}.srt")
     with open(output_plain_text_file, "w") as f:
         f.write(plain_text_content)
