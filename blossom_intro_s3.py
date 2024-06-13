@@ -18,7 +18,7 @@ if config["Blossom"]["status"] == "Enabled":
     else:
          bl = BlossomInterface()
 
-audio_dir = "./blossom_intro_files_mp3/" # changed folder with updated files 
+audio_dir = "./blossom_intro_s3_files_mp3/" # changed folder with updated files 
 
 
 def play_mp3(file_path):
@@ -29,16 +29,15 @@ def play_mp3(file_path):
 blossom = [
     "cognitive/extra_07",
     "fear/fear",
-    "happy/happy_nodding",
     "cognitive/extra_09",
     "cognitive/extra_11",
-    "cognitive/extra_07",
+    "cognitive/extra_12",
     "cognitive/extra_06",
     "cognitive/extra_10",
     "cognitive/extra_08"
 ]
 
-audio_files = ['new_voice_1.mp3', 'new_voice_2.mp3', 'new_voice_3.mp3', 'new_voice_4.mp3', 'new_voice_5.mp3', 'new_voice_6.mp3', 'new_voice_7.mp3', 'new_voice_8.mp3', 'new_voice_9.mp3']
+audio_files = ['1.mp3', '2.mp3', '3.mp3', '4.mp3', '5.mp3', '6.mp3', '7.mp3', '8.mp3']
 
 
 def play_phrases_and_sequences(blossom, audio_files):

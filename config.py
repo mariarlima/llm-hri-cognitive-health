@@ -40,7 +40,7 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
-            "use_network_controller": True, # to use AWS instance server and Raspberry Pi 
+            "use_network_controller": False, # to use AWS instance server and Raspberry Pi 
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {
@@ -74,7 +74,7 @@ config = {
                     "free_speech_watermark": "storytelling",
                     "prompt": "llm_prompt_task1_1",
                     "start_watermark": "storytelling",
-                    "end_watermark": "bye",
+                    "end_watermark": "next challenge",
                     "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
                 },
             "Picture_2":
@@ -82,7 +82,7 @@ config = {
                     "free_speech_watermark": "storytelling",
                     "prompt": "llm_prompt_task1_2",
                     "start_watermark": "storytelling",
-                    "end_watermark": "bye",
+                    "end_watermark": "next challenge",
                     "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
                 },
             "Semantic_1":
@@ -90,7 +90,7 @@ config = {
                     "free_speech_watermark": "different game",
                     "prompt": "llm_prompt_task2_1",
                     "start_watermark": "different game",
-                    "end_watermark": "next challenge",
+                    "end_watermark": "bye",
                     "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Bye"
                 },
             "Semantic_2":
@@ -98,7 +98,7 @@ config = {
                     "free_speech_watermark": "different game",
                     "prompt": "llm_prompt_task2_2",
                     "start_watermark": "different game",
-                    "end_watermark": "next challenge",
+                    "end_watermark": "bye",
                     "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
                 }
         },
