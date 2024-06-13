@@ -16,7 +16,7 @@ if config["Blossom"]["status"] == "Enabled":
     if config["Blossom"]["use_network_controller"]:
         bl = BlossomLocalSender()
     else:
-         bl = BlossomInterface()
+        bl = BlossomInterface()
 
 audio_dir = "./blossom_intro_s3_files_mp3/" # changed folder with updated files 
 

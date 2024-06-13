@@ -25,10 +25,11 @@ from blossom_local_sender import BlossomLocalSender
 from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_prompt_task2_2
 
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
-# TASK = "Picture_2"
-TASK = "Semantic_2"
 # TASK = "Picture_1"
-# TASK = "Semantic_1"
+TASK = "Semantic_1"
+# TASK = "Picture_2"
+# TASK = "Semantic_2"
+
 max_duration = 5 * 60  # 5 minutes in seconds
 
 # TODO: How should load be triggered? - command line argument or config file?
@@ -112,7 +113,7 @@ if __name__ == '__main__':
 
             # Case 1: free description
             if free_task:
-                logger.info(f"Free task ON")
+                logger.info(f"<<<FREE TASK ON>>>")
                 free_task = False
                 # trigger random behaviour Blossom (start)
                 if config["Blossom"]["status"] == "Enabled":
@@ -129,8 +130,6 @@ if __name__ == '__main__':
             # Case 2: end of interaction (from LLM)
             elif end_task:
                 if config["Blossom"]["status"] == "Enabled":
-                    # bl_thread = threading.Thread(target=bl.do_end_sequence, args=(),
-                    #                              kwargs={"delay_time": config["Blossom"]["delay"]})
                     bl_thread_target = bl.do_end_sequence()
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
                     bl_thread = threading.Thread(target=bl_thread_target, args=(), kwargs=bl_thread_kwargs)
@@ -155,9 +154,6 @@ if __name__ == '__main__':
 
                 # trigger random behaviour Blossom (prompt)
                 if config["Blossom"]["status"] == "Enabled":
-                    # bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
-                    #                              kwargs={"delay_time": config["Blossom"]["delay"],
-                    #                                      "audio_length": stt_response["transcription"]["duration"]})
                     bl_thread_target = bl.do_prompt_sequence_matching
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"],
                                         "audio_length": 0}
@@ -228,7 +224,7 @@ if __name__ == '__main__':
             # End of task detection from LLM response
             if config["Task"][TASK]["end_watermark"] in llm_response_text.lower():
                 end_task = True
-                logger.info("End of task detected.")
+                logger.info("<<<End of task detected (LLM)>>>")
 
             # TTS audio response
             tts_thread = threading.Thread(target=tts.play_text_audio, args=(llm_response_text,))
@@ -243,6 +239,11 @@ if __name__ == '__main__':
             if config["Blossom"]["status"] == "Enabled":
                 bl.reset()  # Cutoff Blossom's movement after audio ends
             logger.info("Main thread wakes up.")
+            if end_task:
+                save_data = llm.save_final_history()
+                save_filename = create_final_save(save_data)
+                logger.info(f"Full interaction data saved at {save_filename}")
+                exit()
 
     except KeyboardInterrupt:
         logger.info("KeyboardInterrupt: Backing up...")
@@ -258,9 +259,7 @@ if __name__ == '__main__':
     # play audio for end of task out of main loop
     if end_task:
         end_text = config["Task"][TASK]["end_blossom"]
-        # bl_thread.start()
         tts.play_text_audio(end_text)
-
         save_data = llm.save_final_history()
         save_filename = create_final_save(save_data)
         logger.info(f"Full interaction data saved at {save_filename}")
