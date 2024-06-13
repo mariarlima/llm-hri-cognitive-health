@@ -27,6 +27,8 @@ from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
 # TASK = "Picture_2"
 TASK = "Semantic_2"
+# TASK = "Picture_1"
+# TASK = "Semantic_1"
 max_duration = 5 * 60  # 5 minutes in seconds
 
 # TODO: How should load be triggered? - command line argument or config file?
@@ -215,8 +217,7 @@ if __name__ == '__main__':
                     continue
 
             # Free speech watermark detection for both tasks
-            if config["Task"][TASK]["free_speech_watermark"] in llm_response_text.toLowerCase() and len(
-                    user_input_text) > 5:
+            if config["Task"][TASK]["free_speech_watermark"] in llm_response_text.lower() and len(user_input_text) > 5:
                 # TODO: check does this handle the case where people ask for repetition or say something else?
                 free_task = True
                 logger.info("Free speech watermark detected.")
@@ -225,7 +226,7 @@ if __name__ == '__main__':
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"]}
 
             # End of task detection from LLM response
-            if config["Task"][TASK]["end_watermark"] in llm_response_text.toLowerCase():
+            if config["Task"][TASK]["end_watermark"] in llm_response_text.lower():
                 end_task = True
                 logger.info("End of task detected.")
 
