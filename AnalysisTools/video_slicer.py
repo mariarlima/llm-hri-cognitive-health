@@ -76,7 +76,7 @@ for start, end in subclip_tuple:
     print(f"Convert to seconds: {start_second} - {end_second}")
     clips.append(video.subclip(start_second, end_second))
 
-clips_subfix = ["picture", "semantic", "interview"]
+clips_subfix = ["T1", "T2", "interview"]
 
 original_codec = get_video_info(args.file)
 
