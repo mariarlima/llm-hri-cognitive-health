@@ -7,3 +7,5 @@ __pycache__/
 .DS_Store
 save/*.json
 FinalSaves/*.json
+*.mov
+*.mp4
