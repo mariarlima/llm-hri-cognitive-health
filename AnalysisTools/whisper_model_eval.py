@@ -35,7 +35,7 @@ def transcribe_and_save_results(whisper_model_id, whisper_model, video_filename,
     return plain_text_content, srt_content
 
 
-whisper_model_ids = ["tiny.en", "base.en", "small.en", "medium.en"]
+whisper_model_ids = ["tiny.en", "base.en"]
 
 # Create the parser
 parser = argparse.ArgumentParser(description="Auto Whisper Model Evaluation Tool CLI")
@@ -81,7 +81,7 @@ for video_file in get_video_files(args.file):
     for model_id in whisper_model_ids:
         similarity = string_similarity(current_results[whisper_model_ids[-1]], current_results[model_id])
         print(f"Similarity between {whisper_model_ids[-1]} and {model_id}: {similarity:.2f}")
-        eval_summary_content.join(f"{model_id}: {similarity:.2f}\n")
+        eval_summary_content += f"{model_id}: {similarity:.2f}\n"
 
     output_eval_summary = os.path.join(dir_name, f"{name}_eval_summary.txt")
     with open(output_eval_summary, "w") as f:
