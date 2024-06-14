@@ -23,8 +23,11 @@ class STT:
         else:
             device = "cpu"
             logger.warning("PyTorch is using CPU.")
-        logger.info("Loading whisper model with ID: %s", config["whisper_model_id"][self.pid])
-        self.whisper_model = whisper.load_model(config["whisper_model_id"][self.pid]).to(device)
+        self.whisper_model_id = config["whisper_model_id"]["default"]
+        if config["whisper_model_id"].get(self.pid) is not None:
+            self.whisper_model_id = config["whisper_model_id"][self.pid]
+        logger.info("Loading whisper model with ID: %s", self.whisper_model_id)
+        self.whisper_model = whisper.load_model(self.whisper_model_id).to(device)
         logger.info("Whisper model loaded.")
 
         # TODO: play with energy level.

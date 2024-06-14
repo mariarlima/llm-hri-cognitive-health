@@ -87,6 +87,7 @@ for clip in clips:
     output_filename = os.path.join(dir_name, f"{name}_{clips_subfix[index]}{ext}")
     print(f"Saving sliced video {output_filename} duration: {clip.duration}")
     clip.write_videofile(output_filename, codec=original_codec["video_codec"],
-                         audio_codec=original_codec["audio_codec"])
+                         audio_codec=original_codec["audio_codec"],
+                         ffmpeg_params=["-movflags", "faststart"])
     print("Done")
     index += 1

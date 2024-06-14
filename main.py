@@ -142,9 +142,12 @@ if __name__ == '__main__':
             else:
                 # listen to user
                 if config["is_using_voice"]:
+                    pause_threshold = config["STT"]["normal"]["pause_threshold"]["default"]
+                    if config["STT"]["normal"]["pause_threshold"].get(PID) is not None:
+                        pause_threshold = config["STT"]["normal"]["pause_threshold"][PID]
                     stt_response = stt.get_voice_as_text(
                         phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
-                        pause_threshold=config["STT"]["normal"]["pause_threshold"][PID])
+                        pause_threshold=pause_threshold)
                 # else:
                 #     user_input_text = input("Enter Prompts: ")
 
