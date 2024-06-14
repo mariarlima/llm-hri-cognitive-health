@@ -1,26 +1,54 @@
 config = {
     "is_using_voice": True,
     "is_playback": False,
-    "whisper_model_id": "base.en",  # "tiny.en", first try: "base.en", then: "small.en", "medium.en",
+    "whisper_model_id": # "tiny.en", first try: "base.en", then: "small.en", "medium.en",
+        {
+            "default": "tiny.en",  
+            "P03": "base.en",
+            "P04": "base.en",
+            "P05": "base.en",
+            "P07": "small.en",
+            "P08": "base.en",
+            "P10": "small.en",
+            "P12": "base.en"
+            "P13": "small.en",
+        },
     "enable_LLM_module": True,
     "enable_TTS_module": True,
     "STT":
         {
             "free_speech":
                 {
-                    "pause_threshold": 7,  # Only stop recording after X second of silence
-                    "phrase_time_limit": 85,  # Max duration of a recorded audio clip
+                    "pause_threshold":  # Only stop recording after X second of silence
+                        {
+                            "Picture_1": 7,
+                            "Picture_2": 7,
+                            "Semantic_1": 15,
+                            "Semantic_2": 15,
+                        }, 
+                    "phrase_time_limit": # Max duration of a recorded audio clip
+                        {
+                             "Picture_1": 85,
+                             "Picture_2": 85,
+                             "Semantic_1": 60,
+                             "Semantic_2": 60,
+                        }, 
                 },
             "normal":
                 {
-                    "pause_threshold": 4,  # Only stop recording after 5 second of silence
-                    "pause_threshold_task_1": 4,
+                    "pause_threshold": # Only stop recording after 5 second of silence
+                        {
+                            "default": 4,  
+                            "P04": 5,
+                            "P06": 7,
+                            "P07": 6,
+                        },
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "mic_time_offset": -0.05,  # Time offset for mic to start recording, seconds
         },
-    "llm_model_id": "gpt-4o",  # "gpt-4-turbo",
+    "llm_model_id": "gpt-4o", 
     "TTS":
         {
             "api_provider": "unrealspeech",  # unrealspeech or openai
@@ -40,7 +68,7 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
-            "use_network_controller": True, # to use AWS instance server and Raspberry Pi 
+            "use_network_controller": False, # to use AWS instance server and Raspberry Pi 
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {

@@ -12,9 +12,10 @@ logger = logging.getLogger("HRI")
 
 
 class STT:
-    def __init__(self, api_key):
+    def __init__(self, api_key, pid):
         # Initialize whisper API
         self.openai_api = OpenAI(api_key=api_key)
+        self.pid = pid
         # Initialize whisper model
         if torch.cuda.is_available():
             device = torch.device("cuda")
@@ -22,8 +23,8 @@ class STT:
         else:
             device = "cpu"
             logger.warning("PyTorch is using CPU.")
-        logger.info("Loading whisper model with ID: %s", config["whisper_model_id"])
-        self.whisper_model = whisper.load_model(config["whisper_model_id"]).to(device)
+        logger.info("Loading whisper model with ID: %s", config["whisper_model_id"][self.pid])
+        self.whisper_model = whisper.load_model(config["whisper_model_id"][self.pid]).to(device)
         logger.info("Whisper model loaded.")
 
         # TODO: play with energy level.

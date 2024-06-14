@@ -25,8 +25,9 @@ from blossom_local_sender import BlossomLocalSender
 from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_prompt_task2_2
 
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
-# TASK = "Picture_1"
-TASK = "Semantic_1"
+TASK = "Picture_1"
+# TASK = "Semantic_1"
+PID = 'default'
 # TASK = "Picture_2"
 # TASK = "Semantic_2"
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt)
-    stt = STT.STT(os.getenv("OPENAI_API_KEY"))
+    stt = STT.STT(os.getenv("OPENAI_API_KEY"), PID)
     llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
     bl = None
     if config["Blossom"]["status"] == "Enabled":
@@ -122,8 +123,8 @@ if __name__ == '__main__':
                 # listen to user
                 if config["is_using_voice"]:
                     stt_response = stt.get_voice_as_text(
-                        phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"],
-                        pause_threshold=config["STT"]["free_speech"]["pause_threshold"])
+                        phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"][TASK],
+                        pause_threshold=config["STT"]["free_speech"]["pause_threshold"][TASK])
                 # else:
                 #     user_input_text = input("Enter Prompts: ")
 
@@ -141,14 +142,9 @@ if __name__ == '__main__':
             else:
                 # listen to user
                 if config["is_using_voice"]:
-                    if TASK == "Picture_1" or TASK == "Picture_2":
-                        stt_response = stt.get_voice_as_text(
-                            phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
-                            pause_threshold=config["STT"]["normal"]["pause_threshold_task_1"])
-                    else:
-                        stt_response = stt.get_voice_as_text(
-                            phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
-                            pause_threshold=config["STT"]["normal"]["pause_threshold"])
+                    stt_response = stt.get_voice_as_text(
+                        phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
+                        pause_threshold=config["STT"]["normal"]["pause_threshold"][PID])
                 # else:
                 #     user_input_text = input("Enter Prompts: ")
 
