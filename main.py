@@ -25,9 +25,9 @@ from blossom_local_sender import BlossomLocalSender
 from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_prompt_task2_2
 
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
-TASK = "Picture_1"
-# TASK = "Semantic_1"
-PID = 'default'
+# TASK = "Picture_1"
+TASK = "Semantic_1"
+PID = 'P08'
 # TASK = "Picture_2"
 # TASK = "Semantic_2"
 

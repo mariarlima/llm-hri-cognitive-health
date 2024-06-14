@@ -7,10 +7,11 @@ config = {
             "P03": "base.en",
             "P04": "base.en",
             "P05": "base.en",
+            "P06": "tiny.en",
             "P07": "small.en",
             "P08": "base.en",
             "P10": "small.en",
-            "P12": "base.en"
+            "P12": "base.en",
             "P13": "small.en",
         },
     "enable_LLM_module": True,
@@ -40,8 +41,9 @@ config = {
                         {
                             "default": 4,  
                             "P04": 5,
-                            "P06": 7,
+                            "P06": 6,
                             "P07": 6,
+                            "P08": 4,
                         },
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
@@ -68,7 +70,7 @@ config = {
     "Blossom":
         {
             "status": "Enabled",  # Enabled or Disabled
-            "use_network_controller": False, # to use AWS instance server and Raspberry Pi 
+            "use_network_controller": True, # to use AWS instance server and Raspberry Pi 
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
                 {
