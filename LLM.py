@@ -238,24 +238,21 @@ class LLM:
         return llm_response.choices[0].message.content
 
     def request_mod_response(self, generated_content):
-        # TODO: delete this placeholder
-        return "yes"
-        #
-        # if self.llm_role != LLM_Role.MOD:
-        #     logger.error("Call request_mod_response from MOD LLM only.")
-        # # TODO: what role should we assign in prompt?
-        # prompt = [{"role": "system", "content": llm_mod_prompt}, {"role": "user", "content": generated_content}]
-        #
-        # logger.info("Calling LLM API")
-        # # TODO: Add hyperparameter for LLM API
-        # # checkpoint: Add hyperparams
-        # llm_response = self.openai.chat.completions.create(
-        #     model=config["llm_model_id"],
-        #     messages=prompt
-        # )
-        #
-        # logger.info("MOD LLM response: %s", llm_response.choices[0].message.content)
-        # return llm_response.choices[0].message.content
+        if self.llm_role != LLM_Role.MOD:
+            logger.error("Call request_mod_response from MOD LLM only.")
+        # TODO: what role should we assign in prompt?
+        prompt = [{"role": "system", "content": llm_mod_prompt}, {"role": "user", "content": generated_content}]
+
+        logger.info("Calling LLM API")
+        # TODO: Add hyperparameter for LLM API
+        # checkpoint: Add hyperparams
+        llm_response = self.openai.chat.completions.create(
+            model=config["llm_model_id"],
+            messages=prompt
+        )
+
+        logger.info("MOD LLM response: %s", llm_response.choices[0].message.content)
+        return llm_response.choices[0].message.content
 
     def request_response(self, text):
         if self.llm_role != LLM_Role.MAIN:
