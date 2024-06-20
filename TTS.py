@@ -25,6 +25,11 @@ class TTS:
             self.model_id = config["TTS"]["openai"]["model_id"]
             self.voice_id = config["TTS"]["openai"]["voice_id"]
             self.openai_api = OpenAI(api_key=api_key)
+        elif api_provider == "aws":
+            self.voice_id = config["TTS"]["aws"]["voice_id"]
+            self.bit_rate = config["TTS"]["aws"]["bit_rate"]
+            # self.speech_api = AWSAPI(api_key)
+            raise NotImplementedError
         else:
             assert False, "Invalid TTS API Provider."
         logger.info("TTS module initialized.")

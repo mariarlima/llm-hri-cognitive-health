@@ -43,7 +43,10 @@ if __name__ == '__main__':
     prompt_name = config["Task"][TASK]["prompt"]
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
-    llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt)
+    language = config["language"]["default"]
+    if config["language"].get(PID) is not None:
+        language = config["language"][PID]
+    llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt, language=language)
     stt = STT.STT(os.getenv("OPENAI_API_KEY"), PID)
     llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
     bl = None
@@ -124,7 +127,8 @@ if __name__ == '__main__':
                 if config["is_using_voice"]:
                     stt_response = stt.get_voice_as_text(
                         phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"][TASK],
-                        pause_threshold=config["STT"]["free_speech"]["pause_threshold"][TASK])
+                        pause_threshold=config["STT"]["free_speech"]["pause_threshold"][TASK],
+                        language=language)
                 # else:
                 #     user_input_text = input("Enter Prompts: ")
 

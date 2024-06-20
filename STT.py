@@ -59,7 +59,7 @@ class STT:
             self.mic = sr.Microphone()
         
 
-    def get_voice_as_text(self, pause_threshold, phrase_time_limit, use_api=False):
+    def get_voice_as_text(self, pause_threshold, phrase_time_limit, use_api=False, language="en"):
         """
         Listen to user speech and transcribe it to text using Whisper API.
         """
@@ -114,7 +114,7 @@ class STT:
             # if a RequestError or UnknownValueError exception is caught,
             #     update the response object accordingly
             try:
-                response["transcription"] = self.whisper_model.transcribe('playback.wav')
+                response["transcription"] = self.whisper_model.transcribe('playback.wav', language=language)
             except sr.RequestError:
                 # API was unreachable or unresponsive
                 response["success"] = False

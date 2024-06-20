@@ -13,6 +13,14 @@ llm_mod_prompt = ""
 # TODO: Add predefined response for regenerating response here.
 regeneration_predefined_response = ""
 
+llm_language_prompt = {
+    "es":
+        {
+            "role": "system",
+            "content": "For following interaction, reply with Spanish."
+        }
+}
+
 llm_prompt_task1_1 = [
     {
         "role": "system",
@@ -129,8 +137,12 @@ class LLM_Role(Enum):
 
 # TODO: current arch is instantiate multiple LLM api, should it be singleton?
 class LLM:
-    def __init__(self, api_key, llm_role, llm_prompt=""):
+    def __init__(self, api_key, llm_role, llm_prompt=None, language="en"):
+        if llm_prompt is None:
+            llm_prompt = []
         self.openai = OpenAI(api_key=api_key)
+        if llm_language_prompt.get(language) is not None:
+            llm_prompt.append(llm_language_prompt[language])
         self.conversation = llm_prompt
         # TODO: Do we need full_conversation?
         self.full_conversation = copy.deepcopy(llm_prompt)
