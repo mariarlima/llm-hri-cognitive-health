@@ -53,11 +53,11 @@ config = {
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
             "open_dialog":
-            {
-                "pause_threshold": 2,
-                "phrase_time_limit": 10,
+                {
+                    "pause_threshold": 2,
+                    "phrase_time_limit": 10,
 
-            },
+                },
             "timeout": 10,  # How much time r.listen will wait before a speech is picked up by mic
             "mic_time_offset": -0.05,  # Time offset for mic to start recording, seconds
         },
@@ -118,64 +118,147 @@ config = {
         {
             "Picture_1":
                 {
-                    "free_speech_watermark": "storytelling",
+                    "free_speech_watermark":
+                        {
+                            "en": "storytelling",
+                            "es": "storytelling",
+                        },
                     "prompt":
-                    {
-                        "en": "llm_prompt_t1_v1",
-                        "es": "llm_prompt_t1_v1_ES",
-                    },
-                    "start_watermark": "storytelling",
-                    "end_watermark": "next challenge",
-                    "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
+                        {
+                            "en": "llm_prompt_t1_v1",
+                            "es": "llm_prompt_t1_v1_ES",
+                        },
+                    "start_watermark":
+                        {
+                            "en": "storytelling",
+                            "es": "storytelling",
+
+                        },
+                    "end_watermark":
+                        {
+                            "en": "next challenge",
+                            "es": "next challenge",
+
+                        },
+                    "end_blossom":
+                        {
+                            "en": "Great job! You described the picture in great detail. You’re ready for the next challenge!",
+                            "es": "Great job! You described the picture in great detail. You’re ready for the next challenge!",
+                        },
                 },
             "Picture_2":
                 {
-                    "free_speech_watermark": "storytelling",
-                    "prompt": 
-                    {
-                        "en": "llm_prompt_t1_v2",
-                        "es": "llm_prompt_t1_v2_ES",
-                    },
-                    "start_watermark": "storytelling",
-                    "end_watermark": "next challenge",
-                    "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
+                    "free_speech_watermark":
+                        {
+                            "en": "storytelling",
+                            "es": "storytelling",
+                        },
+                    "prompt":
+                        {
+                            "en": "llm_prompt_t1_v2",
+                            "es": "llm_prompt_t1_v2_ES",
+                        },
+                    "start_watermark":
+                        {
+                            "en": "storytelling",
+                            "es": "storytelling",
+
+                        },
+                    "end_watermark":
+                        {
+                            "en": "next challenge",
+                            "es": "next challenge",
+
+                        },
+                    "end_blossom":
+                        {
+                            "en": "Great job! You described the picture in great detail. You’re ready for the next challenge!",
+                            "es": "Great job! You described the picture in great detail. You’re ready for the next challenge!",
+                        },
                 },
             "Semantic_1":
                 {
-                    "free_speech_watermark": "different game",
-                    "prompt": 
-                    {
-                        "en": "llm_prompt_t2_v1",
-                        "es": "llm_prompt_t2_v1_ES",
-                    },
-                    "start_watermark": "different game",
-                    "end_watermark": "bye",
-                    "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Bye"
+                    "free_speech_watermark":
+                        {
+                            "en": "different game",
+                            "es": "different game",
+                        },
+                    "prompt":
+                        {
+                            "en": "llm_prompt_t2_v1",
+                            "es": "llm_prompt_t2_v1_ES",
+                        },
+                    "start_watermark":
+                        {
+                            "en": "different game",
+                            "es": "different game",
+                        },
+                    "end_watermark":
+                        {
+                            "en": "bye",
+                            "es": "bye",
+                        },
+                    "end_blossom":
+                        {
+                            "en": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
+                            "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
+                        }
                 },
             "Semantic_2":
                 {
-                    "free_speech_watermark": "different game",
-                    "prompt": 
-                    {
-                        "en": "llm_prompt_t2_v2",
-                        "es": "llm_prompt_t2_v2_ES",
-                    },
-                    "start_watermark": "different game",
-                    "end_watermark": "bye",
-                    "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
+                    "free_speech_watermark":
+                        {
+                            "en": "different game",
+                            "es": "different game",
+                        },
+                    "prompt":
+                        {
+                            "en": "llm_prompt_t2_v2",
+                            "es": "llm_prompt_t2_v2_ES",
+                        },
+                    "start_watermark":
+                        {
+                            "en": "different game",
+                            "es": "different game",
+                        },
+                    "end_watermark":
+                        {
+                            "en": "bye",
+                            "es": "bye",
+                        },
+                    "end_blossom":
+                        {
+                            "en": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
+                            "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
+                        }
                 },
             "Open_dialog":
-            {
-                 "free_speech_watermark": "different game",
-                    "prompt": 
-                    {
-                        "en": "llm_prompt_open",
-                        "es": "llm_prompt_open_ES",
-                    },
-                    "start_watermark": "different game",
-                    "end_watermark": "bye",
-                    "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
+                {
+                    "free_speech_watermark":
+                        {
+                            "en": "different game",
+                            "es": "different game",
+                        },
+                    "prompt":
+                        {
+                            "en": "llm_prompt_open",
+                            "es": "llm_prompt_open_ES",
+                        },
+                    "start_watermark":
+                        {
+                            "en": "different game",
+                            "es": "different game",
+                        },
+                    "end_watermark":
+                        {
+                            "en": "bye",
+                            "es": "bye",
+                        },
+                    "end_blossom":
+                        {
+                            "en": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
+                            "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
+                        }
                 },
-                
-            }
         }
+}

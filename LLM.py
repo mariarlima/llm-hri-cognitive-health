@@ -252,6 +252,8 @@ class LLM:
         )
 
         logger.info("MOD LLM response: %s", llm_response.choices[0].message.content)
+        if "no" in llm_response.choices[0].message.content.lower():
+            logger.warning("=======================MOD returns no for generated content.=======================")
         return llm_response.choices[0].message.content
 
     def request_response(self, text):
