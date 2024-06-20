@@ -8,6 +8,15 @@ import logging
 from pydub import AudioSegment
 from io import BytesIO
 
+# aws polly import
+from boto3 import Session
+from botocore.exceptions import BotoCoreError, ClientError
+from contextlib import closing
+import os
+import sys
+import subprocess
+from tempfile import gettempdir
+
 logger = logging.getLogger("HRI")
 
 
@@ -27,9 +36,8 @@ class TTS:
             self.openai_api = OpenAI(api_key=api_key)
         elif api_provider == "aws":
             self.voice_id = config["TTS"]["aws"]["voice_id"]
-            self.bit_rate = config["TTS"]["aws"]["bit_rate"]
-            # self.speech_api = AWSAPI(api_key)
-            raise NotImplementedError
+            self.session = Session(profile_name="default")
+            self.aws_api = self.session.client("polly")
         else:
             assert False, "Invalid TTS API Provider."
         logger.info("TTS module initialized.")
@@ -62,4 +70,37 @@ class TTS:
             audio_bytes = tts_audio_data.content
             self.signal_queue.put(get_audio_length(audio_bytes))
             play(tts_audio_data.content)
+
+        elif self.api_provider == "aws":
+            try:
+                # Request speech synthesis
+                response = self.aws_api.synthesize_speech(Text=text, OutputFormat="mp3",
+                                                          VoiceId=self.voice_id)
+            except (BotoCoreError, ClientError) as error:
+                # The service returned an error
+                logger.error(error)
+                return 0
+
+            with closing(response["AudioStream"]) as stream:
+                output = os.path.join(gettempdir(), "speech.mp3")
+
+                try:
+                    # Open a file for writing the output as a binary stream
+                    with open(output, "wb") as file:
+                        file.write(stream.read())
+                        audio_bytes = read_mp3_as_bytes(output)
+                        self.signal_queue.put(get_audio_length(audio_bytes))
+                        play(audio_bytes)
+
+                except IOError as error:
+                    # Could not write to file, exit gracefully
+                    logger.error(error)
+                    return 0
+
         return get_audio_length(audio_bytes)
+
+# import queue
+# q = queue.Queue()
+# tts = TTS("api_key", q, "aws")
+# tts.play_text_audio("Hola, ¿cómo estás?")
+# print(q.get())

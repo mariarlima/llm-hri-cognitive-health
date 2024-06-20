@@ -38,14 +38,14 @@ max_duration = 5 * 60  # 5 minutes in seconds
 if __name__ == '__main__':
     load_dotenv()
     signal_queue = queue.Queue()
+    language = config["language"]["default"]
+    if config["language"].get(PID) is not None:
+        language = config["language"][PID]
     # choose appropriate prompt based on task and version/session
     # print(config["STT"]["mic_time_offset"])
     prompt_name = config["Task"][TASK]["prompt"]
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
-    language = config["language"]["default"]
-    if config["language"].get(PID) is not None:
-        language = config["language"][PID]
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt, language=language)
     stt = STT.STT(os.getenv("OPENAI_API_KEY"), PID)
     llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
@@ -55,7 +55,9 @@ if __name__ == '__main__':
             bl = BlossomLocalSender()
         else:
             bl = BlossomInterface()
-    if config["TTS"]["api_provider"] == "unrealspeech":
+    if language == "es":
+        tts = TTS.TTS(os.getenv("AWS_POLLY_KEY"), signal_queue, api_provider="aws")
+    elif config["TTS"]["api_provider"] == "unrealspeech":
         tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"), signal_queue)
     else:  # fallback to openai tts
         tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), signal_queue, api_provider="openai")

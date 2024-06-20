@@ -58,7 +58,7 @@ config = {
     "llm_model_id": "gpt-4o",
     "TTS":
         {
-            "api_provider": "unrealspeech",  # unrealspeech or openai
+            "api_provider": "unrealspeech",  # unrealspeech, openai, aws
             "unrealspeech":
                 {
                     "voice_id": "Amy",
@@ -73,7 +73,7 @@ config = {
                 },
             "aws":
                 {
-                    "voice_id": "",
+                    "voice_id": "Penelope",
                 }
         },
     "Blossom":
