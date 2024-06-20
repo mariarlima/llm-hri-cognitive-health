@@ -12,7 +12,6 @@ config = {
             "P03": "base.en",
             "P04": "base.en",
             "P05": "base.en",
-            "P06": "tiny.en",
             "P07": "small.en",
             "P08": "base.en",
             "P10": "small.en",
@@ -48,7 +47,8 @@ config = {
                             "P04": 5,
                             "P06": 6,
                             "P07": 6,
-                            "P08": 4,
+                            "P12": 5,
+                            "P13": 5
                         },
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
