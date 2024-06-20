@@ -45,7 +45,6 @@ config = {
                         {
                             "default": 4,
                             "P04": 5,
-                            "P06": 6,
                             "P07": 6,
                             "P12": 5,
                             "P13": 5,
@@ -84,7 +83,7 @@ config = {
         },
     "Blossom":
         {
-            "status": "Disabled",  # Enabled or Disabled
+            "status": "Enabled",  # Enabled or Disabled
             "use_network_controller": True,  # to use AWS instance server and Raspberry Pi
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
@@ -200,7 +199,7 @@ config = {
                         },
                     "end_blossom":
                         {
-                            "en": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
+                            "en": "Well done! Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Bye",
                             "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
                         }
                 },
@@ -228,7 +227,7 @@ config = {
                         },
                     "end_blossom":
                         {
-                            "en": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
+                            "en": "You're really good at this! Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
                             "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
                         }
                 },
@@ -256,7 +255,7 @@ config = {
                         },
                     "end_blossom":
                         {
-                            "en": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye",
+                            "en": "Alright, it was nice speaking with you! I hope we can talk again soon! Bye bye",
                             "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
                         }
                 },

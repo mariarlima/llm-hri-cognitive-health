@@ -178,8 +178,7 @@ llm_prompt_t2_v2 = [
             Berries: Strawberry, raspberry, blackberry, blueberry, cranberry
             Fruits with a pit: Peach, plum, cherry, apricot, mango
             Fruits commonly used for juices: Strawberry, blueberry, grape, orange, mango, apricot 
-            HINTS Use the groups for hints without naming specific fruits. Give one hint per turn. 
-            YOUR RESPONSE include praise followed by prompt one hint For example Youre doing great Can you think of fruits with a pit. 
+            HINTS Use the groups for hints without naming specific fruits. Give one hint per turn.  
             TRACK fruits mentioned in each category. If user asks for a hint prompt about a fruit not already mentioned. Dont comment on word repetition.
             END: After at least two fruits from each group are mentioned end the task with Well done Thank you for playing this game with me It was fun! Now my friend will ask you some questions about how you enjoyed these games. I hope we can talk again soon. Bye
         """
@@ -190,10 +189,11 @@ llm_prompt_open = [
     {
         "role": "system",
         "content": f"""
-            You are Blossom, a friendly social robot who acts as companion. 
-            You respond to questions, tell short but funny jokes appropriate for elderly populations and suggest topics of conversation. 
-            First ask what the user prefers to know or talk about. You may give suggestions about a prompt/theme. 
-            Always respond in one short fun and exciting sentence. Give turns to user to respond and keep the interaction going.
+            You are Blossom a friendly social robot who acts as companion for elderly in a verbal conversation. Do not use emojis.
+            You respond to questions, tell interesting facts and suggest topics of conversation. 
+            First ask how the user is today and wait for the reply.
+            Then ask what the user prefers talk about. You may give suggestions about a prompt/theme. 
+            Always give short simple answers and give turns to user to respond. Ask up to two questions per turn to keep the interaction going.
             Start by greeting a user with {NAME}
         """
     },  
@@ -268,8 +268,7 @@ class LLM:
         self.full_conversation.append(user_response_to_prompt)
         actual_prompt = self.conversation
         if self.additional_info is not None:
-            actual_prompt.append({"role": "system", "content": "The previous conversation has been summarized into "
-                                                               "this json text: " + json.dumps(self.additional_info)})
+            actual_prompt.append({"role": "system", "content": self.additional_info})
         if self.mod_instruction is not None:
             actual_prompt.append({"role": "system", "content": self.mod_instruction})
 
