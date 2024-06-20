@@ -8,7 +8,7 @@ config = {
         },
     "whisper_model_id":  # "tiny.en", first try: "base.en", then: "small.en", "medium.en",
         {
-            "default": "tiny",
+            "default": "tiny.en",
             "P03": "base.en",
             "P04": "base.en",
             "P05": "base.en",
@@ -78,7 +78,7 @@ config = {
         },
     "Blossom":
         {
-            "status": "Enabled",  # Enabled or Disabled
+            "status": "Disabled",  # Enabled or Disabled
             "use_network_controller": True,  # to use AWS instance server and Raspberry Pi
             "sequence_length_boundary_list": {"prompt": [2, 3, 4, 5, 6, 7, 8, 9, 12, 17, 20]},
             "sequence_list":
@@ -113,7 +113,11 @@ config = {
             "Picture_1":
                 {
                     "free_speech_watermark": "storytelling",
-                    "prompt": "llm_prompt_task1_1",
+                    "prompt":
+                    {
+                        "en": "llm_prompt_t1_v1",
+                        "es": "llm_prompt_t1_v1_ES",
+                    },
                     "start_watermark": "storytelling",
                     "end_watermark": "next challenge",
                     "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
@@ -121,7 +125,11 @@ config = {
             "Picture_2":
                 {
                     "free_speech_watermark": "storytelling",
-                    "prompt": "llm_prompt_task1_2",
+                    "prompt": 
+                    {
+                        "en": "llm_prompt_t1_v2",
+                        "es": "llm_prompt_t1_v2_ES",
+                    },
                     "start_watermark": "storytelling",
                     "end_watermark": "next challenge",
                     "end_blossom": "Great job! You described the picture in great detail. You’re ready for the next challenge!"
@@ -129,7 +137,11 @@ config = {
             "Semantic_1":
                 {
                     "free_speech_watermark": "different game",
-                    "prompt": "llm_prompt_task2_1",
+                    "prompt": 
+                    {
+                        "en": "llm_prompt_t2_v1",
+                        "es": "llm_prompt_t2_v1_ES",
+                    },
                     "start_watermark": "different game",
                     "end_watermark": "bye",
                     "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Bye"
@@ -137,7 +149,11 @@ config = {
             "Semantic_2":
                 {
                     "free_speech_watermark": "different game",
-                    "prompt": "llm_prompt_task2_2",
+                    "prompt": 
+                    {
+                        "en": "llm_prompt_t2_v2",
+                        "es": "llm_prompt_t2_v2_ES",
+                    },
                     "start_watermark": "different game",
                     "end_watermark": "bye",
                     "end_blossom": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"

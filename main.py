@@ -22,14 +22,15 @@ import LLM
 import TTS
 from blossom_interaction import BlossomInterface
 from blossom_local_sender import BlossomLocalSender
-from LLM import llm_prompt_task1_1, llm_prompt_task1_2, llm_prompt_task2_1, llm_prompt_task2_2
+from LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2
+from LLM import llm_prompt_t1_v1_ES
 
 # Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
-# TASK = "Picture_1"
+TASK = "Picture_1"
 # TASK = "Semantic_1"
-PID = 'P14'
+PID = 'P21'
 # TASK = "Picture_2"
-TASK = "Semantic_2"
+# TASK = "Semantic_2"
 
 max_duration = 5 * 60  # 5 minutes in seconds
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
         language = config["language"][PID]
     # choose appropriate prompt based on task and version/session
     # print(config["STT"]["mic_time_offset"])
-    prompt_name = config["Task"][TASK]["prompt"]
+    prompt_name = config["Task"][TASK]["prompt"][language]
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt, language=language)
@@ -153,7 +154,8 @@ if __name__ == '__main__':
                         pause_threshold = config["STT"]["normal"]["pause_threshold"][PID]
                     stt_response = stt.get_voice_as_text(
                         phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
-                        pause_threshold=pause_threshold)
+                        pause_threshold=pause_threshold,
+                        language=language)
                 # else:
                 #     user_input_text = input("Enter Prompts: ")
 
