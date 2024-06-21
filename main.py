@@ -75,6 +75,7 @@ if __name__ == '__main__':
     free_task = False
     end_task = False
     user_input_text = ""
+    system_input_text = None
     attempt_times = 0  # Count the number of attempts that MOD returns no for a generated content.
 
     # TODO: Add save/load function here to resume from last interaction.
@@ -181,6 +182,13 @@ if __name__ == '__main__':
             if config["is_using_voice"]:
                 if stt_response["success"]:
                     user_input_text = stt_response["transcription"]["text"]
+                    system_input_text = None
+                else:
+                    logger.warning("STT failed.")
+                    logger.error(f"STT error: {stt_response['error']}")
+                    user_input_text = ""
+                    system_input_text = "No user input is captured, prompt the user again with the same response."
+
             # TODO: no blossom exception handling
             # TODO: What should I put in prompt for no voice / stt error? - System message / user message with empty string
 
@@ -195,7 +203,7 @@ if __name__ == '__main__':
                 continue
 
             # LLM process the user input for next interaction turn
-            llm_response_text = llm.request_response(user_input_text)
+            llm_response_text = llm.request_response(user_input_text, system_input_text)
 
             # TODO: Moderation here.
             # mod_queue = queue.Queue()
