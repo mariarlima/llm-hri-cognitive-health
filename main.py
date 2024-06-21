@@ -23,7 +23,7 @@ import TTS
 from blossom_interaction import BlossomInterface
 from blossom_local_sender import BlossomLocalSender
 from LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4
-from LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_s4_ES
+from LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES
 from LLM import llm_prompt_open
 
 from session_vars import PID, TASK, SESSION
@@ -62,6 +62,7 @@ if __name__ == '__main__':
             bl = BlossomInterface()
     if language == "es":
         tts = TTS.TTS(os.getenv("AWS_POLLY_KEY"), signal_queue, api_provider="aws")
+        logger.info("Using AWS Polly for TTS.")
     elif config["TTS"]["api_provider"] == "unrealspeech":
         tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"), signal_queue)
     else:  # fallback to openai tts

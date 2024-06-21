@@ -5,18 +5,27 @@ config = {
         {
             "default": "en",
             "P21": "es",
+            "P19": "es",
+            "P20": "es",
+            "P21": "es",
+            "P17": "es",
+            "P22": "es",
+            "P23": "es",
+            "P24": "es",
+
         },
     "whisper_model_id":  # "tiny.en", first try: "base.en", then: "small.en", "medium.en",
         {
-            "default": "tiny.en",
-            "P03": "base.en",
-            "P04": "base.en",
-            "P05": "base.en",
-            "P07": "small.en",
-            "P08": "base.en",
-            "P10": "small.en",
-            "P12": "base.en",
-            "P13": "small.en",
+            "default": "base",
+            # change!!!!!!!!
+            # "P03": "base.en",
+            # "P04": "base.en",
+            # "P05": "base.en",
+            # "P07": "small.en",
+            # "P08": "base.en",
+            # "P10": "small.en",
+            # "P12": "base.en",
+            # "P13": "small.en",
         },
     "enable_LLM_module": True,
     "enable_TTS_module": True,
@@ -43,7 +52,7 @@ config = {
                 {
                     "pause_threshold":  # Only stop recording after 5 second of silence
                         {
-                            "default": 3,
+                            "default": 4,
                             "P04": 5,
                             # "P07": 6,
                             "P12": 5,

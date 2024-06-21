@@ -79,12 +79,12 @@ class TTS:
                 text = f"""
                     <speak>
                       <prosody rate="{self.speed}" pitch="{self.pitch}">
-                        This is an example of text-to-speech with a reduced speech rate.
+                        {text}
                       </prosody>
                     </speak>
                 """
                 response = self.aws_api.synthesize_speech(Text=text, OutputFormat="mp3",
-                                                          VoiceId=self.voice_id)
+                                                          VoiceId=self.voice_id, TextType="ssml")
             except (BotoCoreError, ClientError) as error:
                 # The service returned an error
                 logger.error(error)
