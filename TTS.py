@@ -36,6 +36,8 @@ class TTS:
             self.openai_api = OpenAI(api_key=api_key)
         elif api_provider == "aws":
             self.voice_id = config["TTS"]["aws"]["voice_id"]
+            self.speed = config["TTS"]["aws"]["speed"]
+            self.pitch = config["TTS"]["aws"]["pitch"]
             self.session = Session(profile_name="default")
             self.aws_api = self.session.client("polly")
         else:
@@ -74,6 +76,13 @@ class TTS:
         elif self.api_provider == "aws":
             try:
                 # Request speech synthesis
+                text = f"""
+                    <speak>
+                      <prosody rate="{self.speed}" pitch="{self.pitch}">
+                        This is an example of text-to-speech with a reduced speech rate.
+                      </prosody>
+                    </speak>
+                """
                 response = self.aws_api.synthesize_speech(Text=text, OutputFormat="mp3",
                                                           VoiceId=self.voice_id)
             except (BotoCoreError, ClientError) as error:

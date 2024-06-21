@@ -79,6 +79,8 @@ config = {
             "aws":
                 {
                     "voice_id": "Penelope",
+                    "speed": "80%",
+                    "pitch": "+0%",
                 }
         },
     "Blossom":
