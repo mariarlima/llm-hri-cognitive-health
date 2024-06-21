@@ -1,6 +1,6 @@
 PID = 'P08'
 NAME = "Ralph"
-
+SESSION = "S1"
 
 ### SESSIONS: S1, S3 ###
 # TASK = "Picture_1"
