@@ -43,9 +43,9 @@ config = {
                 {
                     "pause_threshold":  # Only stop recording after 5 second of silence
                         {
-                            "default": 4,
+                            "default": 3,
                             "P04": 5,
-                            "P07": 6,
+                            # "P07": 6,
                             "P12": 5,
                             "P13": 5,
                         },

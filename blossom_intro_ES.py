@@ -27,14 +27,14 @@ def play_mp3(file_path):
 
 
 blossom = [
-    "fear/fear_looking_around_1",
+    "happy/happy_head_bobbing",
     "happy/happy_nodding",
     "happy/happy_5_109",
     "cognitive/extra_08",
     "fear/fear_startled",
     "happy/happy_1_109",
     "cognitive/extra_13",
-    "cognitive/extra_149",
+    "cognitive/extra_14",
     "happy/happy_9_109"
 ]
 
