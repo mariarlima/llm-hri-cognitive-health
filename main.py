@@ -28,15 +28,6 @@ from LLM import llm_prompt_open
 
 from session_vars import PID, TASK
 
-# Choose from "Picture_1", "Picture_2", "Semantic_1", "Semantic_2"
-# TASK = "Picture_1"
-# TASK = "Semantic_1"
-# PID = 'P01'
-
-### SESSIONS: S2, S4 ###
-# TASK = "Picture_2"
-# TASK = "Semantic_2"
-
 # TODO
 # S4 = True
 
