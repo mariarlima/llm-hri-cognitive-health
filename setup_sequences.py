@@ -31,4 +31,7 @@ combine_sequences(["happy/happy", "happy/happy_9_109", "sad/sad_head_down"], "ex
 combine_sequences(["sesame/sesame12", "fear/fear", "happy/happy_1_109", "fear/fear"], "extra_10")
 combine_sequences(["grand/grand4", "happy/happy_2_109"], "extra_11")
 combine_sequences(["happy/happy_nodding", "fear/fear_startled"], "extra_12")
+combine_sequences(["happy/happy_nodding", "anger/anger_dissapoint", "fear/fear", "sesame/sesame10"], "extra_13")
+combine_sequences(["fear/fear", "cognitive/encouragement_04"], "extra_14")
+
 
