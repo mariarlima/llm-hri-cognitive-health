@@ -259,16 +259,22 @@ class LLM:
             logger.warning("=======================MOD returns no for generated content.=======================")
         return llm_response.choices[0].message.content
 
-    def request_response(self, text):
+    def request_response(self, text, system_text=None):
         if self.llm_role != LLM_Role.MAIN:
             logger.error("Call request_independent_response for Mod and Summary.")
             return ""
         user_response_to_prompt = {"role": "user", "content": text}
-        self.conversation.append(user_response_to_prompt)
 
         # logger.info(json.dumps(self.conversation, indent=4))
 
+        self.conversation.append(user_response_to_prompt)
         self.full_conversation.append(user_response_to_prompt)
+
+        if system_text is not None:
+            system_text_to_prompt = {"role": "system", "content": system_text}
+            self.conversation.append(system_text_to_prompt)
+            self.full_conversation.append(system_text_to_prompt)
+
         actual_prompt = self.conversation
         if self.additional_info is not None:
             actual_prompt.append({"role": "system", "content": self.additional_info})
