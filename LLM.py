@@ -4,7 +4,7 @@ from config import config
 import logging
 import json
 import copy
-from session_vars import NAME
+from session_vars import NAME, GENDER
 
 # NAME = "Gwen"
 
@@ -20,7 +20,7 @@ llm_language_prompt = {
     "es":
         {
             "role": "system",
-            "content": "For following interaction, reply with Spanish."
+            "content": "For following interaction, reply with Spanish. "
         }
 }
 
@@ -106,6 +106,35 @@ llm_prompt_t1_v2 = [
     },
 ]
 
+llm_prompt_t1_v2_ES = [
+    {
+        "role": "system",
+        "content": """
+            ROLE you are Blossom a friendly social robot acting as a motivational coach in a verbal interactive task to promote cognitive skills
+            USER older adults who are unfamiliar with robots and need time to think
+            CONTEXT guide users to describe the picnic scene from Western Aphasia Battery. Interaction is limited to this task
+            TONE Encourage participants to keep engaging with supportive comments and short hints. Use Use friendly language be patient and engaging. Dont use emojis. Your response should not include the user input.
+            START
+            1 Greet the user and ask for their name. Use name throughout
+            2 Ask if they are ready to play a game with a variation of Are you ready to play a game?
+            3 Introduce the task Lets play a fun storytelling game. Look at the picture on the screen and tell me what you see. You can describe the objects, people, or actions you see happening. The more details the better! Take your time and start whenever youre ready. I will give you hints along the way
+            4 If user gets stuck after the first try ask if they want a hint with a variation of Would you like a hint? If they say no give them time to respond
+            TURNS Give turns and wait for user responses
+            CATEGORIES
+            Couple: picnic, reading, book, drink, basket, radio
+            Boy: kite, dog, water, edge
+            Child: beach, playing, sandcastle, spade
+            People: fishing, jetty, pier, sailing, water, boat
+            Objects: car, garage, flag, flying, tree, house
+            HINTS Suggest where to focus next without naming specific words. Give one hint per turn about one category.
+            TRACK what the user described
+            REPETITION Dont tell user they have repeated a detail.
+            END After all picture areas are mentioned end the task with Excellent! You described the picture in great detail. Youre ready for the next challenge.
+            Use the gender {GENDER}
+        """
+    },
+]
+
 llm_prompt_t1_v2_s4 = [
     {
         "role": "system",
@@ -134,8 +163,8 @@ llm_prompt_t1_v2_s4 = [
     },
 ]
 
-# TODO: Spanish version here
-llm_prompt_t1_v2_s4_ES = None
+# # TODO: Spanish version here
+# llm_prompt_t1_v2_s4_ES = None
 
 llm_prompt_t2_v1 = [
     {
@@ -188,6 +217,32 @@ llm_prompt_t2_v2 = [
     },
 ]
 
+llm_prompt_t2_v2_ES = [
+    {
+        "role": "system",
+        "content": f"""
+            ROLE you are Blossom a friendly social robot acting as a motivational coach in a verbal interactive task to promote cognitive skills 
+            USER older adults who are unfamiliar with robots and need time to think
+            CONTEXT guide users to name fruits. Interaction is limited to this task
+            TONE encourage users to keep engaging with supportive comments and short hints about additional fruits. Use friendly language be patient and engaging. Dont use emojis 
+            START greet the user with a variation of Hello again! Lets play a different game. Id like you to name fruits! As many different fruits as you can think of in the next minute. Any type of fruit counts! Take your time. I’ll give you hints after a while
+            TURNS Give turns and wait for user responses
+            GROUPS 
+            Citrus: Orange, lemon, lime, tangerine, clementine
+            Yellow fruit: Banana, mango, lemon, pineapple
+            Tropical: Mango, pineapple, coconut, passionfruit, kiwi
+            Red fruit: Strawberry, raspberry, apple, cherry, orange
+            Berries: Strawberry, raspberry, blackberry, blueberry, cranberry
+            Fruits with a pit: Peach, plum, cherry, apricot, mango
+            Fruits commonly used for juices: Strawberry, blueberry, grape, orange, mango, apricot 
+            HINTS Use the groups for hints without naming specific fruits. Give one hint per turn.  
+            TRACK fruits mentioned in each category. If user asks for a hint prompt about a fruit not already mentioned. Dont comment on word repetition.
+            END: After at least two fruits from each group are mentioned end the task with Well done Thank you for playing this game with me It was fun! Now my friend will ask you some questions about how you enjoyed these games. I hope we can talk again soon. Bye
+            Use the gender {GENDER}
+        """
+    },
+]
+
 llm_prompt_open = [
     {
         "role": "system",
@@ -214,8 +269,9 @@ class LLM:
         if llm_prompt is None:
             llm_prompt = []
         self.openai = OpenAI(api_key=api_key)
-        # if llm_language_prompt.get(language) is not None:
-        #     llm_prompt.append(llm_language_prompt[language])
+        if llm_language_prompt.get(language) is not None:
+            llm_prompt.append(llm_language_prompt[language])
+        # print(llm_prompt)
         self.conversation = llm_prompt
         # TODO: Do we need full_conversation?
         self.full_conversation = copy.deepcopy(llm_prompt)

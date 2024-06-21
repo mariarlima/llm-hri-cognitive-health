@@ -23,7 +23,7 @@ import TTS
 from blossom_interaction import BlossomInterface
 from blossom_local_sender import BlossomLocalSender
 from LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4
-from LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_s4_ES
+from LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES
 from LLM import llm_prompt_open
 
 from session_vars import PID, TASK, SESSION
@@ -62,6 +62,7 @@ if __name__ == '__main__':
             bl = BlossomInterface()
     if language == "es":
         tts = TTS.TTS(os.getenv("AWS_POLLY_KEY"), signal_queue, api_provider="aws")
+        logger.info("Using AWS Polly for TTS.")
     elif config["TTS"]["api_provider"] == "unrealspeech":
         tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"), signal_queue)
     else:  # fallback to openai tts
@@ -187,7 +188,7 @@ if __name__ == '__main__':
             elapsed_time = time.time() - start_time
             logger.info(f"Time of HRI: {round(elapsed_time, 2)} s")
             if elapsed_time >= max_duration:
-
+                # llm.additional_info = f"Max duration reached. Response to user and end interaction."
                 logger.info("! Max duration reached. Ending interaction now")
                 end_task = True
                 # break before LLM processes if > max duration
@@ -236,7 +237,7 @@ if __name__ == '__main__':
 
             # CHANGED TO DEAL WITH CASE: "r.listen timeout"
             # if config["Task"][TASK]["free_speech_watermark"][language] in llm_response_text.lower() and len(user_input_text) > 5:
-            if config["Task"][TASK]["free_speech_watermark"] in llm_response_text.lower():
+            if config["Task"][TASK]["free_speech_watermark"][language] in llm_response_text.lower():
                 # TODO: check does this handle the case where people ask for repetition or say something else?
                 free_task = True
                 logger.info("Free speech watermark detected.")
@@ -285,7 +286,7 @@ if __name__ == '__main__':
         llm.additional_info = f"Max duration reached. Response to user and end interaction."
         llm_response_text = llm.request_response("")
         tts.play_text_audio(llm_response_text)
-        tts.play_text_audio(end_text)
+        # tts.play_text_audio(end_text)
         save_data = llm.save_final_history()
         save_filename = create_final_save(save_data)
         logger.info(f"Full interaction data saved at {save_filename}")

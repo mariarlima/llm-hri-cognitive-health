@@ -1,6 +1,7 @@
-PID = 'P08'
-NAME = "Ralph"
-SESSION = "S1"
+PID = 'P22'
+NAME = ""
+GENDER = "Male"
+SESSION = "S2"
 
 ### SESSIONS: S1, S3 ###
 # TASK = "Picture_1"
