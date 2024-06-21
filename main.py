@@ -22,17 +22,11 @@ import LLM
 import TTS
 from blossom_interaction import BlossomInterface
 from blossom_local_sender import BlossomLocalSender
-from LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2
-from LLM import llm_prompt_t1_v1_ES
+from LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4
+from LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_s4_ES
 from LLM import llm_prompt_open
 
-from session_vars import PID, TASK
-
-# TODO
-# S4 = True
-
-### OPEN DIALOG ###
-# TASK = "Open_dialog"
+from session_vars import PID, TASK, SESSION
 
 if TASK == "Open_dialog":
     max_duration = 3.5 * 60  # 10 minutes in seconds
@@ -50,6 +44,11 @@ if __name__ == '__main__':
     # choose appropriate prompt based on task and version/session
     # print(config["STT"]["mic_time_offset"])
     prompt_name = config["Task"][TASK]["prompt"][language]
+    # TODO: Add spanish prompt in llm file
+    if SESSION == "S4" and TASK == "Picture_2":
+        prompt_name = "llm_prompt_t1_v2_s4"
+        if language == "es":
+            prompt_name = "llm_prompt_t1_v2_s4_ES"
     prompt = eval(prompt_name)
     logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt, language=language)

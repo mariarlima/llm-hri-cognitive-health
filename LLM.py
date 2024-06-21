@@ -106,7 +106,7 @@ llm_prompt_t1_v2 = [
     },
 ]
 
-llm_prompt_t1_v2_S4 = [
+llm_prompt_t1_v2_s4 = [
     {
         "role": "system",
         "content": f"""
@@ -133,6 +133,9 @@ llm_prompt_t1_v2_S4 = [
         """
     },
 ]
+
+# TODO: Spanish version here
+llm_prompt_t1_v2_s4_ES = None
 
 llm_prompt_t2_v1 = [
     {
