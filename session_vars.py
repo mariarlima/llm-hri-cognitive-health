@@ -1,6 +1,6 @@
-PID = 'P22'
+PID = 'P23'
 NAME = ""
-GENDER = "Male"
+GENDER = "Female"
 SESSION = "S2"
 
 ### SESSIONS: S1, S3 ###
@@ -9,8 +9,8 @@ SESSION = "S2"
 
 
 ### SESSIONS: S2, S4 ###
-TASK = "Picture_2"
-# TASK = "Semantic_2"
+# TASK = "Picture_2"
+TASK = "Semantic_2"
 
 
 ### OPEN DIALOG ###
