@@ -24,12 +24,14 @@ config = {
             "P10": "small.en",
             "P12": "base.en",
             "P13": "small.en",
+            "P15": "base.en",
+            "P16": "base.en",
             "P17": "base",
             "P19": "base",
             "P20": "base",
-            "P21": "tiny", # to try!
+            "P21": "base", 
             "P22": "base",
-            "P23": "tiny", # to try!
+            "P23": "base", 
             "P24": "base",
         },
     "enable_LLM_module": True,
@@ -47,8 +49,8 @@ config = {
                         },
                     "phrase_time_limit":  # Max duration of a recorded audio clip
                         {
-                            "Picture_1": 85,
-                            "Picture_2": 85,
+                            "Picture_1": 90,
+                            "Picture_2": 90,
                             "Semantic_1": 60,
                             "Semantic_2": 60,
                         },
@@ -136,7 +138,7 @@ config = {
                     "free_speech_watermark":
                         {
                             "en": "storytelling",
-                            "es": "storytelling",
+                            "es": "contar historias",
                         },
                     "prompt":
                         {
@@ -152,7 +154,7 @@ config = {
                     "end_watermark":
                         {
                             "en": "next challenge",
-                            "es": "next challenge",
+                            "es": "siguiente desafío",     
 
                         },
                     "end_blossom":
@@ -166,7 +168,7 @@ config = {
                     "free_speech_watermark":
                         {
                             "en": "storytelling",
-                            "es": "storytelling",
+                            "es": "contar historias",
                         },
                     "prompt":
                         {
@@ -182,7 +184,7 @@ config = {
                     "end_watermark":
                         {
                             "en": "next challenge",
-                            "es": "next challenge",
+                            "es": "siguiente desafío",                         
 
                         },
                     "end_blossom":
@@ -211,7 +213,7 @@ config = {
                     "end_watermark":
                         {
                             "en": "bye",
-                            "es": "bye",
+                            "es": "adiós", 
                         },
                     "end_blossom":
                         {
@@ -239,7 +241,7 @@ config = {
                     "end_watermark":
                         {
                             "en": "bye",
-                            "es": "bye",
+                            "es": "adiós", 
                         },
                     "end_blossom":
                         {

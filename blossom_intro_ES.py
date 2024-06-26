@@ -58,6 +58,9 @@ def play_phrases_and_sequences(blossom, audio_files):
 
             if audio_files[ind] == audio_files[1]:
                 time.sleep(5)
+
+            if audio_files[ind] == audio_files[1]:
+                time.sleep(5)
             else:
                 time.sleep(1.5)
 
