@@ -11,6 +11,7 @@ config = {
             "P22": "es",
             "P23": "es",
             "P24": "es",
+            "P25": "es",
 
         },
     "whisper_model_id":  # "tiny.en", first try: "base.en", then: "small.en", "medium.en",
@@ -33,6 +34,7 @@ config = {
             "P22": "base",
             "P23": "base", 
             "P24": "base",
+            "P25": "base",
         },
     "enable_LLM_module": True,
     "enable_TTS_module": True,
