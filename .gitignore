@@ -9,3 +9,5 @@ save/*.json
 FinalSaves/*.json
 *.mov
 *.mp4
+*.csv
+*.avi
