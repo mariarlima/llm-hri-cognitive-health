@@ -291,6 +291,11 @@ if __name__ == '__main__':
         save_filename = create_save(save_data)
         logger.info(f"Data saved at {save_filename}")
 
+    except Exception as e:
+        logger.error(f"Exception occurred: {str(e)}")
+        logger.error(e, exc_info=True)
+        exit()
+
     # play audio for end of task out of main loop
     if end_task:
         end_text = config["Task"][TASK]["end_blossom"][language]
