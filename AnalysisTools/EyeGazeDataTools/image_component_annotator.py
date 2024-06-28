@@ -94,6 +94,12 @@ def load_annotation_file(file_path):
     global shapes, selection_index, current_shape
     with open(file_path, 'r') as f:
         shapes = json.load(f)
+    # Restore the shapes from normalized coordinates
+    for key in shapes.keys():
+        shape = shapes[key]
+        for i in range(len(shape)):
+            shape[i] = [int(shape[i][0] * window_width), int(shape[i][1] * window_height)]
+    print(f"Shapes Loaded:{json.dumps(shapes, indent=4)}")
     current_shape = []
     selection_index = 0
 
@@ -235,6 +241,11 @@ def main():
 
     cv2.destroyAllWindows()
 
+    # Normalize the shapes
+    for key in shapes.keys():
+        shape = shapes[key]
+        for i in range(len(shape)):
+            shape[i] = [shape[i][0] / window_width, shape[i][1] / window_height]
 
     print(f"Shapes:{json.dumps(shapes, indent=4)}")
 
