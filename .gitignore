@@ -13,3 +13,4 @@ FinalSaves/*.json
 *.avi
 *.png
 *.jpg
+!AnalysisTools/EyeGazeDataTools/images/*
