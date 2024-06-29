@@ -14,3 +14,4 @@ FinalSaves/*.json
 *.png
 *.jpg
 !AnalysisTools/EyeGazeDataTools/images/*
+!/AnalysisTools/EyeGazeDataTools/image_component_analysis.py
