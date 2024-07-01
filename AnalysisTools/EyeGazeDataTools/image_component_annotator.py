@@ -161,6 +161,9 @@ def main():
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):  # Press 'q' to quit
             break
+        if key == ord('x'):
+            cv2.destroyAllWindows()
+            exit()
         elif key == ord('a'):
             if is_in_selection_mode:
                 show_popup("Please exit selection mode to add a new point.")
@@ -233,11 +236,20 @@ def main():
             except FileNotFoundError:
                 show_popup("No annotation file found.")
 
+        elif key == ord('d'):
+            if not is_in_selection_mode:
+                show_popup("Please enter selection mode to delete a shape.")
+            if selection_key is not None:
+                shapes.pop(selection_key)
+                validate_select_shape()
+                redrawn_image()
+
         elif key == ord('h'):
             show_popup(
                 "Press 'a' to add a point.\nPress 'f' to finalize a shape.\nPress 'z' to undo a point or "
                 "shape.\nPress 's' to enter selection mode.\nPress '[' to select previous shape.\nPress ']' "
-                "to select next shape. \nPress 't' to name/rename a shape.\nPress 'q' to quit.")
+                "to select next shape. \nPress 't' to name/rename a shape. \nPress 'd' to delete selected shape."
+                "\nPress 'q' to save & quit. \nPress 'x' to exit without saving.")
 
     cv2.destroyAllWindows()
 
