@@ -2,7 +2,12 @@ import torch
 import whisper
 import datetime
 import argparse
+import json
 import os
+
+
+def transcribe_and_return_raw_data(model, audio_file):
+    return model.transcribe(audio_file, word_timestamps=True)
 
 
 def format_timestamp(seconds):
@@ -63,8 +68,8 @@ def transcribe_and_generate_srt_and_text(model, audio_file):
     return plain_text_content, srt_content
 
 
-whisper_model_id = "base.en"
-audio_file = "../Experiments.mp3"
+# whisper_model_id = "base.en"
+# audio_file = "../Experiments.mp3"
 
 # Create the parser
 parser = argparse.ArgumentParser(description="Auto Captioning Tool CLI")
@@ -73,6 +78,7 @@ parser = argparse.ArgumentParser(description="Auto Captioning Tool CLI")
 parser.add_argument('-f', '--file', type=str, required=True, help="Input file to transcribe.")
 # parser.add_argument('-o', '--output', type=str, required=True, help="The output file")
 parser.add_argument('-m', '--model', type=str, required=False, help="Whisper model ID", default="base.en")
+parser.add_argument('-r', '--raw', type=bool, required=False, help="Output raw value.", default=False)
 
 # Parse the arguments
 args = parser.parse_args()
@@ -84,7 +90,10 @@ base_name = os.path.basename(args.file)
 name, _ = os.path.splitext(base_name)
 
 # Construct the output file name
-output_file = os.path.join(dir_name, f"{name}.srt")
+ext = "srt"
+if args.raw:
+    ext = "json"
+output_file = os.path.join(dir_name, f"{name}.{ext}")
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
@@ -92,9 +101,17 @@ else:
     device = "cpu"
 whisper_model = whisper.load_model(args.model).to(device)
 
-srt_content = transcribe_and_generate_srt(whisper_model, args.file)
+if args.raw:
+    raw_data = transcribe_and_return_raw_data(whisper_model, args.file)
 
-with open(output_file, "w") as f:
-    f.write(srt_content)
+    with open(output_file, "w") as f:
+        json.dump(raw_data, f, indent=4)
 
-print(f"SRT file generated: {output_file}")
+    print(f"Raw data file generated: {output_file}")
+else:
+    srt_content = transcribe_and_generate_srt(whisper_model, args.file)
+
+    with open(output_file, "w") as f:
+        f.write(srt_content)
+
+    print(f"SRT file generated: {output_file}")
