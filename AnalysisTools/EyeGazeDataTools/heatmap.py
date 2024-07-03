@@ -7,7 +7,8 @@ from scipy.ndimage import gaussian_filter
 from utils import plotting
 
 
-def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sigma=20, figsize=(5, 4), dpi=600):
+def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sigma=20, use_fixation=False,
+                     figsize=(5, 4), dpi=600):
     cookie_image_path = "./images/The-Cookie-Theft-Picture-from-the-Boston-Diagnostic-Aphasia-Examination-For-the-PD-task.png"
     picnic_image_path = "./images/picnic.png"
 
@@ -21,14 +22,22 @@ def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sig
         background_image_path = picnic_image_path
     # print(pandas_data.head())
     # Create a blank image with 16:9 aspect ratio
-    filtered_pts = df[
-        (df['BPOGX'] >= 0.0) & (df['BPOGX'] <= 1.0) & (df['BPOGY'] >= 0.0) & (df['BPOGY'] <= 1.0) & (df['BPOGV'] == 1)]
-
+    if not use_fixation:
+        filtered_pts = df[
+            (df['BPOGX'] >= 0.0) & (df['BPOGX'] <= 1.0) & (df['BPOGY'] >= 0.0) & (df['BPOGY'] <= 1.0) & (
+                        df['BPOGV'] == 1)]
+    else:
+        filtered_pts = df[
+            (df['FPOGX'] >= 0.0) & (df['FPOGX'] <= 1.0) & (df['FPOGY'] >= 0.0) & (df['FPOGY'] <= 1.0) & (
+                    df['FPOGV'] == 1) & (df['FPOGD'] > 0.2)]
     # print(filtered_pts[["BPOGX", "BPOGY"]].describe())
     height = 900
     width = 1600
     heatmap = np.zeros((height, width))
-    points = filtered_pts[['BPOGX', 'BPOGY']].values
+    if not use_fixation:
+        points = filtered_pts[['BPOGX', 'BPOGY']].values
+    else:
+        points = filtered_pts[['FPOGX', 'FPOGY', 'FPOGD']].values
     # print(points)
     # Scale points to the image dimensions
     points[:, 0] *= width
@@ -43,7 +52,10 @@ def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sig
             y -= 1
         if x == width:
             x -= 1
-        heatmap[y, x] += 1
+        if not use_fixation:
+            heatmap[y, x] += 1
+        else:
+            heatmap[y, x] += point[2]
         # print(heatmap[y, x])
 
     # print(heatmap)
