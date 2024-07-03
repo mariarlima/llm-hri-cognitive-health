@@ -11,7 +11,7 @@ from utils import plotting
 
 
 def generate_correlated_visualization(data_path, transcription_path, title="Correlation Visualization",
-                                      figure_path="./figure.png", time_offset=0.0,
+                                      figure_path="./figure.png", time_offset=0.0, max_duration=0.0,
                                       figsize=(5, 4), dpi=600):
     cookie_image_path = "./images/The-Cookie-Theft-Picture-from-the-Boston-Diagnostic-Aphasia-Examination-For-the-PD-task.png"
     picnic_image_path = "./images/picnic.png"
@@ -19,7 +19,7 @@ def generate_correlated_visualization(data_path, transcription_path, title="Corr
     width = 1600
     max_char_per_line = 100
     # time_offset = 35.0
-    duration_threshold = 0.4
+    duration_threshold = 0.2
     line_height = 0.035
     char_offset = 0.01
     # data_path = "./data/P23_S1_all_gaze.csv"
@@ -35,7 +35,9 @@ def generate_correlated_visualization(data_path, transcription_path, title="Corr
     # Create a blank image with 16:9 aspect ratio
     filtered_pts = df[
         (df['FPOGX'] >= 0.0) & (df['FPOGX'] <= 1.0) & (df['FPOGY'] >= 0.0) & (df['FPOGY'] <= 1.0) & (
-                df['FPOGV'] == 1) & (df['FPOGD'] > duration_threshold)]
+                df['FPOGV'] == 1) & (df['FPOGD'] > duration_threshold) & (
+                df["TIME(2024/06/13 11:07:59.703)"] + time_offset <= max_duration) & (
+                df["TIME(2024/06/13 11:07:59.703)"] + time_offset >= 0)]
 
     # print(filtered_pts[["FPOGX", "FPOGY"]].describe())
 
@@ -45,10 +47,11 @@ def generate_correlated_visualization(data_path, transcription_path, title="Corr
     points[:, 0] *= width
     points[:, 1] *= height
     points[:, 2] += time_offset
-    points[:, 3] *= 20
+    points[:, 3] *= 15
     # print(points)
     # (196, 199, 243), (23, 33, 33)
-    custom_cmap = LinearSegmentedColormap.from_list('mycmap', ['lightsteelblue', 'midnightblue'], N=256)
+    # custom_cmap = LinearSegmentedColormap.from_list('mycmap', ['lightsteelblue', 'midnightblue'], N=256)
+    custom_cmap = "turbo"
     norm = Normalize(vmin=0, vmax=max(points[:, 2]))
     sm = ScalarMappable(cmap=custom_cmap, norm=norm)
 
@@ -140,9 +143,11 @@ def generate_correlated_visualization(data_path, transcription_path, title="Corr
     plt.tight_layout()
     figs = [plt.figure(n) for n in plt.get_fignums()]
     for i, fig in enumerate(figs):
-        fig.savefig(f"./figure{i}.png", format='png', dpi=dpi)
+        fig.savefig(f"{figure_path}“figure”{i}.png", format='png', dpi=dpi)
     # plt.show()
     plt.close('all')
 
 
-generate_correlated_visualization("./data/P02_S3_all_gaze.csv", "./data/P02_S3_T1_2.json", time_offset=35.0)
+generate_correlated_visualization("./data/P02_S3_all_gaze.csv", "./data/P02_S3_T1_blackout_.json", time_offset=-22.8,
+                                  max_duration=244.0,
+                                  figure_path="./picnic")
