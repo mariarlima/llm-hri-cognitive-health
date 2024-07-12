@@ -29,5 +29,8 @@ for file_name in file_names_fixation:
         extracted_string = match.group(1).replace('_', ' ')
         print(f"Processing: {extracted_string}")
         print(f"File name: {file_name}")
-        generate_heatmap(f"{directory_path}{file_name}", extracted_string,
-                         f"{figures_path}{extracted_string.replace(' ', '_')}_fixations.png", use_fixation=True)
+        try:
+            generate_heatmap(f"{directory_path}{file_name}", extracted_string,
+                             f"{figures_path}{extracted_string.replace(' ', '_')}_fixations.png", use_fixation=True)
+        except KeyError:
+            print(f"Error processing {file_name}, skipping file...")

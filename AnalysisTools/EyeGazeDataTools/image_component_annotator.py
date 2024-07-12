@@ -143,7 +143,7 @@ def redrawn_image():
 
 def main():
     global image, original_image, current_shape, shapes, selection_key, selection_index, is_in_selection_mode
-    image_path = "./images/Cookie_theft_padded.png"
+    image_path = "./images/Picnic_padded.png"
     window_title = "Image Annotation Tool - Press 'h' for help."
     image = cv2.imread(image_path)
     original_image = image.copy()

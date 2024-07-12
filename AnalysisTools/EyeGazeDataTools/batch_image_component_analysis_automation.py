@@ -19,13 +19,16 @@ for file_name in file_names:
         extracted_string = match.group(1).replace('_', ' ')
         print(f"Processing: {extracted_string}")
         print(f"File name: {file_name}")
-        data = get_fixation_duration_per_image_component(f"{directory_path}{file_name}")
-        save_file_name = f"{processed_data_path}{extracted_string.replace(' ', '_')}_image_component_analysis.csv"
-        with open(save_file_name, mode='w', newline='') as file:
-            keys = ""
-            values = ""
-            for key, item in data.items():
-                keys += key + ","
-                values += str(item) + ","
-            file.writelines(keys[:-1] + "\n")
-            file.writelines(values[:-1] + "\n")
+        try:
+            data = get_fixation_duration_per_image_component(f"{directory_path}{file_name}")
+            save_file_name = f"{processed_data_path}{extracted_string.replace(' ', '_')}_image_component_analysis.csv"
+            with open(save_file_name, mode='w', newline='') as file:
+                keys = ""
+                values = ""
+                for key, item in data.items():
+                    keys += key + ","
+                    values += str(item) + ","
+                file.writelines(keys[:-1] + "\n")
+                file.writelines(values[:-1] + "\n")
+        except KeyError:
+            print(f"Error processing {file_name} with error {KeyError}, skipping file...")
