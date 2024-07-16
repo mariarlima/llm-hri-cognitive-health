@@ -52,7 +52,7 @@ parser = argparse.ArgumentParser(description="Video Slicer Tool CLI")
 parser.add_argument('-f', '--file', type=str, required=True, help="Input video file.")
 # parser.add_argument('-o', '--output', type=str, required=True, help="The output file")
 parser.add_argument('-t', '--timestamps', type=str, required=False,
-                    help="List of subclip tuples contain user speech.", default="[]")
+                    help="List of subclip timestamp tuples.", default="[]")
 
 # Parse the arguments
 args = parser.parse_args()
