@@ -1,5 +1,5 @@
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.editor import concatenate_videoclips
+from moviepy.editor import concatenate_videoclips, ColorClip
 import argparse
 import ast
 import os
@@ -58,12 +58,17 @@ parser.add_argument('-t', '--timestamps', type=str, required=False,
 args = parser.parse_args()
 
 # input_timestamps = re.sub(r'\b0+(\d)', r'\1', args.subclip)
-subclip_tuples = parse_input_timestamp(args.subclip)  # ast.literal_eval(input_timestamps)
+subclip_tuples = parse_input_timestamp(args.timestamps)  # ast.literal_eval(input_timestamps)
 
 dir_name = os.path.dirname(args.file)
 base_name = os.path.basename(args.file)
 name, ext = os.path.splitext(base_name)
 video = VideoFileClip(args.file)
+# Create a 1-second blank clip with the same resolution as the original video
+blank_clip = ColorClip(size=video.size, color=(0, 0, 0), duration=1)
+# Concatenate the original video with the blank clip
+video = concatenate_videoclips([video, blank_clip])
+
 
 # # Define the start and end times for multiple slices
 # slices = [(10, 20), (30, 40), (50, 60)]
