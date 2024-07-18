@@ -8,7 +8,7 @@ from utils import plotting
 
 
 def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sigma=20, use_fixation=False,
-                     figsize=(5, 4), dpi=600):
+                     figsize=(5, 4), dpi=600, is_saving=True, height=900, width=1600):
     cookie_image_path = "./images/The-Cookie-Theft-Picture-from-the-Boston-Diagnostic-Aphasia-Examination-For-the-PD-task.png"
     picnic_image_path = "./images/picnic.png"
 
@@ -31,8 +31,8 @@ def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sig
             (df['FPOGX'] >= 0.0) & (df['FPOGX'] <= 1.0) & (df['FPOGY'] >= 0.0) & (df['FPOGY'] <= 1.0) & (
                     df['FPOGV'] == 1) & (df['FPOGD'] > 0.2)]
     # print(filtered_pts[["BPOGX", "BPOGY"]].describe())
-    height = 900
-    width = 1600
+    height = height
+    width = width
     heatmap = np.zeros((height, width))
     if not use_fixation:
         points = filtered_pts[['BPOGX', 'BPOGY']].values
@@ -114,7 +114,10 @@ def generate_heatmap(data_path, title="heatmap", figure_path="./figure.png", sig
         plt.title(title, fontsize=10)
 
     plt.tight_layout()
-    plt.savefig(figure_path, dpi=dpi)
-    plt.close('all')
-
+    if is_saving:
+        plt.savefig(figure_path, dpi=dpi)
+        plt.close('all')
+    else:
+        plt.show()
+        return heatmap_normalized
 # generate_heatmap("./data/P23_S1_all_gaze.csv")

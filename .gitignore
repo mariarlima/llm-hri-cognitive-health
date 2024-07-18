@@ -18,3 +18,4 @@ AnalysisTools/EyeGazeDataTools/figures/*
 AnalysisTools/EyeGazeDataTools/data_processed/*
 !AnalysisTools/EyeGazeDataTools/images/*
 !/AnalysisTools/EyeGazeDataTools/image_component_analysis.py
+AnalysisTools/EyeGazeDataTools/.ipynb_checkpoints/*
