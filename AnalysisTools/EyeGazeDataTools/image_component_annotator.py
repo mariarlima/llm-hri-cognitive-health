@@ -249,7 +249,7 @@ def main():
                 "Press 'a' to add a point.\nPress 'f' to finalize a shape.\nPress 'z' to undo a point or "
                 "shape.\nPress 's' to enter selection mode.\nPress '[' to select previous shape.\nPress ']' "
                 "to select next shape. \nPress 't' to name/rename a shape. \nPress 'd' to delete selected shape."
-                "\nPress 'q' to save & quit. \nPress 'x' to exit without saving.")
+                "\nPress 'l' to load. \nPress 'q' to save & quit. \nPress 'x' to exit without saving.")
 
     cv2.destroyAllWindows()
 
