@@ -15,6 +15,6 @@ def get_eye_gaze_data(file_path, is_fixation=False):
         points = filtered_pts[['BPOGX', 'BPOGY']].values
     else:
         points = filtered_pts[['FPOGX', 'FPOGY', 'FPOGD']].values
-    return points
+    return points, df["MEDIA_NAME"][0]
 
 # print(get_eye_gaze_data("data/P23_S1_all_gaze.csv"))

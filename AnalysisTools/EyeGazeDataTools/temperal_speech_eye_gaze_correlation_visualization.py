@@ -133,8 +133,8 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
     # print(points)
     # (196, 199, 243), (23, 33, 33)
     # custom_cmap = LinearSegmentedColormap.from_list('mycmap', ['lightsteelblue', 'midnightblue'], N=256)
-    custom_cmap = sns.color_palette("crest", as_cmap=True)
-    # custom_cmap = "winter"  # cool, winter
+    # custom_cmap = sns.color_palette("crest", as_cmap=True)
+    custom_cmap = "winter"  # cool, winter
     norm = Normalize(vmin=0, vmax=max(points[:, 2]))
     sm = ScalarMappable(cmap=custom_cmap, norm=norm)
 
@@ -198,7 +198,7 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
         suffix = "_text"
         if i == 0:
             suffix = "_eye_gaze"
-        fig.savefig(f"{figure_path}{filename_with_extension}{suffix}.png", format='png', dpi=dpi)
+        fig.savefig(f"{figure_path}{filename_with_extension.replace("_fixations.csv", "")}{suffix}.png", format='png', dpi=dpi)
     # plt.show()
     plt.close('all')
 
@@ -206,31 +206,31 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
 generate_correlated_visualization("./data/P02_S1_fixations.csv", "./data/P02_S1_T1.json",
                                   timestamps_str='[(00:00,00:24), (00:24,02:00), (02:00,02:08), (02:08,02:35), (02:35,02:42), (02:42,03:21), (03:21,03:28), (03:28,03:51), (03:51,04:00), (04:00,04:44), (04:44,04:51)]',
                                   time_offset=2)
-# generate_correlated_visualization("./data/P02_S2_fixations.csv", "./data/P02_S2_T1.json",
-#                                   timestamps_str='[(00:00,01:09), (01:09,01:16), (01:16,01:26), (01:26,04:02), (04:02,04:30)]',
-#                                   time_offset=47)
-# generate_correlated_visualization("./data/P02_S3_fixations.csv", "./data/P02_S3_T1.json",
-#                                   timestamps_str='[00:00,00:57), (00:57,02:09), (02:09,02:24), (02:24,03:10), (03:10,03:26), (03:26,04:07), (04:07,04:37), (04:37,05:01), (05:01,05:22)]',
-#                                   time_offset=35)
-# generate_correlated_visualization("./data/P02_S4_fixations.csv", "./data/P02_S4_T1.json",
-#                                   timestamps_str='[(00:00,00:43), (00:43,01:55), (01:55,02:14), (02:14,02:39), (02:39,03:52), (03:52,04:21), (04:21,05:30), (05:30,05:38)]',
-#                                   time_offset=22)
-# generate_correlated_visualization("./data/P02_S5 # Partial_fixations.csv", "./data/P02_S5_T1.json",
-#                                   timestamps_str='[(00:00,00:15), (00:15,02:37), (02:37,02:45), (02:45,03:22), (03:22,03:37), (03:37,03:56), (03:56,04:06), (04:06,04:37), (04:37,04:46)]',
-#                                   time_offset=3)
-#
-# generate_correlated_visualization("./data/P07_S1_fixations.csv", "./data/P07_S1_T1.json",
-#                                   timestamps_str='[(00:00,00:33), (00:33,00:57), (00:57,01:07), (01:07,01:17), (01:17,01:23), (01:23,01:32), (01:32,01:34), (01:34,01:42), (01:42,01:46), (01:46,01:57), (01:57,02:07), (02:07,02:34), (02:34,02:50), (02:50,03:13), (03:13,03:23)]',
-#                                   time_offset=2)
-# generate_correlated_visualization("./data/P07_S2_fixations.csv", "./data/P07_S2_T1.json",
-#                                   timestamps_str='[(00:00,00:35), (00:35,00:40), (00:40,00:44), (00:44,00:58), (00:58,01:11), (01:11,01:32), (01:32,01:48), (01:48,02:25), (02:25,02:57), (02:57,03:13), (03:13,03:35), (03:35,03:48), (03:48,04:15), (04:15,04:41), (04:41,05:01), (05:01,05:43), (05:43,05:53)]',
-#                                   time_offset=14)
-# generate_correlated_visualization("./data/P07_S3_fixations.csv", "./data/P07_S3_T1.json",
-#                                   timestamps_str='[(00:00,01:29), (01:29,01:38), (01:38,01:50), (01:50,02:14), (02:14,02:48), (02:48,02:52), (02:52,03:00), (03:00,03:26), (03:26,03:42), (03:42,04:06), (04:06,04:26), (04:26,04:53), (04:53,05:14), (05:14,05:34), (05:34,05:42)]',
-#                                   time_offset=66)
-# generate_correlated_visualization("./data/P07_S4_fixations.csv", "./data/P07_S4_T1.json",
-#                                   timestamps_str='[(00:00,00:44), (00:44,02:18), (02:18,02:41), (02:41,02:56), (02:56,03:11), (03:11,03:22), (03:22,03:51), (03:51,05:09), (05:09,05:24)]',
-#                                   time_offset=30)
-# generate_correlated_visualization("./data/P07_S5_fixations.csv", "./data/P07_S5_T1.json",
-#                                   timestamps_str='[(00:00,00:14), (00:14,00:58), (00:58,01:08), (01:08,01:20), (01:20,01:29), (01:29,01:49), (01:49,01:53), (01:53,01:55), (01:55,02:02), (02:02,02:24), (02:24,02:38), (02:38,03:14), (03:14,03:24)]',
-#                                   time_offset=5)
+generate_correlated_visualization("./data/P02_S2_fixations.csv", "./data/P02_S2_T1.json",
+                                  timestamps_str='[(00:00,01:09), (01:09,01:16), (01:16,01:26), (01:26,04:02), (04:02,04:30)]',
+                                  time_offset=47)
+generate_correlated_visualization("./data/P02_S3_fixations.csv", "./data/P02_S3_T1.json",
+                                  timestamps_str='[00:00,00:57), (00:57,02:09), (02:09,02:24), (02:24,03:10), (03:10,03:26), (03:26,04:07), (04:07,04:37), (04:37,05:01), (05:01,05:22)]',
+                                  time_offset=35)
+generate_correlated_visualization("./data/P02_S4_fixations.csv", "./data/P02_S4_T1.json",
+                                  timestamps_str='[(00:00,00:43), (00:43,01:55), (01:55,02:14), (02:14,02:39), (02:39,03:52), (03:52,04:21), (04:21,05:30), (05:30,05:38)]',
+                                  time_offset=22)
+generate_correlated_visualization("./data/P02_S5 # Partial_fixations.csv", "./data/P02_S5_T1.json",
+                                  timestamps_str='[(00:00,00:15), (00:15,02:37), (02:37,02:45), (02:45,03:22), (03:22,03:37), (03:37,03:56), (03:56,04:06), (04:06,04:37), (04:37,04:46)]',
+                                  time_offset=3)
+
+generate_correlated_visualization("./data/P07_S1_fixations.csv", "./data/P07_S1_T1.json",
+                                  timestamps_str='[(00:00,00:33), (00:33,00:57), (00:57,01:07), (01:07,01:17), (01:17,01:23), (01:23,01:32), (01:32,01:34), (01:34,01:42), (01:42,01:46), (01:46,01:57), (01:57,02:07), (02:07,02:34), (02:34,02:50), (02:50,03:13), (03:13,03:23)]',
+                                  time_offset=2)
+generate_correlated_visualization("./data/P07_S2_fixations.csv", "./data/P07_S2_T1.json",
+                                  timestamps_str='[(00:00,00:35), (00:35,00:40), (00:40,00:44), (00:44,00:58), (00:58,01:11), (01:11,01:32), (01:32,01:48), (01:48,02:25), (02:25,02:57), (02:57,03:13), (03:13,03:35), (03:35,03:48), (03:48,04:15), (04:15,04:41), (04:41,05:01), (05:01,05:43), (05:43,05:53)]',
+                                  time_offset=14)
+generate_correlated_visualization("./data/P07_S3_fixations.csv", "./data/P07_S3_T1.json",
+                                  timestamps_str='[(00:00,01:29), (01:29,01:38), (01:38,01:50), (01:50,02:14), (02:14,02:48), (02:48,02:52), (02:52,03:00), (03:00,03:26), (03:26,03:42), (03:42,04:06), (04:06,04:26), (04:26,04:53), (04:53,05:14), (05:14,05:34), (05:34,05:42)]',
+                                  time_offset=66)
+generate_correlated_visualization("./data/P07_S4_fixations.csv", "./data/P07_S4_T1.json",
+                                  timestamps_str='[(00:00,00:44), (00:44,02:18), (02:18,02:41), (02:41,02:56), (02:56,03:11), (03:11,03:22), (03:22,03:51), (03:51,05:09), (05:09,05:24)]',
+                                  time_offset=30)
+generate_correlated_visualization("./data/P07_S5_fixations.csv", "./data/P07_S5_T1.json",
+                                  timestamps_str='[(00:00,00:14), (00:14,00:58), (00:58,01:08), (01:08,01:20), (01:20,01:29), (01:29,01:49), (01:49,01:53), (01:53,01:55), (01:55,02:02), (02:02,02:24), (02:24,02:38), (02:38,03:14), (03:14,03:24)]',
+                                  time_offset=5)
