@@ -9,8 +9,7 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib as mpl
 
 
-def get_normalized_log_likelihood(filepath, gmm, x_scale=1920, y_scale=1080, show_plot=True):
-    points, _ = get_eye_gaze_data(filepath)
+def get_normalized_log_likelihood(points, gmm, x_scale=1920, y_scale=1080, show_plot=True):
     points[:, 0] *= x_scale
     points[:, 1] *= y_scale
     log_llh = gmm.score(points)
@@ -60,8 +59,8 @@ def get_pixel_coordinates(segmented_mask, label):
     image_component_mask = segmented_mask.copy()
     image_component_mask[image_component_mask != label] = -1
     # plt.imshow(image_component_mask, cmap='nipy_spectral')
-    print(np.unique(segmented_mask))
-    print(np.unique(image_component_mask))
+    # print(np.unique(segmented_mask))
+    # print(np.unique(image_component_mask))
     # plt.show()
     return np.column_stack(np.where(segmented_mask == label))
 
@@ -82,8 +81,7 @@ def gmm_bic_score(estimator, X):
     return -estimator.bic(X)
 
 
-def get_GMM_baseline(eye_gaze_data_path, height=1080, width=1920, verbose=False):
-    points, task = get_eye_gaze_data(eye_gaze_data_path)
+def get_GMM_baseline(task="Cognitive Picture Description Task", height=1080, width=1920, verbose=False):
     img = cv2.imread('./images/Cookie_theft_segmentation.png')
     image_component_id_lookup = {
         0: "Surrounding",
@@ -255,7 +253,3 @@ def get_GMM_baseline(eye_gaze_data_path, height=1080, width=1920, verbose=False)
 
     return combined_gmm
 
-path = "data/P23_S1_all_gaze.csv"
-baseline_gmm = get_GMM_baseline(path, verbose=True)
-get_normalized_log_likelihood(path, gmm=baseline_gmm, show_plot=False)
-# print(get_GMM_result("data/P23_S1_all_gaze.csv", verbose=True))
