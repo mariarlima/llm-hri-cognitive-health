@@ -95,27 +95,37 @@ def read_and_compute(file_path, baseline):
     for paragraph in full_text_list:
         if "storytelling" in paragraph.lower():
             break
+        # This is for P16_S1, it doesn't have storytelling keyword.
+        if " You will look at the screen. Um you will see a picture" in paragraph:
+            break
         t1_start_index += 1
     for paragraph in full_text_list:
         if "t2" in paragraph.lower():
             break
         t1_end_index += 1
 
-    # t2_start_index = 0
-    # t2_end_index = len(full_text_list) - 1
-    # for paragraph in full_text_list:
-    #     if "different game" in paragraph.lower():
-    #         break
-    #     t2_start_index += 1
+    t2_start_index = 0
+    t2_end_index = len(full_text_list) - 1
+    for paragraph in full_text_list:
+        if "different game" in paragraph.lower():
+            break
+        t2_start_index += 1
 
     t1 = (full_text_list[t1_start_index:t1_end_index])
+    t2 = (full_text_list[t2_start_index:t2_end_index])
 
     t1_processed = list(
         filter(lambda x: not ((x == "") or ("speaker 0" in x.lower()) or (x is None) or ("first prompt" in x.lower())),
                t1))
+    t2_processed = list(
+        filter(lambda x: not ((x == "") or ("speaker 0" in x.lower()) or (x is None) or ("first prompt" in x.lower())),
+               t2))
 
     for i in range(0, len(t1_processed)):
         t1_processed[i] = t1_processed[i].replace("Speaker 1: ", "")
+
+    for i in range(0, len(t2_processed)):
+        t2_processed[i] = t2_processed[i].replace("Speaker 1: ", "")
 
     test_text = "".join(t1_processed)
 
@@ -124,49 +134,36 @@ def read_and_compute(file_path, baseline):
 
     baseline_text_emb, test_text_emb = pad_embeddings(baseline_text_emb, test_text_emb)
 
-    return cosine_similarity(baseline_text_emb, test_text_emb)
+    return cosine_similarity(baseline_text_emb, test_text_emb), "".join(t1_processed), "".join(t2_processed)
 
-#
-# print(f"P02 Cookie Theft Task: ")
-# print(f"P02 S1: {read_and_compute('./data/P02_S1_check.docx', baseline_cookie_text)}")
-# print(f"P02 S3: {read_and_compute('./data/P02_S3_check.docx', baseline_cookie_text)}")
-# print(f"P02 S5: {read_and_compute('./data/P02_S5_check.docx', baseline_cookie_text)}")
-# print(f"P02 Picnic Task: ")
-# print(f"P02 S2: {read_and_compute('./data/P02_S2_check.docx', baseline_picnic_text)}")
-# print(f"P02 S4: {read_and_compute('./data/P02_S4_check.docx', baseline_picnic_text)}")
-#
-# print(f"===============================================")
-#
-# print(f"P07 Cookie Theft Task: ")
-# print(f"P07 S1: {read_and_compute('./data/P07_S1_check.docx', baseline_cookie_text)}")
-# print(f"P07 S3: {read_and_compute('./data/P07_S3_check.docx', baseline_cookie_text)}")
-# print(f"P07 S5: {read_and_compute('./data/P07_S5_check.docx', baseline_cookie_text)}")
-# print(f"P07 Picnic Task: ")
-# print(f"P07 S2: {read_and_compute('./data/P07_S2_check.docx', baseline_picnic_text)}")
-# print(f"P07 S4: {read_and_compute('./data/P07_S4_check.docx', baseline_picnic_text)}")
-#
-# print(f"===============================================")
-#
-# print(f"P05 Cookie Theft Task: ")
-# print(f"P05 S1: {read_and_compute('./data/P05_S1_check.docx', baseline_cookie_text)}")
-# print(f"P05 S3: {read_and_compute('./data/P05_S3_check.docx', baseline_cookie_text)}")
-# print(f"P05 S5: {read_and_compute('./data/P05_S5_check.docx', baseline_cookie_text)}")
-# print(f"P05 Picnic Task: ")
-# print(f"P05 S2: {read_and_compute('./data/P05_S2_check.docx', baseline_picnic_text)}")
-# print(f"P05 S4: {read_and_compute('./data/P05_S4_check.docx', baseline_picnic_text)}")
 
-# P02 Cookie Theft Task:
-# P02 S1: 0.6939642079326661
-# P02 S3: 0.7478055468023939
-# P02 S5: 0.7240586258910455
-# P02 Picnic Task:
-# P02 S2: 0.5974089850474277
-# P02 S4: 0.5869567996005751
-# ===============================================
-# P07 Cookie Theft Task:
-# P07 S1: 0.44760570318832604
-# P07 S3: 0.5741515796895419
-# P07 S5: 0.6299557761963929
-# P07 Picnic Task:
-# P07 S2: 0.4864122731071448
-# P07 S4: 0.5481734649878743
+directory_path = "./data/"
+output_path = "./data_processed/"
+
+# Get all file names in the directory
+file_names = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
+
+with open("similarity.txt", "w") as f:
+    f.write("Similarity Score: \n")
+
+# Print all file names
+for file_name in file_names:
+    print(f"Processing: {file_name}")
+    base_name = file_name.split(".")[0]
+    base_name.replace("_check", "")
+    if "S2" in base_name or "S4" in base_name:
+        baseline_text = baseline_picnic_text
+    else:
+        baseline_text = baseline_cookie_text
+    similarity, t1, t2 = read_and_compute(f"{directory_path}{file_name}", baseline_text)
+    print(f"{base_name} Similarity: {similarity:.2f}")
+    with open("similarity.txt", "a") as f:
+        f.write(f"{base_name}: {similarity:.2f}\n")
+
+    print(f"Writing processed T1 text to file: {output_path}{base_name}_t1.txt")
+    with open(f"{output_path}{base_name}_t1.txt", "w") as f:
+        f.write(t1)
+
+    print(f"Writing processed T2 text to file: {output_path}{base_name}_t2.txt")
+    with open(f"{output_path}{base_name}_t2.txt", "w") as f:
+        f.write(t2)

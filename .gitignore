@@ -22,3 +22,5 @@ AnalysisTools/EyeGazeDataTools/data_processed/*
 !/AnalysisTools/EyeGazeDataTools/image_component_analysis.py
 AnalysisTools/EyeGazeDataTools/.ipynb_checkpoints/*
 AnalysisTools/NLPTools/.ipynb_checkpoints/*
+AnalysisTools/NLPTools/data/*
+AnalysisTools/NLPTools/data_processed/*
