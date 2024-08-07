@@ -8,8 +8,8 @@ output_filepath = "./data_processed/GMM_results.csv"
 pattern = r'(P\d{2}_S\d)\s?(#\s?)?.*?_all_gaze\.csv'
 # Get all file names in the directory
 file_names = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
-baseline_cookie = get_GMM_baseline("Cognitive Picture Description Task", verbose=False)
-baseline_picnic = get_GMM_baseline("Picnic Task", verbose=False)
+baseline_cookie = get_GMM_baseline("Cognitive Picture Description Task", verbose=True)
+# baseline_picnic = get_GMM_baseline("Picnic Task", verbose=False)
 # Print all file names
 for file_name in file_names:
     match = re.search(pattern, file_name)
@@ -24,6 +24,6 @@ for file_name in file_names:
             score = get_normalized_log_likelihood(points, gmm=baseline_gmm, show_plot=False)
         except ValueError:
             score = float('nan')
-        print(f"{extracted_string} GMM score: {score}")
+        print(f"{extracted_string} GMM score: {score:.2f}")
         with open(output_filepath, "a") as f:
-            f.write(f"{extracted_string},{score}\n")
+            f.write(f"{extracted_string},{score:.2f}\n")
