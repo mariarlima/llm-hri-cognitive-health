@@ -126,7 +126,7 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
     points = filtered_pts.iloc[:, [5, 6, 3, 8]].values
     # print(points)
     # Scale points to the image dimensions
-    points[:, 0] *= width
+    points[:,0] *= width
     points[:, 1] *= height
     points[:, 2] += time_offset
     points[:, 3] *= 15
@@ -171,11 +171,11 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
         if plot_aspect_ratio > image_aspect_ratio:
             # The image is too wide, pad top and bottom
             pad_height = int(((background_image.shape[1] * plot_aspect_ratio) - background_image.shape[0]) / 2)
-            padding = ((pad_height, pad_height), (0, 0), (0, 0))
+            padding = ((pad_height, pad_height), (0,0), (0,0))
         else:
             # The image is too tall, pad left and right
             pad_width = int(((background_image.shape[0] / plot_aspect_ratio) - background_image.shape[1]) / 2)
-            padding = ((0, 0), (pad_width, pad_width), (0, 0))
+            padding = ((0,0), (pad_width, pad_width), (0,0))
 
         # Step 4: Apply padding
         background_image_padded = np.pad(background_image, padding, mode='constant', constant_values=255)
@@ -185,8 +185,8 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
     # # Create a figure with the background image
     with plotting.paper_theme():
         plt.figure(figsize=figsize)
-        plt.imshow(background_image_padded, extent=[0, width, height, 0])
-        scatter = plt.scatter(points[:, 0], points[:, 1], c=points[:, 2], cmap=custom_cmap, s=points[:, 3], alpha=0.7)
+        plt.imshow(background_image_padded, extent=[0, width, height,0])
+        scatter = plt.scatter(points[:,0], points[:, 1], c=points[:, 2], cmap=custom_cmap, s=points[:, 3], alpha=0.7)
         # plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
         plt.colorbar(shrink=0.5, pad=0.01)
         plt.axis('off')
@@ -195,9 +195,9 @@ def generate_correlated_visualization(data_path, transcription_path, timestamps_
     plt.tight_layout()
     figs = [plt.figure(n) for n in plt.get_fignums()]
     for i, fig in enumerate(figs):
-        suffix = "_text"
+        suffix = "_eye_gaze"
         if i == 0:
-            suffix = "_eye_gaze"
+            suffix = "_text"
         fig.savefig(f"{figure_path}{filename_with_extension.replace("_fixations.csv", "")}{suffix}.png", format='png', dpi=dpi)
     # plt.show()
     plt.close('all')
@@ -233,4 +233,20 @@ generate_correlated_visualization("./data/P07_S4_fixations.csv", "./data/P07_S4_
                                   time_offset=30)
 generate_correlated_visualization("./data/P07_S5_fixations.csv", "./data/P07_S5_T1.json",
                                   timestamps_str='[(00:00,00:14), (00:14,00:58), (00:58,01:08), (01:08,01:20), (01:20,01:29), (01:29,01:49), (01:49,01:53), (01:53,01:55), (01:55,02:02), (02:02,02:24), (02:24,02:38), (02:38,03:14), (03:14,03:24)]',
+                                  time_offset=5)
+
+generate_correlated_visualization("./data/P14_S1_fixations.csv", "./data/P14_S1_T1.json",
+                                  timestamps_str='[(00:00,00:36), (00:36,00:53), (00:53,01:05), (01:05,01:15), (01:15,01:26), (01:26,01:33), (01:33,01:35), (01:35,01:36), (01:36,01:41), (01:41,01:47), (01:47,02:02), (02:02,02:24), (02:24,02:30)]',
+                                  time_offset=2)
+generate_correlated_visualization("./data/P14_S2_fixations.csv", "./data/P14_S2_T1.json",
+                                  timestamps_str='[(00:00,01:15), (01:15,01:15), (01:15,01:25), (01:25,01:48), (01:48,01:58), (01:58,02:26), (02:26,02:49), (02:49,03:10), (03:10,03:31), (03:31,03:47), (03:47,04:02)]',
+                                  time_offset=14)
+generate_correlated_visualization("./data/P14_S3_fixations.csv", "./data/P14_S3_T1.json",
+                                  timestamps_str='[(00:00,00:59), (00:59,02:32), (02:32,02:36), (02:36,02:36), (02:36,02:46), (02:46,03:38), (03:38,04:06)]',
+                                  time_offset=66)
+generate_correlated_visualization("./data/P14_S4 # Double Check_fixations.csv", "./data/P14_S4_T1.json",
+                                  timestamps_str='[(00:00,00:49), (00:49,01:57), (01:57,01:59), (01:59,01:59), (01:59,02:06), (02:06,02:06), (02:06,02:11), (02:11,03:14), (03:14,03:30), (03:30,03:52), (03:52,04:10)]',
+                                  time_offset=30)
+generate_correlated_visualization("./data/P14_S5 # Double Check_fixations.csv", "./data/P14_S5_T1.json",
+                                  timestamps_str='[(00:00,00:20), (00:20,01:33), (01:33,01:40), (01:40,01:49), (01:49,01:59), (01:59,02:33), (02:33,02:43)]',
                                   time_offset=5)
