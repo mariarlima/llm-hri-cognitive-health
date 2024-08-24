@@ -171,6 +171,7 @@
 
 import os
 import re
+import string
 import numpy as np
 from docx import Document
 from openai import OpenAI
@@ -194,6 +195,7 @@ def pad_embeddings(a, b):
 
 def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
 
 # TODO: should I remove /n?
 
@@ -235,6 +237,94 @@ def read_docx(file_path):
     for para in doc.paragraphs:
         full_text.append(para.text)
     return full_text
+
+
+# def remove_punctuation(text):
+#     translator = str.maketrans('', '', string.punctuation)
+#     return text.translate(translator)
+
+def remove_punctuation(text):
+    text = re.sub(r'[^\w\s]', ' ', text)
+    return re.sub(r'\s+', ' ', text)
+
+
+def read_and_preprocess_text(file_path):
+    full_text_list = read_docx(file_path)
+
+    t1_start_index = 0
+    t1_end_index = 0
+    free_attempt_end_index = 0
+    print(full_text_list)
+    for paragraph in full_text_list:
+        if ("storytelling" in paragraph.lower()) or ("mirar la imagen" in paragraph.lower()) or (
+                "mira la imagen" in paragraph.lower()) or ("observa la imagen" in paragraph.lower()) or (
+                "mires la imagen" in paragraph.lower()) or ("la imagen de esta pantalla" in paragraph.lower()) or (
+                "una imagen en la pantalla" in paragraph.lower()) or ("Mirarás la imagen en " in paragraph):
+            break
+        # This is for P16_S1, it doesn't have storytelling keyword.
+        if " You will look at the screen. Um you will see a picture" in paragraph:
+            break
+        t1_start_index += 1
+    for paragraph in full_text_list:
+        if "t2" in paragraph.lower():
+            break
+        t1_end_index += 1
+    for paragraph in full_text_list:
+        if "first prompt" in paragraph.lower():
+            break
+        free_attempt_end_index += 1
+
+    t2_start_index = 0
+    t2_end_index = len(full_text_list) - 1
+    for paragraph in full_text_list:
+        if ("different game" in paragraph.lower()) or ("juego diferente" in paragraph.lower()) or (
+                "animal" in paragraph.lower()) or ("frutas" in paragraph.lower()):
+            break
+        if "different challenge" in paragraph.lower():
+            break
+        t2_start_index += 1
+
+    # if t1_end_index > t2_start_index or t2_start_index > t2_end_index:
+    #     print(f"Error in file: {file_path}")
+    #     print(f"Info: {t1_start_index}, {t1_end_index}, {t2_start_index}, {t2_end_index}")
+    #     return 0, "", ""
+
+    t1 = (full_text_list[t1_start_index:t1_end_index])
+    t2 = (full_text_list[t2_start_index:t2_end_index])
+    free_attempt = (full_text_list[t1_start_index:free_attempt_end_index])
+
+    t1_processed = list(
+        filter(lambda x: not ((x == "") or ("speaker 0" in x.lower()) or (x is None) or ("first prompt" in x.lower())),
+               t1))
+    t2_processed = list(
+        filter(lambda x: not ((x == "") or ("speaker 0" in x.lower()) or (x is None) or ("first prompt" in x.lower())),
+               t2))
+    free_attempt_processed = list(
+        filter(lambda x: not ((x == "") or ("speaker 0" in x.lower()) or (x is None) or ("first prompt" in x.lower())),
+               free_attempt))
+
+    for i in range(0, len(t1_processed)):
+        t1_processed[i] = t1_processed[i].replace("Speaker 1:", "")
+        t1_processed[i] = t1_processed[i].replace("(?)", "")
+        # t1_processed[i].strip()
+
+    for i in range(0, len(t2_processed)):
+        t2_processed[i] = t2_processed[i].replace("Speaker 1:", "")
+        t2_processed[i] = t2_processed[i].replace("(?)", "")
+        # t2_processed[i].strip()
+
+    for i in range(0, len(free_attempt_processed)):
+        free_attempt_processed[i] = free_attempt_processed[i].replace("Speaker 1:", "")
+        free_attempt_processed[i] = free_attempt_processed[i].replace("(?)", "")
+        # free_attempt_processed[i].strip()
+
+    t1_final = re.sub(r'\s+', ' ', "".join(t1_processed))
+    t1_final = t1_final.replace("\n", " ")
+    t2_final = re.sub(r'\s+', ' ', "".join(t2_processed))
+    t2_final = t2_final.replace("\n", " ")
+    free_attempt_final = re.sub(r'\s+', ' ', "".join(free_attempt_processed))
+    free_attempt_final = free_attempt_final.replace("\n", " ")
+    return t1_final, t2_final, free_attempt_final
 
 
 def read_and_compute(file_path, baseline):
@@ -310,11 +400,23 @@ def read_and_compute(file_path, baseline):
         r'\s+', ' ', "".join(t2_processed))
 
 
-directory_path = "./data/ES/"
-output_path = "./data_processed/ES/"
+lang = "ES"
 
-baseline_picnic_text = baseline_picnic_text_es
-baseline_cookie_text = baseline_cookie_text_es
+directory_path = f"./data/{lang}/"
+output_path = f"./data_processed/{lang}/"
+t1_output_path = f"./data_processed/{lang}/Original/T1/"
+t2_output_path = f"./data_processed/{lang}/Original/T2/"
+free_attempt_output_path = f"./data_processed/{lang}/Original/Free_Attempt/"
+t1_no_pun_output_path = f"./data_processed/{lang}/NoPunctuation/T1/"
+t2_no_pun_output_path = f"./data_processed/{lang}/NoPunctuation/T2/"
+free_attempt_no_pun_output_path = f"./data_processed/{lang}/NoPunctuation/Free_Attempt/"
+
+if lang == "EN":
+    baseline_picnic_text = baseline_picnic_text_en
+    baseline_cookie_text = baseline_cookie_text_en
+else:
+    baseline_picnic_text = baseline_picnic_text_es
+    baseline_cookie_text = baseline_cookie_text_es
 
 # Get all file names in the directory
 file_names = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
@@ -331,15 +433,32 @@ for file_name in file_names:
         baseline_text = baseline_picnic_text
     else:
         baseline_text = baseline_cookie_text
-    similarity, t1, t2 = read_and_compute(f"{directory_path}{file_name}", baseline_text)
-    print(f"{base_name} Similarity: {similarity:.2f}")
-    with open(f"{output_path}similarity.txt", "a") as f:
-        f.write(f"{base_name}: {similarity:.2f}\n")
+    # similarity, t1, t2 = read_and_compute(f"{directory_path}{file_name}", baseline_text)
+    t1, t2, free_attempt = read_and_preprocess_text(f"{directory_path}{file_name}")
+    if lang == "EN":
+        t1 = t1.replace("í", "'")
+        t2 = t2.replace("í", "'")
+        free_attempt = free_attempt.replace("í", "'")
+    # print(f"{base_name} Similarity: {similarity:.2f}")
+    # with open(f"{output_path}similarity.txt", "a") as f:
+    #     f.write(f"{base_name}: {similarity:.2f}\n")
 
-    print(f"Writing processed T1 text to file: {output_path}{base_name}_t1.txt")
-    with open(f"{output_path}{base_name}_t1.txt", "w") as f:
+    print(f"Writing processed T1 text to file: {t1_output_path}{base_name}_t1.txt")
+    with open(f"{t1_output_path}{base_name}_t1.txt", "w") as f:
         f.write(t1)
+    with open(f"{t1_no_pun_output_path}{base_name}_no_pun_t1.txt", "w") as f:
+        f.write(remove_punctuation(t1))
+    # print(remove_punctuation(t1))
 
-    print(f"Writing processed T2 text to file: {output_path}{base_name}_t2.txt")
-    with open(f"{output_path}{base_name}_t2.txt", "w") as f:
+    print(f"Writing processed T2 text to file: {t2_output_path}{base_name}_t2.txt")
+    with open(f"{t2_output_path}{base_name}_t2.txt", "w") as f:
         f.write(t2)
+    with open(f"{t2_no_pun_output_path}{base_name}_no_pun_t2.txt", "w") as f:
+        f.write(remove_punctuation(t2))
+    # print(remove_punctuation(t2))
+
+    print(f"Writing processed Free Attempt text to file: {free_attempt_output_path}{base_name}_free_attempt.txt")
+    with open(f"{free_attempt_output_path}{base_name}_free_attempt.txt", "w") as f:
+        f.write(t2)
+    with open(f"{free_attempt_no_pun_output_path}{base_name}_no_pun_free_attempt.txt", "w") as f:
+        f.write(remove_punctuation(free_attempt))

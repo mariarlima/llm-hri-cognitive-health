@@ -522,6 +522,7 @@ def get_GMM_baseline_with_component_label_map(task="Cognitive Picture Descriptio
         for component_count in range(gmm.weights_.shape[0]):
             component_labels[current_component_index] = image_component_id_lookup[key]
             current_component_index += 1
+        component_labels[current_component_index] = 'Surroundings'
 
     if verbose:
         print(f'Combined GMM component labels: \n{component_labels}')
