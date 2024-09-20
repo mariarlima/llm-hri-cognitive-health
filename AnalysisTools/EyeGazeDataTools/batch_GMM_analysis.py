@@ -24,6 +24,6 @@ for file_name in file_names:
             score = get_normalized_log_likelihood(points, gmm=baseline_gmm, show_plot=False)
         except ValueError:
             score = float('nan')
-        print(f"{extracted_string} GMM score: {score}")
+        print(f"{extracted_string} GMM score: {score:.2f}")
         with open(output_filepath, "a") as f:
-            f.write(f"{extracted_string},{score}\n")
+            f.write(f"{extracted_string},{score:.2f}\n")
