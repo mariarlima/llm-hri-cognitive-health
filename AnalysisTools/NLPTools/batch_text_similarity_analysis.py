@@ -289,6 +289,7 @@ def read_and_preprocess_text(file_path):
     #     print(f"Info: {t1_start_index}, {t1_end_index}, {t2_start_index}, {t2_end_index}")
     #     return 0, "", ""
 
+    print(f"Info: {t1_start_index}, {free_attempt_end_index}, {t1_end_index}, {t2_start_index}, {t2_end_index}")
     t1 = (full_text_list[t1_start_index:t1_end_index])
     t2 = (full_text_list[t2_start_index:t2_end_index])
     free_attempt = (full_text_list[t1_start_index:free_attempt_end_index])
@@ -400,7 +401,7 @@ def read_and_compute(file_path, baseline):
         r'\s+', ' ', "".join(t2_processed))
 
 
-lang = "ES"
+lang = "EN"
 
 directory_path = f"./data/{lang}/"
 output_path = f"./data_processed/{lang}/"
@@ -459,6 +460,6 @@ for file_name in file_names:
 
     print(f"Writing processed Free Attempt text to file: {free_attempt_output_path}{base_name}_free_attempt.txt")
     with open(f"{free_attempt_output_path}{base_name}_free_attempt.txt", "w") as f:
-        f.write(t2)
+        f.write(free_attempt)
     with open(f"{free_attempt_no_pun_output_path}{base_name}_no_pun_free_attempt.txt", "w") as f:
         f.write(remove_punctuation(free_attempt))
