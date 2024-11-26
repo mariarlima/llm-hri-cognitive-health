@@ -4,13 +4,13 @@ config = {
     "language":
         {
             "default": "en",
-            # Set PID indipendent language here:
+            # add PID to define different values from default
             # e.g.: "P01": "es"
         },
     "whisper_model_id":  # "tiny.en" "base.en" "small.en", "medium.en", for other languages use tiny/base/small/medium
         {
             "default": "tiny.en",
-            # Set PID indipendent whisper model here:
+            # add PID to define different values from default
             # e.g.:"P01": "base.en",
             
         },
@@ -40,7 +40,7 @@ config = {
                     "pause_threshold":  # Only stop recording after X second of silence
                         {
                             "default": 3,
-                            # Set PID indipendent pause_threshold here:
+                            # add PID to define different values from default
                             # e.g.:"P01": 5,
                         },
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
