@@ -43,7 +43,7 @@ audio_files = ['new_voice_1.mp3', 'new_voice_2.mp3', 'new_voice_3.mp3', 'new_voi
 
 def play_phrases_and_sequences(blossom, audio_files):
     for ind, seq in enumerate(blossom):
-        if config["Blossom"]["status"] == "Enabled":        
+        if config["Blossom"]["status"] == "Enabled":
             bl_thread = threading.Thread(
                 target=bl.do_sequence,
                 kwargs={

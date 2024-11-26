@@ -2,7 +2,7 @@ import logging
 
 from openai import OpenAI
 
-from config import config
+from ..config import config
 import torch
 import whisper
 import speech_recognition as sr
@@ -30,7 +30,6 @@ class STT:
         self.whisper_model = whisper.load_model(self.whisper_model_id).to(device)
         logger.info("Whisper model loaded.")
 
-        # TODO: play with energy level.
         logger.info("Initializing Mic...")
         self.r = sr.Recognizer()
 
@@ -88,7 +87,6 @@ class STT:
             with open(wav_path, "wb") as f:
                 f.write(audio.get_wav_data())
 
-            # print(audio_np_array)
             if config["is_playback"]:
                 logger.info("Start playback.")
                 # Play the saved audio

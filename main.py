@@ -3,33 +3,32 @@ import queue
 import threading
 from dotenv import load_dotenv
 
-from config import config
+from Robot.config import config
 import logging
-import logging_config
+import Robot.logging_config
 import time
 
-from utilities import create_save, load_latest_save, create_final_save, get_integer_input
+from Robot.Utilities.utilities import create_save, load_latest_save, create_final_save, get_integer_input
 
-# logging_config.configure_logging()
 logger = logging.getLogger("HRI")
-logging_config.configure_logger(logger)
+Robot.logging_config.configure_logger(logger)
 
 logger.info("Logger Initialized.")
 
 # put import here because we need to force logging config set before other modules.
-import STT
-import LLM
-import TTS
-from blossom_interaction import BlossomInterface
-from blossom_local_sender import BlossomLocalSender
-from LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4 # English prompts
-from LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES # Spanish prompts
-from LLM import llm_prompt_open # Open dialogue prompt
+import Robot.HRI.STT as STT
+import Robot.HRI.LLM as LLM
+import Robot.HRI.TTS as TTS
+from Robot.blossom_interaction import BlossomInterface
+from Robot.blossom_local_sender import BlossomLocalSender
+from Robot.HRI.LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4 # English prompts
+from Robot.HRI.LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES # Spanish prompts
+from Robot.HRI.LLM import llm_prompt_open # Open dialogue prompt
 
-from session_vars import PID, TASK, SESSION
+from Robot.session_vars import PID, TASK, SESSION
 
 if TASK == "Open_dialog":
-    max_duration = 3.5 * 60  # 10 minutes in seconds
+    max_duration = 3.5 * 60  # 3.5 minutes in seconds
 else:
     max_duration = 5 * 60  # 5 minutes in seconds
 
@@ -40,9 +39,7 @@ if __name__ == '__main__':
     if config["language"].get(PID) is not None:
         language = config["language"][PID]
     # choose appropriate prompt based on task and version/session
-    # print(config["STT"]["mic_time_offset"])
     prompt_name = config["Task"][TASK]["prompt"][language]
-    # TODO: Add spanish prompt in llm file
     if SESSION == "S4" and TASK == "Picture_2":
         prompt_name = "llm_prompt_t1_v2_s4"
         if language == "es":
@@ -76,8 +73,6 @@ if __name__ == '__main__':
     system_input_text = None
     attempt_times = 0  # Count the number of attempts that MOD returns no for a generated content.
 
-    # TODO: Add save/load function here to resume from last interaction.
-    # TODO: What should be saved? - elapsed time, conversation history, additional_info
     load_save = False
     load_save_command = input("Enter 'y' to load last save, anything else to start new interaction: ")
     extra_time = get_integer_input("Enter time in second to add more interaction time: ")
@@ -137,8 +132,6 @@ if __name__ == '__main__':
                         phrase_time_limit=config["STT"]["free_speech"]["phrase_time_limit"][TASK],
                         pause_threshold=config["STT"]["free_speech"]["pause_threshold"][TASK],
                         language=language)
-                # else:
-                #     user_input_text = input("Enter Prompts: ")
 
             # Case 2: end of interaction (from LLM)
             elif end_task:
@@ -168,16 +161,12 @@ if __name__ == '__main__':
                             phrase_time_limit=config["STT"]["normal"]["phrase_time_limit"],
                             pause_threshold=pause_threshold,
                             language=language)
-                # else:
-                #     user_input_text = input("Enter Prompts: ")
 
                 # trigger random behaviour Blossom (prompt)
                 if config["Blossom"]["status"] == "Enabled":
                     bl_thread_target = bl.do_prompt_sequence_matching
                     bl_thread_kwargs = {"delay_time": config["Blossom"]["delay"],
                                         "audio_length": 0}
-                # else:
-                #     user_input_text = input("Enter Prompts: ")
 
             if config["is_using_voice"]:
                 if stt_response["success"]:
@@ -189,9 +178,6 @@ if __name__ == '__main__':
                     user_input_text = ""
                     system_input_text = "No user input is captured, prompt the user again with the same response."
                     logger.info("<<< EMPTY RESPONSE CAPTURED - Prompting user again >>>")
-
-            # TODO: no blossom exception handling
-            # TODO: What should I put in prompt for no voice / stt error? - System message / user message with empty string
 
             # Check the total interaction time
             elapsed_time = time.time() - start_time
@@ -206,48 +192,19 @@ if __name__ == '__main__':
             # LLM process the user input for next interaction turn
             llm_response_text = llm.request_response(user_input_text, system_input_text)
 
-            # TODO: Moderation here.
-            # mod_queue = queue.Queue()
             mod_thread = threading.Thread(target=llm_moderator.request_mod_response, args=llm_response_text)
             mod_result = llm_moderator.request_mod_response(llm_response_text)
             if mod_result.lower() == "no":
                 logger.info("!!! Content generated by LLM not appropriate. Attempting to regenerate content.")
             
-                # # Playing TTS audio for regeneration hints
-                # tts_thread = threading.Thread(target=tts.play_text_audio, args=(LLM.regeneration_predefined_response,))
-                # tts_thread.start()
-                # audio_length = signal_queue.get()  # wait for TTS audio to load
-            
-                # Start Blossom
-                # bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching,
-                #                              args=(),
-                #                              kwargs={
-                #                                  "delay_time": config["Blossom"]["delay"],
-                #                                  "audio_length": stt_response["transcription"]["duration"]
-                #                              }
-                #                              )
-                # bl_thread.start()
-            
                 # Remove last round of conversation history, and regenerate response
                 llm.remove_last_n_rounds(1)
                 llm_response_text = llm.request_response(user_input_text)
                 mod_result = llm_moderator.request_mod_response(llm_response_text)
-            
-                # Waiting for TTS audio to finish
-                # tts_thread.join()
-            
-                # if mod_result.lower() == "no":
-                #     logger.warning("MOD returns no for regenerated content. Ending interaction now.")
-                #     # TODO: Should I keep the last round of conversation history?
-                #     end_task = True
-                #     continue
 
             # Free speech watermark detection for both tasks
 
-            # CHANGED TO DEAL WITH CASE: "r.listen timeout"
-            # if config["Task"][TASK]["free_speech_watermark"][language] in llm_response_text.lower() and len(user_input_text) > 5:
             if config["Task"][TASK]["free_speech_watermark"][language] in llm_response_text.lower():
-                # TODO: check does this handle the case where people ask for repetition or say something else?
                 free_task = True
                 logger.info("Free speech watermark detected.")
                 if config["Blossom"]["status"] == "Enabled":

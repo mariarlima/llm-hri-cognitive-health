@@ -4,37 +4,15 @@ config = {
     "language":
         {
             "default": "en",
-            "P17": "es",
-            "P19": "es",
-            "P20": "es",
-            "P21": "es",
-            "P22": "es",
-            "P23": "es",
-            "P24": "es",
-            "P25": "es",
-
+            # Set PID indipendent language here:
+            # e.g.: "P01": "es"
         },
-    "whisper_model_id":  # "tiny.en", first try: "base.en", then: "small.en", "medium.en",
+    "whisper_model_id":  # "tiny.en" "base.en" "small.en", "medium.en", for other languages use tiny/base/small/medium
         {
             "default": "tiny.en",
-            "P03": "base.en",
-            "P04": "base.en",
-            "P05": "base.en",
-            "P07": "small.en",
-            "P08": "base.en",
-            "P10": "small.en",
-            "P12": "base.en",
-            "P13": "small.en",
-            "P15": "base.en",
-            "P16": "base.en",
-            "P17": "base",
-            "P19": "base",
-            "P20": "base",
-            "P21": "base", 
-            "P22": "base",
-            "P23": "base", 
-            "P24": "base",
-            "P25": "base",
+            # Set PID indipendent whisper model here:
+            # e.g.:"P01": "base.en",
+            
         },
     "enable_LLM_module": True,
     "enable_TTS_module": True,
@@ -59,13 +37,11 @@ config = {
                 },
             "normal":
                 {
-                    "pause_threshold":  # Only stop recording after 5 second of silence
+                    "pause_threshold":  # Only stop recording after X second of silence
                         {
                             "default": 3,
-                            "P04": 5,
-                            # "P07": 6,
-                            "P12": 5,
-                            "P13": 5,
+                            # Set PID indipendent pause_threshold here:
+                            # e.g.:"P01": 5,
                         },
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },

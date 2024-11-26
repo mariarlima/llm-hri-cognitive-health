@@ -2,8 +2,8 @@ from openai import OpenAI
 from unrealspeech import UnrealSpeechAPI, play, save
 from playsound import playsound
 import platform
-from config import config
-from utilities import get_audio_length, read_mp3_as_bytes, read_mp3_as_bytes_url
+from ..config import config
+from ..Utilities.utilities import get_audio_length, read_mp3_as_bytes, read_mp3_as_bytes_url
 import logging
 from pydub import AudioSegment
 from io import BytesIO
@@ -52,12 +52,6 @@ class TTS:
                                                     speed=self.speed,
                                                     pitch=self.pitch)
             logger.info("Playing TTS Audio...")
-            # if platform.system() == "Darwin":
-            #     audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
-            #     self.signal_queue.put(get_audio_length(audio_bytes))
-            # elif platform.system() == "Windows":
-            #     audio_bytes = tts_audio_data
-            #     self.signal_queue.put(get_audio_length(audio_bytes))
             audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
             self.signal_queue.put(get_audio_length(audio_bytes))
             play(tts_audio_data)
@@ -107,9 +101,4 @@ class TTS:
                     return 0
 
         return get_audio_length(audio_bytes)
-
-# import queue
-# q = queue.Queue()
-# tts = TTS("api_key", q, "aws")
-# tts.play_text_audio("Hola, ¿cómo estás?")
-# print(q.get())
+    

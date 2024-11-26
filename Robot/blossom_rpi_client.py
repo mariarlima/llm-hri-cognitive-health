@@ -9,7 +9,7 @@ from blossom_interaction import BlossomInterface
 logger = logging.getLogger("HRI")
 logging_config.configure_logger(logger)
 logger.info("Client Started.")
-# client = None
+
 example_data = {
     "function": "do_start_sequence",
     "kwargs": {
@@ -28,7 +28,6 @@ class BlossomClient:
         self.sio.on('data_update', self.on_data_update)
         self.sio.on('connect', self.on_connect)
         self.sio.on('disconnect', self.on_disconnect)
-        # self.sio.wait()
 
     def on_data_update(self, data):
         logger.info(f"Received data: {json.dumps(data, indent=2)}")

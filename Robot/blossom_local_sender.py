@@ -72,8 +72,3 @@ class BlossomLocalSender:
         response = requests.post(self.url, json=self.data)
         logger.info(f"Sending data to server: {json.dumps(self.data, indent=2)}")
         logger.info(f"Response from server: {response.text}")
-
-# bls = BlossomLocalSender()
-# # bls.do_sequence("reset")
-# # input()
-# bls.do_prompt_sequence_matching(0.5, 20)
