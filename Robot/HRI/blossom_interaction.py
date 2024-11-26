@@ -2,10 +2,10 @@ import random
 import sys
 import time
 import logging
-from .config import config
+from ..config import config
 
 # sys.path.append("./blossom_public")
-from .blossom_public.blossompy import Blossom
+from ..blossom_public.blossompy import Blossom
 
 logger = logging.getLogger("HRI")
 

@@ -4,7 +4,7 @@ import json
 import dotenv
 import logging
 import logging_config
-from blossom_interaction import BlossomInterface
+from ..HRI.blossom_interaction import BlossomInterface
 
 logger = logging.getLogger("HRI")
 logging_config.configure_logger(logger)

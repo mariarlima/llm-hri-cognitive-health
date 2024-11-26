@@ -19,8 +19,8 @@ logger.info("Logger Initialized.")
 import Robot.HRI.STT as STT
 import Robot.HRI.LLM as LLM
 import Robot.HRI.TTS as TTS
-from Robot.blossom_interaction import BlossomInterface
-from Robot.blossom_local_sender import BlossomLocalSender
+from Robot.HRI.blossom_interaction import BlossomInterface
+from Robot.Utilities.blossom_local_sender import BlossomLocalSender
 from Robot.HRI.LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4 # English prompts
 from Robot.HRI.LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES # Spanish prompts
 from Robot.HRI.LLM import llm_prompt_open # Open dialogue prompt
