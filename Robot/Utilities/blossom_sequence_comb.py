@@ -6,6 +6,9 @@ output_sequence_dir = "./blossom-public/blossompy/src/sequences/woody/cognitive/
 
 
 def combine_sequences(sequences: list, sequence_name=None):
+    """
+    Utility function to combine existing sequences to create new sequence.
+    """
     output_sequence = {
         "animation": "",
         "frame_list": []

@@ -1,3 +1,4 @@
+# Play pre recorded audio and sequences as intro.
 from dotenv import load_dotenv
 
 from Robot.blossom_interaction import BlossomInterface

@@ -76,6 +76,7 @@ if __name__ == '__main__':
     load_save = False
     load_save_command = input("Enter 'y' to load last save, anything else to start new interaction: ")
     extra_time = get_integer_input("Enter time in second to add more interaction time: ")
+    # Load previous save so we can resume interaction without start it over.
     if load_save_command == "y":
         load_save = True
     if load_save:

@@ -7,6 +7,9 @@ socketio = SocketIO(app)
 
 @app.route('/data', methods=['POST'])
 def receive_data():
+    """
+    Receive sequence information from blossom network controller and pass it to Raspberry Pi.
+    """
     data = request.json
     print(f"Received data: {data}")
     socketio.emit('data_update', data)

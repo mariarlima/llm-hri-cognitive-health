@@ -30,6 +30,10 @@ class BlossomClient:
         self.sio.on('disconnect', self.on_disconnect)
 
     def on_data_update(self, data):
+        """
+        Execute function passed by server from blossom local sender.
+        See blossom_interaction to get a better idea what these functions are doing.
+        """
         logger.info(f"Received data: {json.dumps(data, indent=2)}")
         if data["function"] == "do_start_sequence":
             self.bl.do_start_sequence(data["kwargs"]["delay_time"])

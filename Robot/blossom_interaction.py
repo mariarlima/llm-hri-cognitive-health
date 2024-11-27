@@ -19,9 +19,15 @@ class BlossomInterface:
         logger.info("Blossom Connected & Initialized.")
 
     def reset(self):
+        """
+        Reset blossom motor positions.
+        """
         self.bl.do_sequence("reset")
 
     def do_random_sequence_from_list(self, seq_list, delay_time=0):
+        """
+        Select and play random sequence from a sequence list.
+        """
         random.shuffle(seq_list)
         logger.info(f"Blossom start playing sequence {seq_list[0]} with {delay_time}s of delay.")
         time.sleep(delay_time)
@@ -46,6 +52,9 @@ class BlossomInterface:
         self.do_random_sequence_from_list(config["Blossom"]["sequence_list"]["end"], delay_time)
 
     def do_prompt_sequence_matching(self, delay_time=0, audio_length=0):
+        """
+        Select and play a sequence from prompt sequences list which has similar length as given audio length.
+        """
         logger.info(
             f"Tread Target: do_prompt_sequence_matching, delay_time: {delay_time}, audio_length: {audio_length}")
         if audio_length >= config["Blossom"]["sequence_length_boundary_list"]["prompt"][-1]:
@@ -57,6 +66,9 @@ class BlossomInterface:
                     break
 
     def do_sequence(self, seq="reset", delay_time=0):
+        """
+        Play given sequence.
+        """
         logger.info(f"Blossom start playing sequence {seq} with {delay_time}s of delay.")
         time.sleep(delay_time)
         logger.info(f"Blossom playing sequence {seq}")

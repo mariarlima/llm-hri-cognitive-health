@@ -1,5 +1,7 @@
 from blossom_sequence_comb import combine_sequences
 
+# New sequences we used in our project
+
 # If this throws error, create cognitive directory under corresponding directory.
 combine_sequences(["grand/grand1", "anger/anger_0_109", "yes", "anger/anger_scream"], "01")
 

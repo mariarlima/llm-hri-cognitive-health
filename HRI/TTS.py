@@ -45,6 +45,9 @@ class TTS:
         logger.info("TTS module initialized.")
 
     def play_text_audio(self, text):
+        """
+        Convert given text to audio and play it.
+        """
         logger.info("Calling TTS API...")
         audio_bytes = None
         if self.api_provider == "unrealspeech":
