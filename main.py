@@ -3,29 +3,29 @@ import queue
 import threading
 from dotenv import load_dotenv
 
-from Robot.config import config
+from Config.config import config
 import logging
-import Robot.logging_config
+import Config.logging_config as logging_config
 import time
 
-from Robot.Utilities.utilities import create_save, load_latest_save, create_final_save, get_integer_input
+from HRI.utilities import create_save, load_latest_save, create_final_save, get_integer_input
 
 logger = logging.getLogger("HRI")
-Robot.logging_config.configure_logger(logger)
+logging_config.configure_logger(logger)
 
 logger.info("Logger Initialized.")
 
 # put import here because we need to force logging config set before other modules.
-import Robot.HRI.STT as STT
-import Robot.HRI.LLM as LLM
-import Robot.HRI.TTS as TTS
-from Robot.HRI.blossom_interaction import BlossomInterface
+import HRI.STT as STT
+import HRI.LLM as LLM
+import HRI.TTS as TTS
+from Robot.blossom_interaction import BlossomInterface
 from Robot.Utilities.blossom_local_sender import BlossomLocalSender
-from Robot.HRI.LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4 # English prompts
-from Robot.HRI.LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES # Spanish prompts
-from Robot.HRI.LLM import llm_prompt_open # Open dialogue prompt
+from HRI.LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4 # English prompts
+from HRI.LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES # Spanish prompts
+from HRI.LLM import llm_prompt_open # Open dialogue prompt
 
-from Robot.session_vars import PID, TASK, SESSION
+from Config.session_vars import PID, TASK, SESSION
 
 if TASK == "Open_dialog":
     max_duration = 3.5 * 60  # 3.5 minutes in seconds

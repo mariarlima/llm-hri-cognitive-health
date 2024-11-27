@@ -1,10 +1,10 @@
 from openai import OpenAI
 from enum import Enum
-from ..config import config
+from Config.config import config
 import logging
 import json
 import copy
-from ..session_vars import NAME, GENDER, TASK
+from Config.session_vars import NAME, GENDER, TASK
 
 # NAME = "Gwen"
 

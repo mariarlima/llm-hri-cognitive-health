@@ -2,8 +2,8 @@ from openai import OpenAI
 from unrealspeech import UnrealSpeechAPI, play, save
 from playsound import playsound
 import platform
-from ..config import config
-from ..Utilities.utilities import get_audio_length, read_mp3_as_bytes, read_mp3_as_bytes_url
+from Config.config import config
+from .utilities import get_audio_length, read_mp3_as_bytes, read_mp3_as_bytes_url
 import logging
 from pydub import AudioSegment
 from io import BytesIO

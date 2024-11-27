@@ -5,7 +5,7 @@ import datetime
 def configure_logger(logger):
     logger.setLevel(logging.INFO)
     console_handler = logging.StreamHandler()
-    file_handler = logging.FileHandler(f'Robot/log/{datetime.datetime.now().isoformat().replace(":", "-")}.log',
+    file_handler = logging.FileHandler(f'Config/log/{datetime.datetime.now().isoformat().replace(":", "-")}.log',
                                        encoding='utf-8')
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     console_handler.setFormatter(formatter)

@@ -6,6 +6,8 @@ from pydub import AudioSegment
 from io import BytesIO
 import requests
 
+save_dir = "../Config/save"
+final_save_dir = "../Config/FinalSaves"
 
 def read_mp3_as_bytes(file_path):
     with open(file_path, 'rb') as file:
@@ -33,7 +35,7 @@ def extract_timestamp(filename):
     return datetime.datetime.strptime(timestamp_str, '%Y-%m-%dT%H-%M-%S.%f')
 
 
-def get_latest_save_filename(saves_dir="../save"):
+def get_latest_save_filename(saves_dir=save_dir):
     import os
     import glob
     list_of_files = glob.glob(f"{saves_dir}/*.json")
@@ -46,14 +48,14 @@ def get_latest_save_filename(saves_dir="../save"):
 
 
 def create_save(save_data):
-    save_filename = f'../save/{datetime.datetime.now().isoformat().replace(":", "-")}.json'
+    save_filename = f'{save_dir}/{datetime.datetime.now().isoformat().replace(":", "-")}.json'
     with open(save_filename, 'w') as save_file:
         json.dump(save_data, save_file)
     return save_filename
 
 
 def create_final_save(save_data):
-    save_filename = f'../FinalSaves/{datetime.datetime.now().isoformat().replace(":", "-")}.json'
+    save_filename = f'{final_save_dir}/{datetime.datetime.now().isoformat().replace(":", "-")}.json'
     with open(save_filename, 'w') as save_file:
         json.dump(save_data, save_file)
     return save_filename

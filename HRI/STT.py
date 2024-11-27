@@ -2,7 +2,7 @@ import logging
 
 from openai import OpenAI
 
-from ..config import config
+from Config.config import config
 import torch
 import whisper
 import speech_recognition as sr
