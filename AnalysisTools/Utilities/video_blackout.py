@@ -72,16 +72,6 @@ video = concatenate_videoclips([video, blank_clip])
 
 # # Define the start and end times for multiple slices
 # slices = [(10, 20), (30, 40), (50, 60)]
-
-# Create a list of video clips
-# clips = []  # [video.subclip(start, end) for start, end in subclip_tuple]
-# for start, end in subclip_tuple:
-#     print(f"Subclip: {start} - {end}")
-#     start_second = convert_to_seconds(start)
-#     end_second = convert_to_seconds(end)
-#     print(f"Convert to seconds: {start_second} - {end_second}")
-#     clips.append(video.subclip(start_second, end_second))
-
 timestamps_set = set()
 
 for start, end in subclip_tuples:

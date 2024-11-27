@@ -1,3 +1,6 @@
+# This file reads in detailed_timestamps.txt and slice raw videos to response
+# See detailed_timestamps.txt for example.
+
 import re
 
 from datetime import timedelta
