@@ -362,6 +362,133 @@ def get_GMM_baseline(task="Cognitive Picture Description Task", height=1080, wid
 
     return combined_gmm
 
+def get_Overall_Mask_GMM_baseline(task="Cognitive Picture Description Task", height=1080, width=1920,
+                                              verbose=False):
+    img = cv2.imread('./images/Cookie_theft_segmentation.png')
+    image_component_id_lookup = {
+        0: "Surrounding",
+        1: "Cookie Jar",
+        2: "Window",
+        3: "Boy",
+        4: "Lady",
+        5: "Plate, Washing Cloth",
+        6: "Girl",
+        7: "Sink, Water",
+        8: "Stool",
+        9: "Dishes",
+        10: "Image Components"
+    }
+    if task != "Cognitive Picture Description Task":
+        img = cv2.imread('./images/Picnic_segmentation.png')
+        image_component_id_lookup = {
+            0: "Surrounding",
+            1: "Tree, House, Car",
+            2: "Kite",
+            3: "Flag",
+            4: "Boat",
+            5: "Fishing",
+            6: "Boy",
+            7: "Lady",
+            8: "Man",
+            9: "Girl, Sand Castle",
+            10: "Dog",
+            11: "Glass, Beverage",
+            12: "Book",
+            13: "Basket",
+            14: "Blanket",
+            15: "Radio",
+            16: "Sandals",
+            17: "Image Components"
+        }
+
+    image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # Reshape the image to a 2D array of pixels
+    pixels = image_rgb.reshape(-1, 3)
+
+    # Use a KD-Tree to find unique colors within a threshold
+    threshold = 5
+    tree = cKDTree(pixels)
+    unique_colors = []
+    labels = np.zeros(pixels.shape[0], dtype=int) - 1
+
+    for i, pixel in enumerate(pixels):
+        if labels[i] == -1:
+            indices = tree.query_ball_point(pixel, threshold)
+            unique_colors.append(pixel)
+            labels[indices] = len(unique_colors) - 1
+
+    unique_colors = np.array(unique_colors)
+
+    if verbose:
+        # Print unique colors
+        print(f"Unique colors (within threshold): {unique_colors}")
+
+    # Create a dictionary mapping from color tuples to segment labels
+    color_to_label = {tuple(color): label for label, color in enumerate(unique_colors)}
+
+    if verbose:
+        # Print the mapping
+        print(f"Color to label mapping: {color_to_label}")
+
+    # Initialize the segmented mask with the same height and width as the input image
+    segmented_mask = np.zeros((image_rgb.shape[0], image_rgb.shape[1]), dtype=np.int32)
+
+    # Assign labels to each pixel based on the color
+    for i, color in enumerate(unique_colors):
+        mask = np.all(image_rgb == color, axis=-1)
+        # if verbose:
+        #     plt.imshow(mask, cmap='tab20b')
+        #     plt.show()
+        #     print(i)
+        segmented_mask[mask] = i
+
+    if verbose:
+        # Print the segmented mask
+        print(segmented_mask)
+
+    mask_id_list = np.unique(segmented_mask)
+    separated_masks = {}
+
+    for mask_id in mask_id_list:
+        isolated_mask = segmented_mask.copy()
+        isolated_mask[isolated_mask != mask_id] = -1
+        if verbose:
+            print(f"id: {mask_id}, tag: {image_component_id_lookup[mask_id]}")
+            print(np.unique(isolated_mask))
+            # plt.imshow(separated_masks[id], cmap='nipy_spectral')
+            # plt.colorbar()
+            # plt.show()
+        separated_masks[mask_id] = isolated_mask
+
+    image_component_mask = segmented_mask.copy()
+    image_component_mask[image_component_mask != 0] = len(image_component_id_lookup) - 1
+    separated_masks[len(image_component_id_lookup) - 1] = image_component_mask
+
+    if verbose:
+        plt.imshow(segmented_mask, cmap='nipy_spectral')
+        plt.colorbar()
+        plt.show()
+
+    if task == "Cognitive Picture Description Task":
+        num_components_baseline = 9
+    else:
+        num_components_baseline = 16
+
+    overall_gmm = GaussianMixture(random_state=0)
+    
+    points = get_pixel_coordinates(separated_masks[len(image_component_id_lookup) - 1], len(image_component_id_lookup) - 1)
+    points[:, 0] *= 1
+    points[:, 1] *= 1
+    points[:, [0, 1]] = points[:, [1, 0]]
+    overall_gmm = fit_gmm_to_component(points, num_components_baseline)
+
+
+    if verbose:
+        plot_gmm(None, None, overall_gmm.means_, overall_gmm.covariances_, 0, 'GMM Components over Image Components',
+                 width, height, segmented_mask)
+
+    return overall_gmm
 
 def get_GMM_baseline_with_component_label_map(task="Cognitive Picture Description Task", height=1080, width=1920,
                                               verbose=False):
