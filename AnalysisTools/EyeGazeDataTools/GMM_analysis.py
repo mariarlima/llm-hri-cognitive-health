@@ -10,8 +10,9 @@ import matplotlib as mpl
 
 
 def get_normalized_log_likelihood(points, gmm, x_scale=1920, y_scale=1080, show_plot=True):
-    points[:, 0] *= x_scale
-    points[:, 1] *= y_scale
+    # Important: Due to shallow copy reason, scaling is now removed. Handle this carefully outside this function.
+    # points[:, 0] *= x_scale
+    # points[:, 1] *= y_scale
     log_llh = gmm.score(points)
     # log_llh /= points.shape[0]
     # TODO: Add titles Pxx Sx

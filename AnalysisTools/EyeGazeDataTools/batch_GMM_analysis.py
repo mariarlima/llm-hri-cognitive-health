@@ -29,6 +29,8 @@ for file_name in file_names:
         # print(f"File name: {file_name}")
         try:
             points, task = get_eye_gaze_data(f"{directory_path}{file_name}")
+            points[:, 0] *= 1920
+            points[:, 1] *= 1080
             baseline_gmm = baseline_cookie if task == "Cognitive Picture Description Task" else baseline_picnic
             overall_baseline_gmm = overall_baseline_cookie if task == "Cognitive Picture Description Task" else overall_baseline_picnic
             score = get_normalized_log_likelihood(points, gmm=baseline_gmm, show_plot=False)
