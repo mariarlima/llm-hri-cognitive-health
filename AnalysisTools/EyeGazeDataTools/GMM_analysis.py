@@ -14,10 +14,47 @@ def get_normalized_log_likelihood(points, gmm, x_scale=1920, y_scale=1080, show_
     points[:, 1] *= y_scale
     log_llh = gmm.score(points)
     # log_llh /= points.shape[0]
+    # TODO: Add titles Pxx Sx
     if show_plot:
         plt.scatter(points[:, 0], points[:, 1], marker='x', s=1)
         plt.show()
     return log_llh
+
+# def get_mean_entropy(points, gmm, x_scale=1920, y_scale=1080, show_plot=True):
+#     points[:, 0] *= x_scale
+#     points[:, 1] *= y_scale
+#     # After fitting GMM
+#     probs = gmm.predict_proba(X)  # shape: (n_samples, n_components)
+#     # Entropy per gaze point
+#     entropies = np.array([entropy(p) for p in probs])  # shape: (n_samples,)
+#     # Mean entropy across all points
+#     mean_entropy = np.mean(entropies)
+
+def plot_gmm_likelihood(gmm, title, width, height, task):
+    img = cv2.imread('./images/Cookie_theft_padded.png')
+    if task != "Cognitive Picture Description Task":
+        img = cv2.imread('./images/Picnic_padded.png')
+    width, height = 1920, 1080
+
+    # Create a grid of all pixel coordinates
+    x = np.arange(width)
+    y = np.arange(height)
+    xx, yy = np.meshgrid(x, y)
+
+    # Flatten into a list of (x, y) points → shape: (height*width, 2)
+    coords = np.column_stack((xx.ravel(), yy.ravel()))
+
+    log_likelihoods = gmm.score_samples(coords)
+
+    log_likelihood_map = log_likelihoods.reshape((height, width))
+    # Normalize to [0, 1] for visualization
+    log_likelihood_map_norm = (log_likelihood_map - log_likelihood_map.min()) / (log_likelihood_map.max() - log_likelihood_map.min())
+
+    plt.imshow(img)
+    plt.imshow(log_likelihood_map_norm, cmap='bwr', alpha=0.6)
+    plt.title("GMM Log-Likelihood")
+    plt.show()
+
 
 
 def plot_gmm(X, Y_, means, covariances, index, title, width, height, segmented_mask):
@@ -317,6 +354,7 @@ def get_GMM_baseline(task="Cognitive Picture Description Task", height=1080, wid
         )
         # Perform GridSearchCV
         component_coords = get_pixel_coordinates(separated_masks[key], key)
+        component_coords[:, [0, 1]] = component_coords[:, [1, 0]]
         grid_search.fit(component_coords)
 
         # Best parameters
@@ -362,7 +400,7 @@ def get_GMM_baseline(task="Cognitive Picture Description Task", height=1080, wid
 
     return combined_gmm
 
-def get_Overall_Mask_GMM_baseline(task="Cognitive Picture Description Task", height=1080, width=1920,
+def get_Overall_Mask_GMM_baseline(task="Cognitive Picture Description Task", height=1080, width=1920, num_components=0,
                                               verbose=False):
     img = cv2.imread('./images/Cookie_theft_segmentation.png')
     image_component_id_lookup = {
@@ -475,17 +513,20 @@ def get_Overall_Mask_GMM_baseline(task="Cognitive Picture Description Task", hei
     else:
         num_components_baseline = 16
 
+    if num_components != 0:
+        num_components_baseline = num_components
+
     overall_gmm = GaussianMixture(random_state=0)
     
     points = get_pixel_coordinates(separated_masks[len(image_component_id_lookup) - 1], len(image_component_id_lookup) - 1)
-    points[:, 0] *= 1
-    points[:, 1] *= 1
+    # points[:, 0] *= 1
+    # points[:, 1] *= 1
     points[:, [0, 1]] = points[:, [1, 0]]
     overall_gmm = fit_gmm_to_component(points, num_components_baseline)
 
 
     if verbose:
-        plot_gmm(None, None, overall_gmm.means_, overall_gmm.covariances_, 0, 'GMM Components over Image Components',
+        plot_gmm(None, None, overall_gmm.means_, overall_gmm.covariances_, 0, 'Overall GMM Baseline',
                  width, height, segmented_mask)
 
     return overall_gmm
