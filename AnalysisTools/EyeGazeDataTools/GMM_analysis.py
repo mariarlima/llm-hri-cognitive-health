@@ -92,6 +92,41 @@ def plot_gmm(X, Y_, means, covariances, index, title, width, height, segmented_m
     plt.imshow(segmented_mask, cmap='Pastel2', alpha=1)
     plt.show()
 
+def plot_nll_heatmap(gmm, task="Cognitive Picture Description Task", title=None):
+
+    img = cv2.imread('./images/Cookie_theft_padded.png')
+    if task != "Cognitive Picture Description Task":
+        img = cv2.imread('./images/Picnic_padded.png')
+
+    width, height = 1920, 1080
+
+    # Create a grid of all pixel coordinates
+    x = np.arange(width)
+    y = np.arange(height)
+    xx, yy = np.meshgrid(x, y)  # shape: (height, width)
+
+    # Flatten into a list of (x, y) points → shape: (height*width, 2)
+    coords = np.column_stack((xx.ravel(), yy.ravel()))
+
+    # coords is shape (N, 2)
+    log_likelihoods = gmm.score_samples(coords)  # shape: (height*width,)
+
+    log_likelihood_map = log_likelihoods.reshape((height, width))  # shape: (1080, 1920)
+
+    import matplotlib.pyplot as plt
+
+    # Normalize to [0, 1] for visualization
+    log_likelihood_map_norm = (log_likelihood_map - log_likelihood_map.min()) / (log_likelihood_map.max() - log_likelihood_map.min())
+
+    plt.imshow(img)
+    im = plt.imshow(log_likelihood_map_norm, cmap='bwr', alpha=0.6)
+    cbar = plt.colorbar(im, fraction=0.046, pad=0.04)
+    cbar.set_label('Normalized Log-Likelihood')
+    if title is None:
+        title = "Overall GMM Log-Likelihood Heatmap"
+    plt.title(title)
+    plt.show()
+
 
 def get_pixel_coordinates(segmented_mask, label):
     # print(np.column_stack(np.where(segmented_mask == label)))
