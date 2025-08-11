@@ -24,22 +24,26 @@ class TTS:
     def __init__(self, api_key, signal_queue, api_provider="unrealspeech"):
         self.api_provider = api_provider
         self.signal_queue = signal_queue
+
         if api_provider == "unrealspeech":
             self.voice_id = config["TTS"]["unrealspeech"]["voice_id"]
             self.bit_rate = config["TTS"]["unrealspeech"]["bit_rate"]
             self.speed = config["TTS"]["unrealspeech"]["speed"]
             self.pitch = config["TTS"]["unrealspeech"]["pitch"]
             self.speech_api = UnrealSpeechAPI(api_key)
-        # elif api_provider == "openai":
-        #     self.model_id = config["TTS"]["openai"]["model_id"]
-        #     self.voice_id = config["TTS"]["openai"]["voice_id"]
-        #     self.openai_api = OpenAI(api_key=api_key)
-        # elif api_provider == "aws":
-        #     self.voice_id = config["TTS"]["aws"]["voice_id"]
-        #     self.speed = config["TTS"]["aws"]["speed"]
-        #     self.pitch = config["TTS"]["aws"]["pitch"]
-        #     self.session = Session(profile_name="default")
-        #     self.aws_api = self.session.client("polly")
+
+        elif api_provider == "openai":
+            self.model_id = config["TTS"]["openai"]["model_id"]
+            self.voice_id = config["TTS"]["openai"]["voice_id"]
+            self.openai_api = OpenAI(api_key=api_key)
+
+        elif api_provider == "aws":
+            self.voice_id = config["TTS"]["aws"]["voice_id"]
+            self.speed = config["TTS"]["aws"]["speed"]
+            self.pitch = config["TTS"]["aws"]["pitch"]
+            self.session = Session(profile_name="default")
+            self.aws_api = self.session.client("polly")
+        
         else:
             assert False, "Invalid TTS API Provider."
         logger.info("TTS module initialized.")
@@ -51,9 +55,13 @@ class TTS:
         logger.info("Calling TTS API...")
         audio_bytes = None
         if self.api_provider == "unrealspeech":
-            tts_audio_data = self.speech_api.speech(text=text, voice_id=self.voice_id, bitrate=self.bit_rate,
-                                                    speed=self.speed,
-                                                    pitch=self.pitch)
+            tts_audio_data = self.speech_api.speech(
+                text=text, 
+                voice_id=self.voice_id, 
+                bitrate=self.bit_rate,
+                speed=self.speed,
+                pitch=self.pitch
+            )
             logger.info("Playing TTS Audio...")
             audio_bytes = read_mp3_as_bytes_url(tts_audio_data['OutputUri'])
             self.signal_queue.put(get_audio_length(audio_bytes))

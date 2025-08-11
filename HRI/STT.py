@@ -18,16 +18,16 @@ class STT:
         self.pid = pid
         # Initialize whisper model
         if torch.cuda.is_available():
-            device = torch.device("cuda")
+            self.device = torch.device("cuda")
             logger.info("PyTorch is using CUDA.")
         else:
-            device = "cpu"
+            self.device = torch.device("cpu")
             logger.warning("PyTorch is using CPU.")
-        self.whisper_model_id = config["whisper_model_id"]["default"]
-        if config["whisper_model_id"].get(self.pid) is not None:
-            self.whisper_model_id = config["whisper_model_id"][self.pid]
+
+        self.whisper_model_id = config["whisper_model_id"].get(self.pid, config["whisper_model_id"]["default"])
         logger.info("Loading whisper model with ID: %s", self.whisper_model_id)
-        self.whisper_model = whisper.load_model(self.whisper_model_id).to(device)
+
+        self.whisper_model = whisper.load_model(self.whisper_model_id).to(self.device)
         logger.info("Whisper model loaded.")
 
         logger.info("Initializing Mic...")
@@ -37,21 +37,22 @@ class STT:
 
         try:
             mic_list = sr.Microphone.list_microphone_names()
-            print("Available microphones:", mic_list)
+            logger.debug("Available microphones: %s", mic_list)
 
-            
-            if 'USBAudio1.0' in mic_list:
-                self.mic = sr.Microphone(device_index=mic_list.index('USBAudio1.0'))
-                logger.info("Microphone found!")
-            elif 'External Headphones' in mic_list:
-                self.mic = sr.Microphone(device_index=mic_list.index('External Headphones'))
-                logger.info("Microphone new found!")
-            elif 'MacBook Pro Microphone' in mic_list:
-                self.mic = sr.Microphone(device_index=mic_list.index('MacBook Pro Microphone'))
-                logger.warning(f"Using: MacBook Pro Microphone.")
-            else:
-                self.mic = sr.Microphone()
-                logger.info(f"Microphone used: {self.mic}")
+            preferred = [
+                "USBAudio1.0",
+                "External Headphones",
+                "MacBook Pro Microphone",
+            ]
+            chosen_index = None
+            for name in preferred:
+                if name in mic_list:
+                    chosen_index = mic_list.index(name)
+                    logger.info("Selected microphone: %s", name)
+                    break
+
+            self.mic = sr.Microphone(device_index=chosen_index) if chosen_index is not None else sr.Microphone()
+            logger.info("Microphone ready: %s", getattr(self.mic, "device_index", "default"))
                 
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
@@ -75,27 +76,27 @@ class STT:
                 # Timeout: max time r.listen will wait until a speech is picked up
                 # Phrase time limit: max duration of audio clip being recorded
                 try:
-                    audio = self.r.listen(source, timeout=config["STT"]["timeout"], phrase_time_limit=phrase_time_limit)
+                    audio = self.r.listen(
+                        source, 
+                        timeout=config["STT"]["timeout"], 
+                        phrase_time_limit=phrase_time_limit
+                    )
                 except sr.WaitTimeoutError:
-                    response["success"] = False
-                    response["error"] = "Listening timed out while waiting for phrase to start"
-                    logger.warning("r.listen timeout.")
-                    logger.warning(response["error"])
+                    response.update({
+                        "success": False,
+                        "error": "Listening timed out while waiting for phrase to start",
+                    })
+                    logger.warning("listen() timeout: %s", response["error"])
                     return response
 
             wav_path = 'playback.wav'
             with open(wav_path, "wb") as f:
-                f.write(audio.get_wav_data())
-
-            if config["is_playback"]:
-                logger.info("Start playback.")
-                # Play the saved audio
-                playsound(wav_path)
-
-        except Exception as e:
-            response["success"] = False
-            response["error"] = str(e)
-            logger.error(f"An error occurred: {response['error']}")
+                logger.info("Playback enabled; playing captured audio...")
+                try:
+                    playsound(wav_path)
+                except Exception as play_err:
+                    # NOTE: playback should not fail the whole STT path
+                    logger.warning("Audio playback failed: %s", str(play_err))
 
         # Transcribe
         if use_api:
@@ -108,9 +109,6 @@ class STT:
             )
         else:
             logger.info("Transcribing...")
-            # try recognizing the speech in the recording
-            # if a RequestError or UnknownValueError exception is caught,
-            #     update the response object accordingly
             try:
                 response["transcription"] = self.whisper_model.transcribe('playback.wav', language=language)
             except sr.RequestError:
