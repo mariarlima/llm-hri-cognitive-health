@@ -97,6 +97,11 @@ class STT:
                 except Exception as play_err:
                     # NOTE: playback should not fail the whole STT path
                     logger.warning("Audio playback failed: %s", str(play_err))
+                    
+        except Exception as e:
+            response["success"] = False
+            response["error"] = str(e)
+            logger.error(f"An error occurred: {response['error']}")
 
         # Transcribe
         if use_api:
@@ -126,3 +131,4 @@ class STT:
                 logger.warning("%s", response["error"])
 
         return response
+    
