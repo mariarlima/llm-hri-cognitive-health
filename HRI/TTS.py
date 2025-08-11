@@ -30,16 +30,16 @@ class TTS:
             self.speed = config["TTS"]["unrealspeech"]["speed"]
             self.pitch = config["TTS"]["unrealspeech"]["pitch"]
             self.speech_api = UnrealSpeechAPI(api_key)
-        elif api_provider == "openai":
-            self.model_id = config["TTS"]["openai"]["model_id"]
-            self.voice_id = config["TTS"]["openai"]["voice_id"]
-            self.openai_api = OpenAI(api_key=api_key)
-        elif api_provider == "aws":
-            self.voice_id = config["TTS"]["aws"]["voice_id"]
-            self.speed = config["TTS"]["aws"]["speed"]
-            self.pitch = config["TTS"]["aws"]["pitch"]
-            self.session = Session(profile_name="default")
-            self.aws_api = self.session.client("polly")
+        # elif api_provider == "openai":
+        #     self.model_id = config["TTS"]["openai"]["model_id"]
+        #     self.voice_id = config["TTS"]["openai"]["voice_id"]
+        #     self.openai_api = OpenAI(api_key=api_key)
+        # elif api_provider == "aws":
+        #     self.voice_id = config["TTS"]["aws"]["voice_id"]
+        #     self.speed = config["TTS"]["aws"]["speed"]
+        #     self.pitch = config["TTS"]["aws"]["pitch"]
+        #     self.session = Session(profile_name="default")
+        #     self.aws_api = self.session.client("polly")
         else:
             assert False, "Invalid TTS API Provider."
         logger.info("TTS module initialized.")

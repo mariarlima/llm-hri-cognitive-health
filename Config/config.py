@@ -1,5 +1,5 @@
 config = {
-    "is_using_voice": True,
+    "is_using_voice": False,
     "is_playback": False,
     "language":
         {
@@ -45,7 +45,7 @@ config = {
                         },
                     "phrase_time_limit": 60,  # Max duration of a recorded audio clip
                 },
-            "open_dialog":
+            "open_dialogue":
                 {
                     "pause_threshold": 2,
                     "phrase_time_limit": 10,
@@ -227,7 +227,7 @@ config = {
                             "es": "Thank you for playing this game with me! It was so much fun! Now we will ask you some questions about how you enjoyed the games and talking to me. I hope we can talk again soon! Goodbye"
                         }
                 },
-            "Open_dialog":
+            "Open_dialogue":
                 {
                     "free_speech_watermark":
                         {

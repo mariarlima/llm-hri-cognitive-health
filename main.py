@@ -1,60 +1,62 @@
 import os
 import queue
 import threading
+import time
+import logging
 from dotenv import load_dotenv
 
 from Config.config import config
-import logging
 import Config.logging_config as logging_config
-import time
 
 from HRI.utilities import create_save, load_latest_save, create_final_save, get_integer_input
 
+# Configure logging early so downstream imports inherit it.
 logger = logging.getLogger("HRI")
 logging_config.configure_logger(logger)
-
 logger.info("Logger Initialized.")
 
-# put import here because we need to force logging config set before other modules.
+# Import modules that rely on logging being configured.
 import HRI.STT as STT
 import HRI.LLM as LLM
 import HRI.TTS as TTS
 from Robot.blossom_interaction import BlossomInterface
 from Robot.Utilities.blossom_local_sender import BlossomLocalSender
-from HRI.LLM import llm_prompt_t1_v1, llm_prompt_t1_v2, llm_prompt_t2_v1, llm_prompt_t2_v2, llm_prompt_t1_v2_s4 # English prompts
-from HRI.LLM import llm_prompt_t1_v1_ES, llm_prompt_t1_v2_ES, llm_prompt_t2_v2_ES # Spanish prompts
-from HRI.LLM import llm_prompt_open # Open dialogue prompt
+
+# Add prompts used in cognitive tasks from HRI.LLM
+# from HRI.LLM import ...
+
+# Open dialogue prompt
+from HRI.LLM import llm_prompt_open 
 
 from Config.session_vars import PID, TASK, SESSION
 
-if TASK == "Open_dialog":
-    max_duration = 3.5 * 60  # 3.5 minutes in seconds
-else:
-    max_duration = 5 * 60  # 5 minutes in seconds
+if TASK == "Open_dialogue":
+    max_duration = 3.5 * 60  # 3.5 min 
+    max_duration = 5 * 60  # 5 min
 
+# ---- Main --------------------------------------------------------------------
 if __name__ == '__main__':
     load_dotenv()
     signal_queue = queue.Queue()
-    language = config["language"]["default"]
-    if config["language"].get(PID) is not None:
-        language = config["language"][PID]
-    # choose appropriate prompt based on task and version/session
+
+    # Resolve language
+    language = config["language"].get(PID, config["language"]["default"])
+
+    # Choose appropriate prompt based on task and version/session
     prompt_name = config["Task"][TASK]["prompt"][language]
-    if SESSION == "S4" and TASK == "Picture_2":
-        prompt_name = "llm_prompt_t1_v2_s4"
-        if language == "es":
-            prompt_name = "llm_prompt_t1_v2_s4_ES"
-    prompt = eval(prompt_name)
-    logger.info(f"Choose prompt based on task and version/session: {prompt_name}")
+    prompt = LLM.prompt(TASK, SESSION, language)
+    logger.info(f"Choose prompt based on task/session: {prompt_name} (task={TASK}, session={SESSION})")
+
     llm = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MAIN, llm_prompt=prompt, language=language)
     stt = STT.STT(os.getenv("OPENAI_API_KEY"), PID)
     llm_moderator = LLM.LLM(os.getenv("OPENAI_API_KEY"), LLM.LLM_Role.MOD)
+
+    # Blossom robot setup
     bl = None
     if config["Blossom"]["status"] == "Enabled":
-        if config["Blossom"]["use_network_controller"]:
-            bl = BlossomLocalSender()
-        else:
-            bl = BlossomInterface()
+        bl = BlossomLocalSender() if config["Blossom"]["use_network_controller"] else BlossomInterface()
+    
+    # TTS backend
     if language == "es":
         tts = TTS.TTS(os.getenv("AWS_POLLY_KEY"), signal_queue, api_provider="aws")
         logger.info("Using AWS Polly for TTS.")
@@ -62,6 +64,7 @@ if __name__ == '__main__':
         tts = TTS.TTS(os.getenv("UNREAL_SPEECH_KEY"), signal_queue)
     else:  # fallback to openai tts
         tts = TTS.TTS(os.getenv("OPENAI_API_KEY"), signal_queue, api_provider="openai")
+
     bl_thread = None
     bl_thread_target = None
     bl_thread_kwargs = None
@@ -79,6 +82,7 @@ if __name__ == '__main__':
     # Load previous save so we can resume interaction without start it over.
     if load_save_command == "y":
         load_save = True
+
     if load_save:
         save_data = load_latest_save()
         start_time = time.time() - (save_data["elapsed_time"] - extra_time)
@@ -89,7 +93,6 @@ if __name__ == '__main__':
     else:
         # Let LLM generate intro
         logger.info("Main interaction loop starts.")
-
         llm_response_text = llm.request_response("Start")
         start_time = time.time()  # Track start time
 
@@ -99,17 +102,18 @@ if __name__ == '__main__':
 
         # handle Blossom activation
         if config["Blossom"]["status"] == "Enabled":
-            if TASK == "Picture_1" or TASK == "Picture_2":
+            if TASK in ("Picture_1", "Picture_2"):
                 bl_thread = threading.Thread(target=bl.do_prompt_sequence_matching, args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"],
                                                      "audio_length": intro_audio_length})
                 bl_thread.start()
-            elif TASK == "Semantic_1" or TASK == "Semantic_2":
+            elif TASK in ("Semantic_1", "Semantic_2"):
                 free_task = True
                 logger.info("Free task triggered.")
                 bl_thread = threading.Thread(target=bl.do_start_sequence, args=(),
                                              kwargs={"delay_time": config["Blossom"]["delay"]})
                 bl_thread.start()
+        
         time.sleep(intro_audio_length + config["STT"]["mic_time_offset"])
         if config["Blossom"]["status"] == "Enabled":
             bl.reset()  # Cutoff Blossom's movement after audio ends
@@ -154,8 +158,8 @@ if __name__ == '__main__':
                     if TASK == "Open_dialogue":
                         logger.info("OPEN DIALOG -- SETTING PARAMS")
                         stt_response = stt.get_voice_as_text(
-                            phrase_time_limit=config["STT"]["open_dialog"]["phrase_time_limit"],
-                            pause_threshold=config["STT"]["open_dialog"]["pause_threshold"],
+                            phrase_time_limit=config["STT"]["open_dialogue"]["phrase_time_limit"],
+                            pause_threshold=config["STT"]["open_dialogue"]["pause_threshold"],
                             language=language)
                     else:
                         stt_response = stt.get_voice_as_text(
@@ -250,8 +254,7 @@ if __name__ == '__main__':
         logger.info(f"Data saved at {save_filename}")
 
     except Exception as e:
-        logger.error(f"Exception occurred: {str(e)}")
-        logger.error(e, exc_info=True)
+        logger.error(f"Exception occurred: {str(e)}", exc_info=True)
         exit()
 
     # play audio for end of task out of main loop
@@ -259,7 +262,7 @@ if __name__ == '__main__':
         end_text = config["Task"][TASK]["end_blossom"][language]
         llm.additional_info = f"Max duration of interaction reached. Respond to what the user said first, then end interaction"
         llm_response_text = llm.request_response("")
-        logger.info("<<<Additional info added to LLM prompt to end dialoga and respond to user>>>")
+        logger.info("<<<Additional info added to LLM prompt to end dialogue and respond to user>>>")
         tts.play_text_audio(llm_response_text)
         # tts.play_text_audio(end_text) # not needed because LLM updated prompt with additional info already includes end text
         save_data = llm.save_final_history()
