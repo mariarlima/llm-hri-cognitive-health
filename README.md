@@ -45,6 +45,11 @@ UNREAL_SPEECH_KEY=<KEY>
 ```
 Add your LLM prompts to [`./HRI/LLM.py`](./HRI/LLM.py) to generate contextualised and engaging responses. 
 
+## Linguistic and Eye Gaze Analysis 
+
+Post-experiment analysis ([`./AnalysisTools`](./AnalysisTools)) included: 
+- Linguistic feature extraction from trancripts to evaluate changes in task performance over time. Metrics included lexical diversity, descriptive detail (picture description), and total word count. We also computed cosine similarity between pooled token embeddings of participants’ transcripts and a GPT-4o-generated baseline. We hypothesized that higher similarity scores reflected more semantically complete descriptions (see Methods in the paper for details).
+- Eye gaze analysis from data collected during spontaneous speech to assess participants’ visual focus patterns.
 
 ## Citation
 If you find this work useful, please consider citing our paper:
