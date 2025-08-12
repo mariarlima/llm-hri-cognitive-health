@@ -66,6 +66,6 @@ and the UK Dementia Research Institute award number UK DRI-7003 through UK DRI L
 
 For any clarification or interest in the work contact maria.lima@imperial.ac.uk.
 <div align="center">
-  <img src="./images/team.png" alt="team" width="600"/>
+  <img src="./images/team2.png" alt="team2" width="600"/>
   <p><em></em></p>
 </div>
