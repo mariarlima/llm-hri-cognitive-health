@@ -43,6 +43,8 @@ Include your API keys in a `.env` file in the project root directory.
 OPENAI_API_KEY=<KEY>
 UNREAL_SPEECH_KEY=<KEY>
 ```
+Add your LLM prompts to [`./HRI/LLM.py`](./HRI/LLM.py) to generate contextualised and engaging responses. 
+
 
 ## Citation
 If you find this work useful, please consider citing our paper:
