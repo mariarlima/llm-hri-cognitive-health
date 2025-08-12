@@ -16,7 +16,10 @@ This research contributed novel insights into the efficacy of LLM-powered SARs t
 - We integrated a moderator for auto-evaluation as a preventive measure to review LLM-generated responses before they were delivered to participants.
 - The length of the robot’s motion sequences were synchronised with its speech duration to promote natural and engaging interactions.
 
-
+<div align="center">
+  <img src="./images/system.png" alt="system" width="400"/>
+  <p><em>System implementation of an LLM-powered SAR administering cognitive tasks.</em></p>
+</div>
 
 
 #### Conversational SAR
