@@ -1,0 +1,2 @@
+*.ipynb linguist-detectable=false
+AnalysisTools/**/*.ipynb linguist-detectable=false
