@@ -26,9 +26,8 @@ The length of the robot’s motion sequences were synchronised with its speech d
 We used the updated version of the inexpensive Blossom robot, an [open-source](https://github.com/interaction-lab/Blossom-Controller), 3D-printed platform with a gray crocheted exterior, to create a simple and engaging appearance.
 
 #### Robot Behaviour
-- We designed a set of idle motions to enhance user engagement with the robot.
-- We implemented all idle motions as actuations for each of Blossom’s four motors to manually selected goal positions.
-- These include different sequences (of customised duration) of sighing, posture sways, and gaze shifts.
+- We designed a set of idle motions to enhance **user engagement** with the robot.
+- We implemented idle motions as actuations for each of Blossom’s four motors to goal positions. These include different sequences of sighing, posture sways, and gaze shifts.
 - We synchronized the length of the robot’s motion sequences with its speech duration to promote natural and engaging interactions.
 
 <div align="center">
@@ -48,8 +47,8 @@ Add your LLM prompts to [`./HRI/LLM.py`](./HRI/LLM.py) to generate contextualise
 ## Linguistic and Eye Gaze Analysis 
 
 Post-experiment analysis ([`./AnalysisTools`](./AnalysisTools)) included: 
-- Linguistic feature extraction from trancripts to evaluate changes in task performance over time. Metrics included lexical diversity, descriptive detail (picture description), and total word count. We also computed cosine similarity between pooled token embeddings of participants’ transcripts and a GPT-4o-generated baseline. We hypothesized that higher similarity scores reflected more semantically complete descriptions (see Methods in the paper for details).
-- Eye gaze analysis from data collected during spontaneous speech to assess participants’ visual focus patterns.
+- Linguistic feature extraction from trancripts to evaluate changes in **task performance** over time. Metrics included lexical diversity, descriptive detail (picture description), and total word count. We also computed _cosine similarity_ between pooled _token embeddings_ of participants’ transcripts and a GPT-4o-generated baseline. We hypothesized that higher similarity scores reflected more semantically complete descriptions (see Methods in the paper for details).
+- Eye gaze analysis from data collected during spontaneous speech to assess participants’ visual **focus** patterns.
 
 ## Citation
 If you find this work useful, please consider citing our paper:
