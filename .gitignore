@@ -11,7 +11,7 @@ FinalSaves/*.json
 *.mp4
 *.csv
 *.avi
-*.png
+# *.png
 *.jpg
 *.docx
 *.doc
