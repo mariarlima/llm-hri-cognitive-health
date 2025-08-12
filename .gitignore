@@ -25,3 +25,4 @@ AnalysisTools/NLPTools/.ipynb_checkpoints/*
 AnalysisTools/NLPTools/data/*
 AnalysisTools/NLPTools/data_processed/*
 venv/
+*.ipynb linguist-vendored
