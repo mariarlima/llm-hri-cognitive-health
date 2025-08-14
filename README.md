@@ -42,11 +42,11 @@ Include your API keys in a `.env` file in the project root directory.
 OPENAI_API_KEY=<KEY>
 UNREAL_SPEECH_KEY=<KEY>
 ```
-Add your LLM prompts to [`./HRI/LLM.py`](./HRI/LLM.py) to generate contextualised and engaging responses. 
+Add your LLM prompts to [`LLM.py`](./HRI/LLM.py) to generate contextualised and engaging responses. 
 
 ## Linguistic and Eye Gaze Analysis 
 
-Post-experiment analysis ([`./AnalysisTools`](./AnalysisTools)) included: 
+Post-experiment analysis ([`AnalysisTools`](./AnalysisTools)) included: 
 - Linguistic feature extraction from trancripts to evaluate changes in **task performance** over time. Metrics included lexical diversity, descriptive detail (picture description), and total word count. We also computed _cosine similarity_ between pooled _token embeddings_ of participants’ transcripts and a GPT-4o-generated baseline. We hypothesized that higher similarity scores reflected more semantically complete descriptions (see Methods in the paper for details).
 - Eye gaze analysis from data collected during spontaneous speech to assess participants’ visual **focus** patterns.
 
